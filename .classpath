@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/java"/>
+	<classpathentry kind="lib" path="lib/servlet.jar"/>
+	<classpathentry kind="lib" path="lib/new/commons-codec.jar"/>
+	<classpathentry kind="lib" path="lib/new/commons-httpclient.jar"/>
+	<classpathentry kind="lib" path="lib/new/commons-lang.jar"/>
+	<classpathentry kind="lib" path="lib/new/commons-logging.jar"/>
+	<classpathentry kind="lib" path="lib/new/tinder.jar" sourcepath="D:/softpack/openfire/tinder-1.2.3/tinder-1.2.3-sources.jar"/>
+	<classpathentry kind="lib" path="lib/new/slf4j-log4j12.jar"/>
+	<classpathentry kind="lib" path="lib/new/slf4j-api.jar"/>
+	<classpathentry kind="lib" path="lib/new/dom4j.jar" sourcepath="D:/softpack/openfire/dom4j-1.6.1-sources.jar"/>
+	<classpathentry kind="lib" path="lib/new/xstream-1.4.8.jar"/>
+	<classpathentry kind="lib" path="lib/include/libthrift-0.9.2.jar"/>
+	<classpathentry kind="lib" path="lib/include/fastjson-1.1.41.jar"/>
+	<classpathentry kind="lib" path="lib/bin/commons-daemon.jar"/>
+	<classpathentry kind="lib" path="lib/bin/commons-launcher.jar"/>
+	<classpathentry kind="lib" path="lib/bin/commons-logging-api.jar"/>
+	<classpathentry kind="lib" path="lib/bin/bootstrap.jar"/>
+	<classpathentry kind="lib" path="lib/server/commons-el.jar"/>
+	<classpathentry kind="lib" path="lib/server/jasper-compiler.jar"/>
+	<classpathentry kind="lib" path="lib/server/jasper-el.jar"/>
+	<classpathentry kind="lib" path="lib/server/jasper-runtime.jar"/>
+	<classpathentry kind="lib" path="lib/mysql.jar"/>
+	<classpathentry kind="lib" path="lib/openfire.jar" sourcepath="/openfire"/>
+	<classpathentry kind="lib" path="lib/include/crm-api-0.0.4.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/openfire"/>
+	<classpathentry kind="output" path="classes"/>
+</classpath>

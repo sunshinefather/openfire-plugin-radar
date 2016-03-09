@@ -1,0 +1,42 @@
+package com.radar.broadcast.notice;
+
+import org.apache.commons.lang.StringUtils;
+import org.xmpp.packet.JID;
+import org.xmpp.packet.Message;
+import org.xmpp.packet.PacketExtension;
+
+import com.radar.broadcast.SendBoardcastTask;
+import com.radar.pool.ThreadPool;
+import com.radar.utils.HixinUtils;
+import com.zyt.web.after.notice.remote.bean.ImCrmNotice;
+/**
+ * 发送系统通知工具类
+ * @ClassName:  NoticeBroadcast   
+ * @Description:TODO   
+ * @author: sunshine  
+ * @date:   2015年4月17日 下午5:36:13
+ */
+public class NoticeBroadcast {
+
+	public static void pushNotice(ImCrmNotice imCrmNotice,String[] toUserNames,Boolean... forceNotStore) {
+		Message msg=new Message();
+		msg.setType(Message.Type.headline);
+		msg.setSubject(imCrmNotice.getNoticeSubject());
+		msg.setBody(imCrmNotice.getNoticeId());
+		msg.setFrom(new JID(imCrmNotice.getSender()+"@"+HixinUtils.getDomain()));
+		msg.setID(imCrmNotice.getNoticeId());
+		PacketExtension pkg=new PacketExtension("notice", "notice:extension:type");
+		pkg.getElement().addElement("type").setText(imCrmNotice.getNoticeType());
+		msg.addExtension(pkg);
+	    if(toUserNames!=null && toUserNames.length>0){
+			for(String username:toUserNames){
+				if(StringUtils.isNotEmpty(username)){
+					ThreadPool.addWork(new SendBoardcastTask(username,msg,forceNotStore));
+				}
+			}
+	    }else{
+	    	ThreadPool.addWork(new SendBoardcastTask(msg));
+	    }
+	}
+}
+	
