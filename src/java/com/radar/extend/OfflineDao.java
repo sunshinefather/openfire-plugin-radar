@@ -3,18 +3,14 @@ package com.radar.extend;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
 import org.jivesoftware.database.DbConnectionManager;
 import org.jivesoftware.database.SequenceManager;
 import org.jivesoftware.openfire.user.UserManager;
 import org.jivesoftware.util.JiveConstants;
-import org.jivesoftware.util.cache.Cache;
-import org.jivesoftware.util.cache.CacheFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmpp.packet.JID;
 import org.xmpp.packet.Message;
-
 import com.radar.common.SqlConstant;
 /**
  * 离线消息处理
@@ -32,11 +28,6 @@ public class OfflineDao
     private static final String QUERY_OFFINE_SIZE =
             "SELECT messageSize FROM ofOffline WHERE messageID=?";
     
-    private Cache<String, Integer> sizeCache;
-    
-    public OfflineDao() {
-        sizeCache = CacheFactory.createCache("Offline Message Size");
-    }
     /**
      * 添加消息内容到离线表
      * @param message 内容
@@ -46,6 +37,9 @@ public class OfflineDao
             return;
         }
         JID recipient = message.getTo();
+        if(recipient==null){
+        	return;
+        }
         String username = recipient.getNode();
 
         long messageID = SequenceManager.nextID(JiveConstants.OFFLINE);
@@ -74,13 +68,6 @@ public class OfflineDao
         }
         finally {
             DbConnectionManager.closeConnection(pstmt, con);
-        }
-
-        // Update the cached size if it exists.
-        if (sizeCache.containsKey(username)) {
-            int size = sizeCache.get(username);
-            size += msgXML.length();
-            sizeCache.put(username, size);
         }
     }
     /**
@@ -124,7 +111,6 @@ public class OfflineDao
         if (!UserManager.getInstance().isRegisteredUser(username)) {
             return;
         }
-        int messageSize = this.getMessageSize(messageId);
         Connection con = null;
         PreparedStatement pstmt = null;
         try {
@@ -139,13 +125,6 @@ public class OfflineDao
             Log.error("删除离线消息{"+messageId+"},{"+username+"}");
         }finally {
             DbConnectionManager.closeConnection(pstmt, con);
-        }
-
-        // Update the cached size if it exists.
-        if (sizeCache.containsKey(username)) {
-            int size = sizeCache.get(username);
-            size -= messageSize;
-            sizeCache.put(username, size);
         }
     }
     
