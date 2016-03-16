@@ -1,8 +1,11 @@
 package com.radar.broadcast;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmpp.packet.IQ;
 import org.xmpp.packet.Message;
+
 import com.radar.ios.PushMessageTask;
 import com.radar.pool.QueueTask;
 import com.radar.pool.ThreadPool;
@@ -20,6 +23,7 @@ public class SendBoardcastTask implements QueueTask {
     private boolean forceNotStore;
     private IQ iq;
     private boolean isIQ = false;
+    private static final Logger log = LoggerFactory.getLogger(SendBoardcastTask.class);
     
     public SendBoardcastTask (String userName,Message message,Boolean... forceNotStore){
     	this.userName = userName;
@@ -52,9 +56,11 @@ public class SendBoardcastTask implements QueueTask {
 		}else{
 			
 			if(StringUtils.isEmpty(userName)){
+				log.info("xmpp通知推送-广播:"+message.toXML());
 				BoardcastEmitter.sendBoardCastServer(message);
 			}else{
 				message.setTo(userName +"@"+HixinUtils.getDomain());
+				log.info("xmpp通知推送-指定人:"+message.toXML());
 				if(forceNotStore){
 					BoardcastEmitter.sendBoardCastServer(userName, message);
 				}else{

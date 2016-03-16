@@ -9,10 +9,12 @@ import org.slf4j.LoggerFactory;
 import org.xmpp.packet.IQ;
 
 import com.radar.action.DeviceToken;
-
 /**
  * 保存IOS DeviceToken 值
- *
+ * @ClassName:  AddDeviceTokenHandler   
+ * @Description:TODO   
+ * @author: sunshine  
+ * @date:   2016年3月16日 上午10:10:40
  */
 public class AddDeviceTokenHandler extends IQHandler{
 

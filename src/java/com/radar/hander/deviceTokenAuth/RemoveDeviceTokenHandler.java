@@ -8,10 +8,12 @@ import org.slf4j.LoggerFactory;
 import org.xmpp.packet.IQ;
 
 import com.radar.action.DeviceToken;
-
 /**
  * 正常退出时，删除IOS DeviceToken 值
- *
+ * @ClassName:  RemoveDeviceTokenHandler   
+ * @Description:TODO   
+ * @author: sunshine  
+ * @date:   2016年3月16日 上午10:10:28
  */
 public class RemoveDeviceTokenHandler extends IQHandler {
 	
