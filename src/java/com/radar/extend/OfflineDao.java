@@ -13,21 +13,25 @@ import org.xmpp.packet.JID;
 import org.xmpp.packet.Message;
 import com.radar.common.SqlConstant;
 /**
- * 离线消息处理
- *
+ * 
+ * @ClassName:  OfflineDao   
+ * @Description:TODO   
+ * @author: sunshine  
+ * @date:   2015年11月30日 下午4:43:27
  */
 public class OfflineDao
 {
     private static final Logger Log = LoggerFactory.getLogger(OfflineDao.class);
-    private static final String INSERT_OFFLINE =
-            "INSERT INTO ofOffline (username, messageID, creationDate, messageSize, stanza) " +
-            "VALUES (?, ?, ?, ?, ?)";
-    private static final String DELETE_OFFLINE_MESSAGE =
-            "DELETE FROM ofOffline WHERE username=? AND messageID=?";
+    private static final String INSERT_OFFLINE ="INSERT INTO ofOffline (username, messageID, creationDate, messageSize, stanza) VALUES (?, ?, ?, ?, ?)";
+    private static final String DELETE_OFFLINE_MESSAGE ="DELETE FROM ofOffline WHERE username=? AND messageID=?";
     
-    private static final String QUERY_OFFINE_SIZE =
-            "SELECT messageSize FROM ofOffline WHERE messageID=?";
+    private static final String QUERY_OFFINE_SIZE ="SELECT messageSize FROM ofOffline WHERE messageID=?";
+    private static OfflineDao offlineDao =new OfflineDao();
+    private OfflineDao(){};
     
+    public static  OfflineDao getInstance(){
+    	return offlineDao;
+    };
     /**
      * 添加消息内容到离线表
      * @param message 内容
@@ -45,7 +49,7 @@ public class OfflineDao
         long messageID = SequenceManager.nextID(JiveConstants.OFFLINE);
         
         message.setID(String.valueOf(messageID));
-        // Get the message in XML format.
+
         String msgXML = message.getElement().asXML();
 
         Connection con = null;
@@ -60,7 +64,7 @@ public class OfflineDao
             pstmt.setString(5, msgXML);
             int result = pstmt.executeUpdate();
             if(result<1)
-                Log.info("保存离线消息内容失败："+message.toXML());
+                Log.error("保存离线消息内容失败："+message.toXML());
         }
 
         catch (Exception e) {

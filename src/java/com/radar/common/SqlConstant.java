@@ -24,7 +24,7 @@ public class SqlConstant
     public static final String LOAD_USER = "SELECT encryptedPassword,creationDate, modificationDate FROM ofUser WHERE username=?";
     
     /**
-     * 根据用户名删除离线消息
+     * 根据用户名删除离线群消息
      */
     
     public static final String DELETE_OFFLIEMESSAGE = "DELETE FROM ofOffline WHERE username=? AND stanza LIKE '<message type=\"groupchat\"%' ORDER BY creationDate LIMIT 300";

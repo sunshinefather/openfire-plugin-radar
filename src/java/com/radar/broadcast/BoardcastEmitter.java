@@ -1,9 +1,7 @@
 package com.radar.broadcast;
 
 import java.util.Collection;
-
 import org.apache.commons.lang.StringUtils;
-import org.jivesoftware.openfire.OfflineMessageStore;
 import org.jivesoftware.openfire.XMPPServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +9,7 @@ import org.xmpp.packet.IQ;
 import org.xmpp.packet.Message;
 import org.xmpp.packet.Packet;
 import org.xmpp.packet.Presence;
-
+import com.radar.extend.OfflineDao;
 import com.radar.utils.HixinUtils;
 /**
  * 广播消息发射器
@@ -22,7 +20,7 @@ import com.radar.utils.HixinUtils;
  */
 public class BoardcastEmitter
 {    
-	private static OfflineMessageStore messageStore = OfflineMessageStore.getInstance();
+	private static OfflineDao messageStore = OfflineDao.getInstance();
     private static final Logger log = LoggerFactory.getLogger(BoardcastEmitter.class);
     /**
      * 发送Message定向广播消息, 接收人不在线走离线

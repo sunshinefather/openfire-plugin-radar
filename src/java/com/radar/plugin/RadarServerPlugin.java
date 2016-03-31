@@ -48,7 +48,6 @@ import com.radar.hander.pushconfig.PushConfigStatusIQHander;
 import com.radar.hander.pushconfig.PushConfigSwitchIQHander;
 import com.radar.interceptor.IQInterceptor;
 import com.radar.interceptor.SearchEngineInterceptor;
-import com.radar.ios.PushMessage;
 import com.radar.listener.PropertyListenerImpl;
 import com.radar.pool.ThreadPool;
 import com.radar.utils.HixinUtils;
@@ -232,11 +231,6 @@ public class RadarServerPlugin implements Plugin
             listIQ=null;
         }
         ThreadPool.shutdown();  //销毁线程池
-        /**
-         * 销毁ios推送线程池
-         */
-        PushMessage.service299.shutdown();
-        PushMessage.service99.shutdown();
     }
 
     //get set方法
