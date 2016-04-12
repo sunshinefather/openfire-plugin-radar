@@ -52,8 +52,9 @@ public class PushMessage {
 	 * 环境配置
 	 */
 	private static String KSPASSWORD="1234";// 证书密码
-	private static String SERVERHOST="gateway.push.apple.com";//正式网关;测试网关:gateway.sandbox.push.apple.com
+	private static String SERVERHOST="gateway.push.apple.com";//正式网关gateway.push.apple.com;测试网关:gateway.sandbox.push.apple.com
 	private static String CERTIFICATE_URL=PushMessage.class.getResource("mom_push_product.p12").getPath();//299证书名称
+	//private static String CERTIFICATE_URL=PushMessage.class.getResource("mom_push_product_160401.p12").getPath();//内网调试
 	private static String CERTIFICATE_URL2=PushMessage.class.getResource("mom_push_product_99.p12").getPath();//99证书名称
 	
 	public static IApnsService service299;

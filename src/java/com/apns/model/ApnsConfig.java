@@ -2,6 +2,9 @@ package com.apns.model;
 
 import java.io.InputStream;
 public class ApnsConfig {
+	/**
+	 * 应用名称,当发送给不同App的时候需要配置 
+	 */
 	private String name;
 	
 	/**
@@ -28,13 +31,13 @@ public class ApnsConfig {
 	/**
 	 * 发送失败堆积池
 	 */
-	private int cacheLength = 100;
+	private int cacheLength = 1000;
 	/**
 	 *发送错误重发次数少
 	 */
 	private int retries = 3;
 	
-	private int intervalTime = 30 * 60 * 1000; // 30 minutes
+	private int intervalTime = 10 * 60 * 1000; // 10 minutes
 	
 	// socket 超时时间
 	private int timeout = 10 * 1000; // 10 seconds
@@ -46,7 +49,7 @@ public class ApnsConfig {
 	public void setKeyStore(String keystore) {
 		InputStream is = ApnsConfig.class.getClassLoader().getResourceAsStream(keystore);
 		if (is == null) {
-			throw new IllegalArgumentException("Keystore file not found. " + keystore);
+			throw new IllegalArgumentException("@sunshine:正书文件不存在" + keystore);
 		}
 		setKeyStore(is);
 	}

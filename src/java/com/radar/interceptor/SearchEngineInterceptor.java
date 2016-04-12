@@ -11,7 +11,6 @@ import org.xmpp.packet.JID;
 import org.xmpp.packet.Message;
 import org.xmpp.packet.Packet;
 import org.xmpp.packet.PacketExtension;
-
 import com.radar.action.MessageLogTask;
 import com.radar.bean.MsgInfoEnttity.Type;
 import com.radar.broadcast.group.SendGroupMessageTask;
@@ -94,11 +93,11 @@ public class SearchEngineInterceptor implements PacketInterceptor {
 		if (message.getType() == Message.Type.chat) { 
 			// 发送文件的时候，不保存发送中的message
 			if (!HixinUtils.isSending(message.getSubject())) {
-				//IOS推送消息
-				ThreadPool.addWork(new PushMessageTask(message.createCopy()));
-
 				//保存聊天记录
 				ThreadPool.addWork(new MessageLogTask(CHAT_TYPE, SearchEngineInterceptor.messageType(message.getSubject()), message.createCopy()));
+				
+				//IOS推送消息
+				ThreadPool.addWork(new PushMessageTask(message.createCopy()));
 			}
 		} 
 		// 群聊天，多人模式
@@ -106,19 +105,13 @@ public class SearchEngineInterceptor implements PacketInterceptor {
 			
 			//群消息分发
 			ThreadPool.addWork(new SendGroupMessageTask(message.createCopy()));
-			try {
-				Thread.sleep(250);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
 			// 发送资源文件的时候，不保存发送中的message
-			if (!HixinUtils.isSending(message.getSubject())) {
+			if (!HixinUtils.isSending(message.getSubject())) {            
+				//保存群聊天记录
+				ThreadPool.addWork(new MessageLogTask(GROUP_TYPE, SearchEngineInterceptor.messageType(message.getSubject()), message.createCopy()));
 				
 				//IOS推送消息
                 ThreadPool.addWork(new PushMessageTask(message.createCopy()));
-                
-				//保存群聊天记录
-				ThreadPool.addWork(new MessageLogTask(GROUP_TYPE, SearchEngineInterceptor.messageType(message.getSubject()), message.createCopy()));
 			}
 		}
 	}
