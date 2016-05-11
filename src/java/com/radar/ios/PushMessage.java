@@ -12,15 +12,18 @@ import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
+
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmpp.packet.JID;
 import org.xmpp.packet.Message;
 import org.xmpp.packet.PacketExtension;
+
 import com.apns.IApnsService;
 import com.apns.impl.ApnsServiceImpl;
 import com.apns.model.ApnsConfig;
@@ -54,7 +57,6 @@ public class PushMessage {
 	private static String KSPASSWORD="1234";// 证书密码
 	private static String SERVERHOST="gateway.push.apple.com";//正式网关gateway.push.apple.com;测试网关:gateway.sandbox.push.apple.com
 	private static String CERTIFICATE_URL=PushMessage.class.getResource("mom_push_product.p12").getPath();//299证书名称
-	//private static String CERTIFICATE_URL=PushMessage.class.getResource("mom_push_product_160401.p12").getPath();//内网调试
 	private static String CERTIFICATE_URL2=PushMessage.class.getResource("mom_push_product_99.p12").getPath();//99证书名称
 	
 	public static IApnsService service299;

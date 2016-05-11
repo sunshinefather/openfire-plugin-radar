@@ -87,11 +87,14 @@ public class ApnsConnectionImpl implements IApnsConnection {
 		try {
 			plBytes = payload.getBytes(CHARSET_ENCODING);
 			if (plBytes.length > PAY_LOAD_MAX_LENGTH) {
-				logger.error("推送消息提长度不能超过512个字符:" + payload);
-				return;
+				logger.error("自动截取前@推送消息长度超过"+PAY_LOAD_MAX_LENGTH+"个字符:" + payload);
+				String alert=notification.getPayload().getAlert();
+				int pct=PAY_LOAD_MAX_LENGTH-(plBytes.length-alert.getBytes(CHARSET_ENCODING).length)/("中".getBytes(CHARSET_ENCODING).length);
+				notification.getPayload().setAlert(alert.substring(0,pct));
+				logger.error("自动截取后@推送消息长度超过"+PAY_LOAD_MAX_LENGTH+"个字符:" + payload);
 			}
 		} catch (UnsupportedEncodingException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("@sunshine:"+e.getMessage(), e);
 			return;
 		}
 		

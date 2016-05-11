@@ -1,5 +1,8 @@
 package com.radar.action;
 
+import java.sql.Date;
+
+import org.apache.commons.httpclient.util.DateUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,7 +68,7 @@ public class MessageLogTask implements QueueTask {
 	 		if(rt){
 	 			log.debug(sendDate + " 聊天记录存入成功：" + sender);
 	 		}else{
-	 			log.error(sendDate+ ":聊天记录保存失败:" + sender);
+	 			log.error(DateUtil.formatDate(new Date(sendDate),"yyyy-MM-dd HH:mm:ss")+ ":聊天记录保存失败:" + sender);
 	 		}
 		 }else{
 			 log.debug("@sunshine 空错误, 发送者:" + sender);

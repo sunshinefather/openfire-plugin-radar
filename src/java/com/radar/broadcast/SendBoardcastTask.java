@@ -56,11 +56,11 @@ public class SendBoardcastTask implements QueueTask {
 		}else{
 			
 			if(StringUtils.isEmpty(userName)){
-				log.info("xmpp通知推送-广播:"+message.toXML());
+				//log.info("xmpp通知推送-广播:"+message.toXML());
 				BoardcastEmitter.sendBoardCastServer(message);
 			}else{
 				message.setTo(userName +"@"+HixinUtils.getDomain());
-				log.info("xmpp通知推送-指定人:"+message.toXML());
+				//log.info("xmpp通知推送-指定人:"+message.toXML());
 				if(forceNotStore){
 					BoardcastEmitter.sendBoardCastServer(userName, message);
 				}else{

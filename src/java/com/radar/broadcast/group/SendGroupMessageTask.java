@@ -73,7 +73,6 @@ public class SendGroupMessageTask implements QueueTask{
 	        groupMessage.setTo(userName+"@"+HixinUtils.getDomain());
 	        groupMessage.setID(groupMessage.getID());
 	        XMPPServer.getInstance().getSessionManager().userBroadcast(userName, groupMessage);
-	        log.info("xmpp群消息推送:"+groupMessage.toXML());
         } catch (Exception e)
         {
         	log.error("消息推送失败:" +groupMessage.toXML()+e.getMessage());
