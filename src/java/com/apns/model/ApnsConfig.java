@@ -33,7 +33,7 @@ public class ApnsConfig {
 	 */
 	private int cacheLength = 1000;
 	/**
-	 *发送错误重发次数少
+	 *发送错误重试次数
 	 */
 	private int retries = 3;
 	

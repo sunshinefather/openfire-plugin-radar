@@ -7,17 +7,36 @@ import com.apns.model.Payload;
 import com.apns.model.PushNotification;
 
 public interface IApnsService {
-	/**
-	 * @param token  deviceToken
-	 * @param payload
-	 */
+    /**
+     * 推送通知
+     * @Title: sendNotification
+     * @Description: TODO  
+     * @param: @param token
+     * @param: @param payload      
+     * @return: void
+     * @author: sunshine  
+     * @throws
+     */
 	public void sendNotification(String token, Payload payload);
-	/**
-	 * If you want to specify the ID of a notification, use this method
-	 * @param notification
-	 */
+    /**
+     * 推送通知(指定id)
+     * @Title: sendNotification
+     * @Description: TODO  
+     * @param: @param notification      
+     * @return: void
+     * @author: sunshine  
+     * @throws
+     */
 	public void sendNotification(PushNotification notification);
-	
+	/**
+	 * 关闭
+	 * @Title: shutdown
+	 * @Description: TODO  
+	 * @param:       
+	 * @return: void
+	 * @author: sunshine  
+	 * @throws
+	 */
 	public void shutdown();
 	
 	/**
