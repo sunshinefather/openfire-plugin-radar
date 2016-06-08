@@ -3,15 +3,16 @@ package com.radar.ios;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmpp.packet.JID;
 import org.xmpp.packet.Message;
 import org.xmpp.packet.PacketExtension;
+
 import com.apns.IApnsService;
 import com.apns.impl.ApnsServiceImpl;
 import com.apns.model.ApnsConfig;
@@ -88,12 +89,6 @@ public class PushMessage {
 		param.addParam("dataType",1);
 		param.addParam("dataId",message.getID());
 		push(param, deviceToken);
-		List<Feedback> listfb =  service99.getFeedbacks();
-		if(listfb!=null && !listfb.isEmpty()){
-			for(Feedback fb: listfb){
-				log.info(fb.getTime()+" @sunshine:ios端卸载设备token("+DeviceToken.getUserNameByToken(fb.getToken())+"="+fb.getToken()+")");
-			}
-		}
 	}
 	public static void pushNoticeMessage(final Message message) throws Exception{
 		final String msgType;
@@ -140,7 +135,9 @@ public class PushMessage {
 				i++;
 			}
 			//log.info("@sunshine:apsn实际推送通知"+i+"条,"+message.getSubject());
-			clearInvalidToken();
+			if(null==jid){
+				clearInvalidToken();
+			}
 		}
 	}
 	
@@ -252,11 +249,7 @@ public class PushMessage {
 			List<Feedback>  list = service99.getFeedbacks();
 			if(list!=null && list.isEmpty()){
 				for(Feedback fb:list){
-					try {
-						IosTokenDao.getInstance().delUserByToken(fb.getToken());
-					} catch (SQLException e) {
-						e.printStackTrace();
-					}
+					IosTokenDao.getInstance().delUserByToken(fb.getToken());
 				}
 			}
 		}

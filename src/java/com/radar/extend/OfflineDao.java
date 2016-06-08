@@ -41,7 +41,6 @@ public class OfflineDao
     private static OfflineDao offlineDao =new OfflineDao();
     
     private OfflineDao(){
-    	throw new IllegalAccessError("非法访问");
     };
     
     public static  OfflineDao getInstance(){
