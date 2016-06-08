@@ -46,7 +46,6 @@ public class IosTokenDao {
     private static IosTokenDao iostokenDao =new IosTokenDao();
     
     private IosTokenDao(){
-    	throw new IllegalAccessError("非法访问");
     };
     
     public static IosTokenDao getInstance(){
