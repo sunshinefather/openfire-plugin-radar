@@ -38,11 +38,12 @@ public class NoticeAction {
 				if(StringUtils.isNotEmpty(clent.send(imCrmNotice).getNoticeId())){
 					tag=true;
 				}else{
-					log.info("保存通知失败:imcrm");
+					log.error("保存通知失败:imcrm");
 					tag=false;
 				}
 			} catch (Exception e) {
-				log.info("保存通知异常:"+e.getMessage());
+				e.printStackTrace();
+				log.error("保存通知异常:"+e.getMessage());
 				tag=false;
 				e.printStackTrace();
 			}finally{

@@ -16,7 +16,8 @@ public class ApnsResender {
 		IApnsService service = ApnsServiceImpl.getCachedService(name);
 		if (service != null) {
 			while (!queue.isEmpty()) {
-				service.sendNotification(queue.poll());
+				PushNotification pt = queue.poll();
+				service.sendNotification(pt);
 			}
 		} else {
 			logger.error("Cached service is null. name: " + name);

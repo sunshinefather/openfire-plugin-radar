@@ -22,7 +22,7 @@
 	<classpathentry kind="lib" path="lib/server/jasper-el.jar"/>
 	<classpathentry kind="lib" path="lib/server/jasper-runtime.jar"/>
 	<classpathentry kind="lib" path="lib/mysql.jar"/>
-	<classpathentry kind="lib" path="lib/openfire.jar" sourcepath="/openfire"/>
+	<classpathentry kind="lib" path="lib/openfire.jar" sourcepath="/openfire_4.0.2"/>
 	<classpathentry kind="lib" path="lib/include/crm-api-0.0.4.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/openfire_4.0.2"/>

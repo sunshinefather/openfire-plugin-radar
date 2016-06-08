@@ -10,7 +10,7 @@ public class Payload {
 	private Map<String, Object> params;
 	private String alert;
 	private int badge=1;
-	private String sound = "default";
+	private String sound = "default.caf";
 	private Integer contentAvailable;
 	
 	private String alertBody;

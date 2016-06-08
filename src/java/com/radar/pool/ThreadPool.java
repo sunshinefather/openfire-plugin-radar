@@ -17,7 +17,7 @@ public class ThreadPool
 		if (executorService == null) {
 			synchronized (ThreadPool.class) {
 				if (executorService == null) {
-					executorService = Executors.newFixedThreadPool(256);
+					executorService = Executors.newFixedThreadPool(128);
 				}
 			}
 		}

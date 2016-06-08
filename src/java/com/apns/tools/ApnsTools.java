@@ -56,8 +56,9 @@ public class ApnsTools {
 	}
 	
 	/**
+	 * 十六进制转换到十进制
 	 * @param hex
-	 * @return 0---15
+	 * @return 0-15
 	 */
 	private static int hexCharIndex(char hex) {
 		int index = 0;

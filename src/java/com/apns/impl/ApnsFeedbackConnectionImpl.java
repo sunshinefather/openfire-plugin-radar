@@ -11,7 +11,7 @@ import com.apns.model.ApnsConfig;
 import com.apns.model.Feedback;
 import com.apns.tools.ApnsTools;
 public class ApnsFeedbackConnectionImpl implements IApnsFeedbackConnection {
-	private static int READ_TIMEOUT = 10000; // 10s
+	private static int READ_TIMEOUT = 10*1000; // 10s
 	private static int DATA_LENGTH = 38;
 	private ApnsConfig config;
 	private SocketFactory factory;

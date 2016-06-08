@@ -34,8 +34,13 @@ public class SendBoardcastTask implements QueueTask {
     		this.forceNotStore=false;
     	}
     }
-    public SendBoardcastTask (Message message){
+    public SendBoardcastTask (Message message,Boolean... forceNotStore){
     	this.message = message;
+    	if(forceNotStore!=null && forceNotStore.length==1){
+    		this.forceNotStore=forceNotStore[0];
+    	}else{
+    		this.forceNotStore=false;
+    	}
     }
     
     public SendBoardcastTask (String userName,IQ iq,Boolean... forceNotStore){

@@ -26,21 +26,24 @@ public class ApnsConfig {
 	/**
 	 *连接池
 	 */
-	private int poolSize = 5;
+	private int poolSize = 8;
     
 	/**
-	 * 发送失败堆积池
+	 * 发送堆积池
 	 */
-	private int cacheLength = 1000;
+	private int cacheLength = 500;
+	
 	/**
 	 *发送错误重试次数
 	 */
-	private int retries = 3;
-	
+	private int retries = 4;
+	/**
+	 * 如果两条通知的间隔时间超过10分钟，就重新建立连接
+	 */
 	private int intervalTime = 10 * 60 * 1000; // 10 minutes
 	
-	// socket 超时时间
-	private int timeout = 10 * 1000; // 10 seconds
+	// socket read 超时时间 0秒表示不超时
+	private int timeout = 0 * 1000; // 0 seconds
 	
 	public InputStream getKeyStore() {
 		return keyStore;

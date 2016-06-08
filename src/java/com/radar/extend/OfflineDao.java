@@ -3,6 +3,7 @@ package com.radar.extend;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+
 import org.jivesoftware.database.DbConnectionManager;
 import org.jivesoftware.database.SequenceManager;
 import org.jivesoftware.openfire.user.UserManager;
@@ -11,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmpp.packet.JID;
 import org.xmpp.packet.Message;
-import com.radar.common.SqlConstant;
 /**
  * 
  * @ClassName:  OfflineDao   
@@ -22,12 +22,27 @@ import com.radar.common.SqlConstant;
 public class OfflineDao
 {
     private static final Logger Log = LoggerFactory.getLogger(OfflineDao.class);
-    private static final String INSERT_OFFLINE ="INSERT INTO ofOffline (username, messageID, creationDate, messageSize, stanza) VALUES (?, ?, ?, ?, ?)";
-    private static final String DELETE_OFFLINE_MESSAGE ="DELETE FROM ofOffline WHERE username=? AND messageID=?";
     
-    private static final String QUERY_OFFINE_SIZE ="SELECT messageSize FROM ofOffline WHERE messageID=?";
+    /**插入离线消息*/
+    public static final String INSERT_OFFLINE ="INSERT INTO ofOffline (username, messageID, creationDate, messageSize, stanza) VALUES (?, ?, ?, ?, ?)";
+   
+    /**根据用户名和消息id删除离线消息*/
+    public static final String DELETE_OFFLINE_MESSAGE ="DELETE FROM ofOffline WHERE username=? AND messageID=?";
+    
+    /**根据消息id查询消息*/
+    public static final String QUERY_OFFINE_SIZE ="SELECT messageSize FROM ofOffline WHERE messageID=?";
+    
+    /**根据用户名删除离线群消息 */
+    public static final String DELETE_OFFLIEMESSAGE = "DELETE FROM ofOffline WHERE username=? AND stanza LIKE '<message type=\"groupchat\"%' ORDER BY creationDate LIMIT 300";
+    
+    /**统计用户群离线消息数量 */
+    public static final String QUERY_OFFLIEMESSAGE = "SELECT COUNT(1) FROM ofOffline WHERE username=? AND stanza LIKE '<message type=\"groupchat\"%'";
+    
     private static OfflineDao offlineDao =new OfflineDao();
-    private OfflineDao(){};
+    
+    private OfflineDao(){
+    	throw new IllegalAccessError("非法访问");
+    };
     
     public static  OfflineDao getInstance(){
     	return offlineDao;
@@ -147,7 +162,7 @@ public class OfflineDao
         ResultSet rs = null;
         try {
             con = DbConnectionManager.getConnection();
-            pstmt = con.prepareStatement(SqlConstant.QUERY_OFFLIEMESSAGE);
+            pstmt = con.prepareStatement(QUERY_OFFLIEMESSAGE);
             pstmt.setString(1, userName);
             rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -175,7 +190,7 @@ public class OfflineDao
         PreparedStatement pstmt = null;
         try {
             con = DbConnectionManager.getConnection();
-            pstmt = con.prepareStatement(SqlConstant.DELETE_OFFLIEMESSAGE);
+            pstmt = con.prepareStatement(DELETE_OFFLIEMESSAGE);
             pstmt.setString(1, userName);
             int result = pstmt.executeUpdate();
             if(result>0){

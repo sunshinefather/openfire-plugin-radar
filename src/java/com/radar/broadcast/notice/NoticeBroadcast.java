@@ -35,7 +35,7 @@ public class NoticeBroadcast {
 				}
 			}
 	    }else{
-	    	ThreadPool.addWork(new SendBoardcastTask(msg));
+	    	ThreadPool.addWork(new SendBoardcastTask(msg,forceNotStore));
 	    }
 	}
 }

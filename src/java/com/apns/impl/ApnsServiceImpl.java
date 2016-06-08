@@ -63,7 +63,7 @@ public class ApnsServiceImpl implements IApnsService {
 					conn = getConnection();
 					conn.sendNotification(notification);
 				} catch (Exception e) {
-					logger.error(e.getMessage(), e);
+					logger.error("@sunshine:apns推送网络异常 "+e.getMessage(), e);
 				} finally {
 					if (conn != null) {
 						connPool.returnConn(conn);
@@ -75,7 +75,7 @@ public class ApnsServiceImpl implements IApnsService {
 	private IApnsConnection getConnection() {
 		IApnsConnection conn = connPool.borrowConn();
 		if (conn == null) {
-			throw new RuntimeException("Can't get apns connection");
+			throw new RuntimeException("获取连接失败");
 		}
 		return conn;
 	}
@@ -86,13 +86,15 @@ public class ApnsServiceImpl implements IApnsService {
 			throw new IllegalArgumentException("证书或密码不能为空！");
 		}
 		if (config.getPoolSize() <= 0 || config.getRetries() <= 0 || config.getCacheLength() <= 0) {
-			throw new IllegalArgumentException("poolSize,retry, cacheLength must be positive");
+			throw new IllegalArgumentException("apns推送参数配置错误");
 		}
 	}
 	private static Map<String, IApnsService> serviceCacheMap = new HashMap<String, IApnsService>(3);
+	
 	public static IApnsService getCachedService(String name) {
 		return serviceCacheMap.get(name);
 	}
+	
 	public static IApnsService createInstance(ApnsConfig config) {
 		checkConfig(config);
 		String name = config.getName();
@@ -123,5 +125,10 @@ public class ApnsServiceImpl implements IApnsService {
 	@Override
 	public List<Feedback> getFeedbacks() {
 		return feedbackConn.getFeedbacks();
+	}
+	
+	@Override
+	public int remainConnPoolSize() {
+      return connPool.currentConnnectionPoolSize();
 	}
 }

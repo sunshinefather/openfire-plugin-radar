@@ -33,6 +33,7 @@ public class SendGroupMessageTask implements QueueTask{
 		 try
 	        {
 			 List<String> item = queryGroupMember(message.getTo().getNode());
+                log.info("@sunshine:xmpp应推送群聊"+item.size()+"条数据,"+message.getSubject());
 	            for (String userName : item)
 	            {
 	                if (!message.getFrom().getNode().equalsIgnoreCase(userName))
@@ -73,9 +74,11 @@ public class SendGroupMessageTask implements QueueTask{
 	        groupMessage.setTo(userName+"@"+HixinUtils.getDomain());
 	        groupMessage.setID(groupMessage.getID());
 	        XMPPServer.getInstance().getSessionManager().userBroadcast(userName, groupMessage);
+	        log.info("@sunshine:推送群聊到"+userName+"成功,"+groupMessage.getSubject());
         } catch (Exception e)
         {
-        	log.error("消息推送失败:" +groupMessage.toXML()+e.getMessage());
+        	 log.info("@sunshine:推送群聊到"+userName+"失败,"+groupMessage.getSubject());
+        	 log.info("@sunshine:推送群聊失败xml:" +groupMessage.toXML()+"\r\n"+e.getMessage());
         }
     }
 }

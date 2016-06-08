@@ -47,6 +47,14 @@ public class ApnsConnectionPool implements Closeable {
 		}
 	}
 	
+	public int currentConnnectionPoolSize() {
+		int count=0;
+		if(connQueue!=null){
+			count=connQueue.size();
+		}
+      return count;
+	}
+	
 	@Override
 	public void close() {
 		while (!connQueue.isEmpty()) {

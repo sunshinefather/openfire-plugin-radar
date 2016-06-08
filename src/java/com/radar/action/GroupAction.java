@@ -240,6 +240,7 @@ public class GroupAction {
         try{
         	return getGroupRoomById(groupUid).getGroupName();
         }catch(Exception e){
+        	e.printStackTrace();
            System.out.println("查询群名称失败!");
         }
 		return groupUid;

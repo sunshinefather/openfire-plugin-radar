@@ -1,90 +1,63 @@
 package com.radar.ios;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.Socket;
-import java.security.KeyStore;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
-
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmpp.packet.JID;
 import org.xmpp.packet.Message;
 import org.xmpp.packet.PacketExtension;
-
 import com.apns.IApnsService;
 import com.apns.impl.ApnsServiceImpl;
 import com.apns.model.ApnsConfig;
+import com.apns.model.Feedback;
 import com.apns.model.Payload;
 import com.radar.action.ContactAction;
 import com.radar.action.DeviceToken;
 import com.radar.action.GroupAction;
 import com.radar.action.PushConfigAction;
+import com.radar.extend.IosTokenDao;
 import com.radar.pool.QueueTask;
 import com.radar.pool.ThreadPool;
 import com.zyt.web.after.push.remote.ImCrmPushConfig;
 
 /**
  * IOS设备推送消息
- * 分为1对1推送和群聊推送
+ * 分为1对1推送,群聊推送和通知推送
  * @ClassName:  PushMessage   
  * @Description:TODO   
  * @author: sunshine  
  * @date:   2015年6月30日 上午10:14:27
  */
 public class PushMessage {
-	private static final int SERVERPORT = 2195;// 服务接口
-	private static final String KSTYPE = "PKCS12";
-	private static final Pattern pattern = Pattern.compile("[ -]");
-	private static final String KSALGORITHM = "SunX509";
+	
 	private static final Logger log = LoggerFactory.getLogger(PushMessage.class);
 
-	/**
-	 * 环境配置
-	 */
+	/** start 环境配置  */
 	private static String KSPASSWORD="1234";// 证书密码
-	private static String SERVERHOST="gateway.push.apple.com";//正式网关gateway.push.apple.com;测试网关:gateway.sandbox.push.apple.com
-	private static String CERTIFICATE_URL=PushMessage.class.getResource("mom_push_product.p12").getPath();//299证书名称
-	private static String CERTIFICATE_URL2=PushMessage.class.getResource("mom_push_product_99.p12").getPath();//99证书名称
 	
-	public static IApnsService service299;
+	private static String CERTIFICATE_URL=PushMessage.class.getResource("mom_push_product_99.p12").getPath();//99证书名称
+	/** end 环境配置  */
+	
 	public static IApnsService service99;
+	
 	static{
-		ApnsConfig config299 = new ApnsConfig();
 		ApnsConfig config99 = new ApnsConfig();
 		try {
 			InputStream is = new FileInputStream(CERTIFICATE_URL);
-			config299.setKeyStore(is);
-			config299.setDevEnv(false);
-			config299.setPassword(KSPASSWORD);
-			config299.setPoolSize(10);
-			config299.setName("IOS299");
-			service299= ApnsServiceImpl.createInstance(config299);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		try {
-			InputStream is = new FileInputStream(CERTIFICATE_URL2);
 			config99.setKeyStore(is);
 			config99.setDevEnv(false);
 			config99.setPassword(KSPASSWORD);
-			config99.setPoolSize(10);
+			config99.setPoolSize(8);
 			config99.setName("IOS99");
 			service99= ApnsServiceImpl.createInstance(config99);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			log.error("@sunshine:启动apns推送池失败 "+e.getMessage(),e);
 		}
 	}
     /**
@@ -108,23 +81,19 @@ public class PushMessage {
         if(StringUtils.isEmpty(deviceToken) || deviceToken.length()<32){
         	return;
         }
-		// 获取用户名称
 		String sendUserName = ContactAction.queryNickeName(sendUser);
-		/**
-		JSONObject param = new JSONObject();
-		param.put("alert", alertMessage(message.getSubject(), sendUserName + "：", message.getBody()));
-		param.put("sound", "default");
-		param.put("badge",1);
-		param.put("senderId",sendUser);
-		param.put("dataType",1);//单聊
-		param.put("dataId",message.getID());
-		*/
 		Payload param=new Payload();
-		param.setAlert(alertMessage(message.getSubject(), sendUserName + "：", message.getBody()));
+		param.setAlert(alertMessage(message.getSubject(), sendUserName + ":", message.getBody()));
 		param.addParam("senderId",sendUser);
 		param.addParam("dataType",1);
 		param.addParam("dataId",message.getID());
 		push(param, deviceToken);
+		List<Feedback> listfb =  service99.getFeedbacks();
+		if(listfb!=null && !listfb.isEmpty()){
+			for(Feedback fb: listfb){
+				log.info(fb.getTime()+" @sunshine:ios端卸载设备token("+DeviceToken.getUserNameByToken(fb.getToken())+"="+fb.getToken()+")");
+			}
+		}
 	}
 	public static void pushNoticeMessage(final Message message) throws Exception{
 		final String msgType;
@@ -139,13 +108,13 @@ public class PushMessage {
 				return;
 			}
 			JID jid=message.getTo();
-			if(null==jid){
+			if(null==jid){//全体推送
 				sendUserName="";
 				List<String> _list=DeviceToken.getAllDeviceTokens();
 				if(_list!=null && _list.size()>0){
 					list=_list;
 				}
-			}else{
+			}else{//单个推送
 				sendUserName="";
 				String deviceToken=DeviceToken.get(jid.getNode());
 				if(StringUtils.isEmpty(deviceToken) || deviceToken.length()<32){
@@ -154,20 +123,12 @@ public class PushMessage {
 				list.add(deviceToken);
 				
 			}
+			//log.info("@sunshine:apns应推送通知"+list.size()+"条,"+message.getSubject());
+			int i=0;
 			for(final String str:list){
 				ThreadPool.addWork(new QueueTask() {
 					@Override
 					public void executeTask() throws Exception {
-						/**
-						JSONObject param = new JSONObject();
-						//param.put("alert", alertMessage(message.getSubject(), sendUserName + "：", message.getSubject()));
-						param.put("alert", alertMessage(message.getSubject(),"", message.getSubject()));
-						param.put("sound", "default");
-						param.put("badge",1);
-						param.put("senderId",message.getFrom().getNode());
-						param.put("dataType",msgType);
-						param.put("dataId",message.getBody());
-						*/
 						Payload param=new Payload();
 						param.setAlert(alertMessage(message.getSubject(), sendUserName, message.getSubject()));
 						param.addParam("senderId",message.getFrom().getNode());
@@ -176,7 +137,10 @@ public class PushMessage {
 						push(param, str);
 					}
 				});
+				i++;
 			}
+			//log.info("@sunshine:apsn实际推送通知"+i+"条,"+message.getSubject());
+			clearInvalidToken();
 		}
 	}
 	
@@ -193,19 +157,9 @@ public class PushMessage {
 	public static void pushGroupChatMessage(Message message) throws Exception {
 		String groupUid = message.getTo().getNode();
 		String from = message.getFrom().getNode();
-		// 获取群名称
 		//String groupName = GroupAction.queryGroupName(groupUid);
-        /**
-		JSONObject param = new JSONObject();
-		param.put("alert", alertMessage(message.getSubject(), ContactAction.queryNickeName(from)+"：", message.getBody()));
-		param.put("sound", "default");
-		param.put("badge",1);
-		param.put("senderId",groupUid+"/"+from);
-		param.put("dataType",2);//群聊
-		param.put("dataId",message.getID());
-		*/
 		Payload param=new Payload();
-		param.setAlert(alertMessage(message.getSubject(), ContactAction.queryNickeName(from)+"：", message.getBody()));
+		param.setAlert(alertMessage(message.getSubject(), ContactAction.queryNickeName(from)+":", message.getBody()));
 		param.addParam("senderId",groupUid+"/"+from);
 		param.addParam("dataType",2);//群聊
 		param.addParam("dataId",message.getID());
@@ -217,6 +171,8 @@ public class PushMessage {
 		for(ImCrmPushConfig _imCrmPushConfig :list){
 			listUserName.add(_imCrmPushConfig.getUserName().toLowerCase());
 		}
+		//log.info("@sunshine:apns应推送群聊(包含没有token的和已屏蔽接受推送的)"+itmes.size()+"条,"+message.getBody());
+		int i=0;
 		for (String name : itmes) {
 			String deviceToken=null;
 			if(from.equalsIgnoreCase(name.trim())){
@@ -225,9 +181,12 @@ public class PushMessage {
 				deviceToken = DeviceToken.get(name);
 			}
 			if(StringUtils.isNotEmpty(deviceToken) && !listUserName.contains(name.toLowerCase())){
+				i++;
 				push(param, deviceToken);
 	        }
 		}
+		//log.info("@sunshine:apns实际推送群聊"+i+"条,"+message.getBody());
+		clearInvalidToken();
 	}
 
 	/**
@@ -248,48 +207,7 @@ public class PushMessage {
 	 * @param deviceToken ios设备deviceToken值
 	 */
 	private static void push(Payload param, String deviceToken){
-		service299.sendNotification(deviceToken, param);
 		service99.sendNotification(deviceToken, param);
-		/*
-		JSONObject result = new JSONObject();
-		result.put("aps", param);
-		result.put("cpn", (new JSONObject()).put("t0", System.currentTimeMillis()));
-		byte[] msgByte = makebyte((byte) 1, deviceToken, result.toString(), 10000001);
-			Socket socket=null;
-			try {
-				socket=getSocket();
-				OutputStream outputStream = socket.getOutputStream();
-				outputStream.write(msgByte);
-				outputStream.close();
-				log.debug("ios推送299:"+deviceToken+":"+param.toJSONString());
-			} catch (Exception e) {
-				e.printStackTrace();
-				log.info("IOS推送失败299:"+e.getMessage());
-			}finally{
-				try {
-					socket.close();
-				} catch (IOException e) {
-					log.error("socket299:"+e.getMessage());
-				}
-			}
-		
-		   try {
-			    socket=getSocket2();
-				OutputStream outputStream2 = socket.getOutputStream();
-				outputStream2.write(msgByte);
-				outputStream2.close();
-				log.debug("ios推送99:"+deviceToken+":"+param.toJSONString());
-		    } catch (Exception e) {
-				e.printStackTrace();
-				log.info("IOS推送失败99:"+e.getMessage());
-			}finally{
-				try {
-					socket.close();
-				} catch (IOException e) {
-					log.error("socket99:"+e.getMessage());
-				} 
-			}
-		   */
 	}
 	/**
 	 * 提示消息
@@ -313,87 +231,6 @@ public class PushMessage {
 		
 		return headMessage + message;
 	}
-	
-	/**
-	 * 获取apple推送服务器的socket
-	 * 如果socket为空或者socket已经关闭则重新连接
-	 * @return socket
-	 * @throws Exception
-	 */
-	@Deprecated
-	private static Socket getSocket() throws Exception{
-		
-			InputStream certInput = new FileInputStream(CERTIFICATE_URL);
-			
-			KeyStore keyStore = KeyStore.getInstance(KSTYPE);
-			keyStore.load(certInput, KSPASSWORD.toCharArray());
-			
-			KeyManagerFactory kmf = KeyManagerFactory.getInstance(KSALGORITHM);
-			kmf.init(keyStore, KSPASSWORD.toCharArray());
-			
-			SSLContext sslContext = SSLContext.getInstance("TLS");
-			sslContext.init(kmf.getKeyManagers(), null, null);
-			SSLSocketFactory socketFactory = sslContext.getSocketFactory();
-			Socket socket = socketFactory.createSocket(SERVERHOST, SERVERPORT);
-		    return socket;
-	}	
-	/**
-	 * 组装apns规定的字节数组 使用增强型 *
-	 * @param command
-	 * @param deviceToken
-	 * @param payload
-	 * @return
-	 * @throws IOException
-	 */
-	private static byte[] makebyte(byte command, String deviceToken,String payload, int identifer) {
-		byte[] deviceTokenb = decodeHex(deviceToken);
-		byte[] payloadBytes = null;
-		ByteArrayOutputStream boas = new ByteArrayOutputStream();
-		DataOutputStream dos = new DataOutputStream(boas);
-		try {
-			payloadBytes = payload.getBytes("UTF-8");
-
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			return null;
-		}
-		try {
-			dos.writeByte(command);
-			dos.writeInt(identifer);
-			dos.writeInt(Integer.MAX_VALUE);
-			dos.writeShort(deviceTokenb.length);
-			dos.write(deviceTokenb);
-			dos.writeShort(payloadBytes.length);
-			dos.write(payloadBytes);
-			return boas.toByteArray();
-		} catch (IOException e) {
-			e.printStackTrace();
-			
-			return null;
-		}
-	}
-
-	private static byte[] decodeHex(String deviceToken) {
-		String hex = pattern.matcher(deviceToken).replaceAll("");
-		byte[] bts = new byte[hex.length() / 2];
-		for (int i = 0; i < bts.length; i++) {
-			bts[i] = (byte) (charval(hex.charAt(2 * i)) * 16 + charval(hex
-					.charAt(2 * i + 1)));
-		}
-		return bts;
-	}
-
-	private static int charval(char a) {
-		if ('0' <= a && a <= '9')
-			return (a - '0');
-		else if ('a' <= a && a <= 'f')
-			return (a - 'a') + 10;
-		else if ('A' <= a && a <= 'F')
-			return (a - 'A') + 10;
-		else {
-			throw new RuntimeException("Invalid hex character: " + a);
-		}
-	}
 
 	/**
 	 * 截取消息内容，用于推送显示
@@ -408,5 +245,43 @@ public class PushMessage {
 		}
 		
 		return message;
+	}
+	
+	public static void clearInvalidToken(){
+		if(service99!=null){
+			List<Feedback>  list = service99.getFeedbacks();
+			if(list!=null && list.isEmpty()){
+				for(Feedback fb:list){
+					try {
+						IosTokenDao.getInstance().delUserByToken(fb.getToken());
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+	}
+	public static void main(String[] args) {
+		/**		*/
+		String token = 
+				       "c258538e942bc449bb78d124a5bf98e29d6da93efec48651bcb41d27effccd7a"//黄
+				      + ",fdc8760fd9dc2e17ef338a6c65f8234a8319a8f0781a7f86cbc65111d439c01c"//许
+				      + ",d08e660bf425bfa16be88b564a9b77422e16aaf02022f1cd06226cb2a92e0e2d"//王勇
+				     //+ ",33b25c77e4cb4844d42905f5f624385d7c7cecdad5cf3dc0a7bb167ba282f56b,"
+				      +",f8d4794aa2e7b4c49b2b2dd1baa42fc3c2c2172891670839adc09f5ef9673730"//崔
+		               //+ ",193858a0e2e2d62271088aef80ad8ff6bd3ebc92928a9ff897e53b0e3de6d491"
+		+ ",0019a78ef1e62005b74ae119fbf30ba3869637fff8cc65f01787edad5aca91e3"//李
+		+ ",3eba95fb65a5e2b9f4a6a60b0353531a24cb1da4c38a5aaae1c9228c6ae293d1";//姜
+		Payload payload = new Payload();
+		payload.setAlert("推送测试");
+		payload.setBadge(1);
+		payload.addParam("senderId","cc5d916f1ada4a1b84c1f65a969af804/oeg3pw6hs81z8ht2i1hl7ps5kssi");//12,appts
+		payload.addParam("dataType","2");//12
+		payload.addParam("dataId","5554920f16074f6e9269e4ad3548cd99");
+		String[] tokens = token.split("[,]");
+		for(String tk:tokens){
+			service99.sendNotification(tk, payload);
+		}
+		service99.remainConnPoolSize();//目前线程池中有多少条线程,总线程数-剩余线程数=正在使用的线程数据
 	}
 }

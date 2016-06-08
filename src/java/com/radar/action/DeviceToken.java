@@ -1,11 +1,13 @@
 package com.radar.action;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import com.radar.extend.IosTokenDao;
 
-import com.radar.cache.ICacheService;
-import com.radar.cache.TestCacheService;
 /**
  * IOS设备的deviceToken值的管理：包括deviceToken的保存(更新)、获取、删除
  * @ClassName:  DeviceToken   
@@ -14,14 +16,7 @@ import com.radar.cache.TestCacheService;
  * @date:   2015年2月2日 下午6:17:09
  */
 public class DeviceToken {
-	//username做key，deviceToken做值得集合
-	private static final String DEVICETOKENS_A = "deviceTokens_a";
-	
-	//deviceToken做key，username做值得集合
-	private static final String DEVICETOKENS_B = "deviceTokens_b";
-	
-	private static ICacheService cache = new TestCacheService();
-	
+	 private static final Logger log = LoggerFactory.getLogger(DeviceToken.class);
 	private DeviceToken () {}
 	
 	
@@ -44,23 +39,36 @@ public class DeviceToken {
 		if (value.equals(token) && key.equals(userName)) {
 			//deviceToken不为空的情况下，deviceToken等于当前的值，直接返回
 			return;
-		} else if(StringUtils.isEmpty(token) && StringUtils.isEmpty(userName)){
-			cache.setMap(DEVICETOKENS_A, key, value);
-			cache.setMap(DEVICETOKENS_B, value, key);
-			
+		} else if(StringUtils.isEmpty(token) && StringUtils.isEmpty(userName)){//新加用户
+			try {
+				IosTokenDao.getInstance().saveIosToken(key, value);
+			} catch (SQLException e) {
+				log.error("保存iostoken失败1:"+e.getMessage());
+			}
 			return;
 		}else {
 			//此处保证IOS一个设备对应一个username
 			//如果一个username可以多出登陆测另外计算
-			cache.removeMap(DEVICETOKENS_A, key);
-			cache.removeMap(DEVICETOKENS_A, userName);
-			cache.removeMap(DEVICETOKENS_B, token);
-			cache.removeMap(DEVICETOKENS_B, value);
+			try{
+			IosTokenDao.getInstance().delTokenByUser(key);
+			IosTokenDao.getInstance().delUserByToken(value);
+			if(StringUtils.isNotEmpty(token)){
+				IosTokenDao.getInstance().delUserByToken(token);
+			}
+			if(StringUtils.isNotEmpty(userName)){
+				IosTokenDao.getInstance().delTokenByUser(userName);
+			}
+			}catch(SQLException e){
+				log.error("删除iostoken失败:"+e.getMessage());
+			}
 		}
 		
 		//其他情况下保存deviceToken
-		cache.setMap(DEVICETOKENS_A, key, value);
-		cache.setMap(DEVICETOKENS_B, value, key);
+		try{
+		IosTokenDao.getInstance().saveIosToken(key, value);
+		}catch(SQLException e){
+			log.error("保存iostoken失败2:"+e.getMessage());
+		}
 	}
 	
 	/**
@@ -74,8 +82,14 @@ public class DeviceToken {
 		}
 		
 		key = key.trim().toLowerCase();
-		
-		return cache.get(DEVICETOKENS_A, key, String.class);
+		try{
+			
+		 return IosTokenDao.getInstance().getTokenByUserName(key);
+		 
+		}catch(SQLException e){
+			log.error("更具key获取token失败:"+e.getMessage());
+		}
+		return null;
 	}
 	
 	/**
@@ -88,7 +102,13 @@ public class DeviceToken {
 	 * @throws
 	 */
 	public static List<String> getAllDeviceTokens(){
-		return cache.getMapValue(DEVICETOKENS_A,String.class);
+		List<String> list =new ArrayList<String>();
+		try{
+			 list.addAll(IosTokenDao.getInstance().getAllUser().keySet());
+			}catch(SQLException e){
+				log.error("更具key获取token失败:"+e.getMessage());
+			}
+		return list;
 	}
 	/**
 	 * 获取所有IOS用户设备对应的用户
@@ -100,14 +120,27 @@ public class DeviceToken {
 	 * @throws
 	 */
 	public static List<String> getAllUserNames(){
-		return cache.getMapValue(DEVICETOKENS_B,String.class);
+		List<String> list =new ArrayList<String>();
+		try{
+			 list.addAll(IosTokenDao.getInstance().getAllUser().values());
+			}catch(SQLException e){
+				log.error("根据key获取token失败:"+e.getMessage());
+			}
+		return list;
 	}
 	
-	private static String getUserNameByToken(String token){
+	public static String getUserNameByToken(String token){
 		if(StringUtils.isEmpty(token)){
 			return null;
 		}
-		return cache.get(DEVICETOKENS_B, token, String.class);
+		
+		token = token.trim();
+		try{
+		 return IosTokenDao.getInstance().getUserNameByToken(token);
+		}catch(SQLException e){
+			log.error("根据token获取userName失败:"+e.getMessage());
+		}
+		return null;
 	}
 	
 	/**
@@ -121,10 +154,14 @@ public class DeviceToken {
 		
 		key = key.trim().toLowerCase();
 		String token = get(key);
+		try{
+			
 		if(!StringUtils.isEmpty(token)){
-			cache.removeMap(DEVICETOKENS_B, token);
+			IosTokenDao.getInstance().delUserByToken(token);
 		}
-		
-		cache.removeMap(DEVICETOKENS_A, key);
+		IosTokenDao.getInstance().delTokenByUser(key);
+		}catch(SQLException e){
+			log.error("删除iostoken失败:"+e.getMessage());
+		}
 	}
 }
