@@ -149,13 +149,16 @@ public class ApnsConnectionImpl implements IApnsConnection {
 				}
 				retries++;
 			}
+			if(retries>=maxRetries){
+				logger.error("@sunshine:apns超过推送次数:"+maxRetries+",放弃推送");
+			}
 			if (!isSuccessful) {
 				//System.out.println(connName+String.format("%s Notification send failed. %s", connName, notification));
-				logger.error(String.format("%s Notification send failed. %s", connName, notification));
+				logger.error(String.format("%s  @sunshine:apns推送失败. %s", connName, notification));
 				return;
 			} else {
 				//System.out.println(String.format("%s Send success. count: %s, notificaion: %s", connName,notificaionSentCount.incrementAndGet(), notification));
-				logger.info(String.format("%s Send success. count: %s, notificaion: %s", connName,notificaionSentCount.incrementAndGet(), notification));
+				logger.info(String.format("%s @sunshine:apns推送成功. count: %s, notificaion: %s", connName,notificaionSentCount.incrementAndGet(), notification));
 				
 				notificationCachedQueue.offer(notification);
 				lastSuccessfulTime = System.currentTimeMillis();	
@@ -202,7 +205,7 @@ public class ApnsConnectionImpl implements IApnsConnection {
 				socket=null;
 			}
 		} catch (Exception e) {
-			logger.error("关闭连接异常",e);
+			logger.error("@sunshine:关闭连接异常",e);
 		}
 	}
 	
@@ -239,7 +242,7 @@ public class ApnsConnectionImpl implements IApnsConnection {
 								break;
 							}
 						} catch (Exception e) {
-							logger.error(connName+"@sunshine:apns读取失败",e);
+							logger.error(connName+" @sunshine:apns读取失败",e);
 							break;
 						}
 					}
