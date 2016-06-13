@@ -92,6 +92,7 @@ public class PushMessage {
 		clearInvalidToken();
 	}
 	public static void pushNoticeMessage(final Message message) throws Exception{
+		clearInvalidToken();
 		final String msgType;
 		final String sendUserName;
 		List<String> list=new ArrayList<String>();
@@ -136,7 +137,6 @@ public class PushMessage {
 				i++;
 			}
 			//log.info("@sunshine:apsn实际推送通知"+i+"条,"+message.getSubject());
-			clearInvalidToken();
 		}
 	}
 	
@@ -151,6 +151,7 @@ public class PushMessage {
      * @throws
      */
 	public static void pushGroupChatMessage(Message message) throws Exception {
+		clearInvalidToken();
 		String groupUid = message.getTo().getNode();
 		String from = message.getFrom().getNode();
 		//String groupName = GroupAction.queryGroupName(groupUid);
@@ -182,7 +183,6 @@ public class PushMessage {
 	        }
 		}
 		//log.info("@sunshine:apns实际推送群聊"+i+"条,"+message.getBody());
-		clearInvalidToken();
 	}
 
 	/**
@@ -281,7 +281,7 @@ public class PushMessage {
 			List<Feedback>  list = service99.getFeedbacks();
 			if(list!=null && !list.isEmpty()){
 				for(Feedback fb:list){
-					System.out.println("失效token:"+IosTokenDao.getInstance().delUserByToken(fb.getToken()));
+					System.out.println("失效token:"+fb.getToken());
 				}
 			}
 		}
