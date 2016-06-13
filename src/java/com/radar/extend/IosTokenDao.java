@@ -78,7 +78,7 @@ public class IosTokenDao {
         }
         }catch(Exception e){
         	e.printStackTrace();
-        	log.error("获取所有token失败:"+e.getMessage());
+        	log.error("获取所有token失败",e);
         }finally{
         	DbConnectionManager.closeConnection(rs, pts, conn);
         }
@@ -109,11 +109,10 @@ public class IosTokenDao {
     	 boolean hasNext =  rs.next();
     	 if(hasNext){
 		  userName = rs.getString("userName");
-		 }else{
-			 log.warn("根据token获取用户名为空token为:"+token); 
 		 }
         }catch(Exception e){
         	e.printStackTrace();
+        	log.warn("根据token获取用户名为空token为:"+token,e);
         }finally{
         	DbConnectionManager.closeConnection(rs, pts, conn);
         }
@@ -146,7 +145,7 @@ public class IosTokenDao {
     	 }
         }catch(Exception e){
         	e.printStackTrace();
-        	log.error("根据key获取token失败:"+e.getMessage());
+        	log.error("根据key获取token失败:"+userName,e);
         }finally{
         	DbConnectionManager.closeConnection(rs, pts, conn);
         }
@@ -166,13 +165,12 @@ public class IosTokenDao {
     	rs = pst.executeUpdate();
         }catch(Exception e){
         	e.printStackTrace();
+           log.error("删除用户设备失败:"+token,e);
         }finally{
         	DbConnectionManager.closeConnection(pts, conn);
         }
     	if(rs>0){
     		return true;
-    	}else{
-    		log.error("删除用户设备失败");
     	}
     	return false;
     }
@@ -189,7 +187,7 @@ public class IosTokenDao {
     	rs = pst.executeUpdate();
         }catch(Exception e){
         	e.printStackTrace();
-        	log.error("删除iostoken失败:"+e.getMessage());
+        	log.error("删除iostoken失败:"+userName,e);
         }finally{
         	DbConnectionManager.closeConnection(pts, conn);
         }
@@ -212,7 +210,7 @@ public class IosTokenDao {
     	 rs = pst.executeUpdate();
         }catch(Exception e){
         	e.printStackTrace();
-        	log.error("保存iostoken失败:"+e.getMessage());
+        	log.error("保存iostoken失败",e);
         }finally{
         	DbConnectionManager.closeConnection(pts, conn);
         }

@@ -38,14 +38,11 @@ public class NoticeAction {
 				if(StringUtils.isNotEmpty(clent.send(imCrmNotice).getNoticeId())){
 					tag=true;
 				}else{
-					log.error("保存通知失败:imcrm");
 					tag=false;
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
-				log.error("保存通知异常:"+e.getMessage());
 				tag=false;
-				e.printStackTrace();
+				log.error("保存通知异常",e);
 			}finally{
 				ThriftClientManager.closeClient(clientinfo);
 			}
@@ -71,7 +68,7 @@ public class NoticeAction {
 			ImCrmNoticeService.Client clent=(ImCrmNoticeService.Client)clientinfo.getTserviceClient();
 			tag=clent.updateState(noticeId, accepter);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("修改通知 状态异常",e);
 		}finally{
 			ThriftClientManager.closeClient(clientinfo);
 		}
@@ -95,7 +92,7 @@ public class NoticeAction {
 			ImCrmNoticeService.Client clent=(ImCrmNoticeService.Client)clientinfo.getTserviceClient();
 			noticeList=clent.findAccepterList(accepter, noticeType, pageNo, pageSize);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("获取接収通知异常",e);
 		}finally{
 			ThriftClientManager.closeClient(clientinfo);
 		}
@@ -122,7 +119,7 @@ public class NoticeAction {
 			ImCrmNoticeService.Client clent=(ImCrmNoticeService.Client)clientinfo.getTserviceClient();
 			noticeList=clent.findSenderList(sender, noticeType, pageNo, pageSize);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("获取发送通知列表异常",e);
 		}finally{
 			ThriftClientManager.closeClient(clientinfo);
 		}
@@ -148,7 +145,7 @@ public class NoticeAction {
 			ImCrmNoticeService.Client clent=(ImCrmNoticeService.Client)clientinfo.getTserviceClient();
 			imCrmNoticeVO=clent.findUnread(accepter, noticeType);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("获取未读通知异常",e);
 		}finally{
 			ThriftClientManager.closeClient(clientinfo);
 		}
@@ -173,7 +170,7 @@ public class NoticeAction {
 			ImCrmNoticeService.Client clent=(ImCrmNoticeService.Client)clientinfo.getTserviceClient();
 			notice=clent.findById(noticeId);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("获取通知内容详情异常",e);
 		}finally{
 			ThriftClientManager.closeClient(clientinfo);
 		}

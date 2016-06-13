@@ -198,13 +198,11 @@ public class ApnsConnectionImpl implements IApnsConnection {
 	private void closeSocket(Socket socket) {
 		try {
 			if (socket != null) {
-				socket.getOutputStream().close();
-				socket.getInputStream().close();
 				socket.close();
 				socket=null;
 			}
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			logger.error("关闭连接异常",e);
 		}
 	}
 	
