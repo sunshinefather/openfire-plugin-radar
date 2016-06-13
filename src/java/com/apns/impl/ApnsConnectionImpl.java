@@ -239,7 +239,7 @@ public class ApnsConnectionImpl implements IApnsConnection {
 								break;
 							}
 						} catch (Exception e) {
-							logger.error(connName+"@sunshine:apns读取失败:"+ e.getMessage());
+							logger.error(connName+"@sunshine:apns读取失败",e);
 							break;
 						}
 					}
@@ -290,7 +290,7 @@ public class ApnsConnectionImpl implements IApnsConnection {
 				} catch (Exception e) {
 					e.printStackTrace();
 					errorHappendedLastConn=true;
-					logger.error("@sunshine:apns监听异常:"+connName + " " + e.getMessage());
+					logger.error("@sunshine:apns监听异常:"+connName ,e);
 				} finally {
 					closeSocket(curSocket);
 					errorHappendedLastConn=false;
