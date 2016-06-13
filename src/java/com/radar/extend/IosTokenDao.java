@@ -106,8 +106,12 @@ public class IosTokenDao {
     	 PreparedStatement pst = conn.prepareStatement(QUERY_USERNAME_BYIOSTOKEN);
     	 pst.setString(1, token);
     	 rs = pst.executeQuery();
-    	 rs.next();
-		 userName = rs.getString("userName");
+    	 boolean hasNext =  rs.next();
+    	 if(hasNext){
+		  userName = rs.getString("userName");
+		 }else{
+			 log.warn("根据token获取用户名为空token为:"+token); 
+		 }
         }catch(Exception e){
         	e.printStackTrace();
         }finally{
@@ -136,11 +140,13 @@ public class IosTokenDao {
     	 PreparedStatement pst = conn.prepareStatement(QUERY_IOSTOKEN_BYUSERNAME);
     	 pst.setString(1, userName);
     	 rs = pst.executeQuery();
-    	 rs.next();
-    	 iosToken  = rs.getString("iosToken");
+    	 boolean hasNext =  rs.next();
+    	 if(hasNext){
+        	 iosToken  = rs.getString("iosToken");	 
+    	 }
         }catch(Exception e){
         	e.printStackTrace();
-        	log.error("更具key获取token失败:"+e.getMessage());
+        	log.error("根据key获取token失败:"+e.getMessage());
         }finally{
         	DbConnectionManager.closeConnection(rs, pts, conn);
         }
