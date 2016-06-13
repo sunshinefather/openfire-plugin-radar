@@ -126,7 +126,7 @@ public class ApnsConnectionImpl implements IApnsConnection {
 					if (exceedIntervalTime) {
 						closeSocket(socket);
 						socket = null;
-						logger.error("@sunshine:apns推送断开,超过10分钟未发送出消息");
+						logger.error(connName+" @sunshine:apns推送断开,超过10分钟未发送出消息");
 					}
 					
 					if (socket == null || socket.isClosed() || socket.isOutputShutdown()) {
