@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -113,15 +114,17 @@ public class ApnsConnectionImpl implements IApnsConnection {
          *如果发现当前连接有error-response，加锁等待，直到另外一个线程把重发做完后再继续发送  
 		 */
 		//synchronized (lock) {
-		if (errorHappendedLastConn) {
-				closeSocket(socket);
-				socket = null;
-		 }
 			byte[] data = notification.generateData(plBytes);
 			boolean isSuccessful = false;
 			int retries = 0;
 			while (retries < maxRetries) {
 				try {
+					
+					if (errorHappendedLastConn) {
+						closeSocket(socket);
+						socket = null;
+				     }
+					
 					boolean exceedIntervalTime = lastSuccessfulTime > 0 && (System.currentTimeMillis() - lastSuccessfulTime) > intervalTime;
 					if (exceedIntervalTime) {
 						closeSocket(socket);
@@ -140,7 +143,7 @@ public class ApnsConnectionImpl implements IApnsConnection {
 					isSuccessful = true;
 					break;
 				} catch (Exception e) {
-					logger.error(connName+"@sunshine:apns推送异常:第"+retries + "次 " ,e);
+					logger.error(connName+"@sunshine:apns推送异常:第"+(1+retries) + "次 " ,e);
 					closeSocket(socket);
 					socket = null;
 				}
@@ -156,7 +159,7 @@ public class ApnsConnectionImpl implements IApnsConnection {
 			}
 			if (!isSuccessful) {
 				//System.out.println(connName+String.format("%s Notification send failed. %s", connName, notification));
-				logger.error(String.format("%s  @sunshine:apns推送失败. %s", connName, notification));
+				logger.error(connName+" @sunshine:apns推送失败."+notification.getToken());
 				return;
 			} else {
 				//System.out.println(String.format("%s Send success. count: %s, notificaion: %s", connName,notificaionSentCount.incrementAndGet(), notification));
@@ -243,7 +246,9 @@ public class ApnsConnectionImpl implements IApnsConnection {
 							if (size > 0 || size == -1) {
 								break;
 							}
-						} catch (Exception e) {
+						}catch (SocketTimeoutException e) {
+							Thread.sleep(10);
+						}catch (Exception e) {
 							logger.error(connName+" @sunshine:apns读取失败",e);
 							break;
 						}
@@ -268,12 +273,15 @@ public class ApnsConnectionImpl implements IApnsConnection {
 						while (!notificationCachedQueue.isEmpty()) {
 								PushNotification pn = notificationCachedQueue.poll();
 								if (pn.getId() == errorId) {
+									logger.error(connName+" @sunshine:apns失效token"+pn.getToken());
 									found = true;
 								} else {
 									if (found) {
 										resentQueue.add(pn);
-										resentQueue.addAll(notificationCachedQueue);
-										notificationCachedQueue.clear();
+										if(!notificationCachedQueue.isEmpty()){
+											resentQueue.addAll(notificationCachedQueue);
+											notificationCachedQueue.clear();
+										}
 									}
 								}
 							}
