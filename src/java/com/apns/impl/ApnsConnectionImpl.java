@@ -3,6 +3,7 @@ package com.apns.impl;
 import static com.apns.model.ApnsConstants.CHARSET_ENCODING;
 import static com.apns.model.ApnsConstants.ERROR_RESPONSE_BYTES_LENGTH;
 import static com.apns.model.ApnsConstants.PAY_LOAD_MAX_LENGTH;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -11,10 +12,14 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
+
 import javax.net.SocketFactory;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import com.apns.IApnsConnection;
 import com.apns.model.Command;
 import com.apns.model.ErrorResponse;
@@ -34,7 +39,7 @@ public class ApnsConnectionImpl implements IApnsConnection {
 
 	private Socket socket;
 
-	private Queue<PushNotification> notificationCachedQueue = new LinkedList<PushNotification>();
+	private Queue<PushNotification> notificationCachedQueue = new ConcurrentLinkedQueue<PushNotification>();
 
 	private volatile boolean errorHappendedLastConn = false;
 	
@@ -60,7 +65,7 @@ public class ApnsConnectionImpl implements IApnsConnection {
 	
 	private AtomicInteger notificaionSentCount = new AtomicInteger(0);
 	
-	private Object lock = new Object();
+	//private Object lock = new Object();
 	
 	public ApnsConnectionImpl(SocketFactory factory, String host, int port, int maxRetries, 
 			int maxCacheLength, String name, String connName, int intervalTime, int timeout) {
@@ -107,7 +112,7 @@ public class ApnsConnectionImpl implements IApnsConnection {
 		/**
          *如果发现当前连接有error-response，加锁等待，直到另外一个线程把重发做完后再继续发送  
 		 */
-		synchronized (lock) {
+		//synchronized (lock) {
 		if (errorHappendedLastConn) {
 				closeSocket(socket);
 				socket = null;
@@ -164,7 +169,7 @@ public class ApnsConnectionImpl implements IApnsConnection {
 					notificationCachedQueue.poll();
 				}
 			}
-		 }
+		 //}
 		if (isFirstWrite) {
 			isFirstWrite = false;
 			startErrorWorker();
@@ -253,11 +258,11 @@ public class ApnsConnectionImpl implements IApnsConnection {
 						int status = res[1];
 						int errorId = ApnsTools.parse4ByteInt(res[2], res[3], res[4], res[5]);
 						if (logger.isInfoEnabled()) {
-							logger.info(String.format("@sunshine: %s Received error response. status: %s, id: %s, error-desc: %s", connName, status, errorId, ErrorResponse.desc(status)));
+							logger.error(String.format("@sunshine:apns服务器响应  %s 收到错误响应. status: %s, id: %s, error-desc: %s", connName, status, errorId, ErrorResponse.desc(status)));
 						}
 						
 						Queue<PushNotification> resentQueue = new LinkedList<PushNotification>();
-						synchronized (lock) {
+						//synchronized (lock) {
 						boolean found = false;
 						errorHappendedLastConn = true;
 						while (!notificationCachedQueue.isEmpty()) {
@@ -278,14 +283,14 @@ public class ApnsConnectionImpl implements IApnsConnection {
 									resentQueue.addAll(notificationCachedQueue);
 									notificationCachedQueue.clear();
 								}
-								logger.info(String.format("@sunshine: %s Didn't find error-notification in the queue. Maybe it's time to adjust cache length. id: %s",connName,errorId));
+								logger.error(String.format("@sunshine:apns重推  %s 队列中未找到重发数据.缓存队列全部重推送. id: %s",connName,errorId));
 							}
-						}
+						//}
 						if (!resentQueue.isEmpty()) {
 							ApnsResender.getInstance().resend(name, resentQueue);
 						}
 					} else {
-						logger.info(String.format("@sunshine: apns丢失数据了  %s Received error response. commend: %s, size: %s", connName, command, size));
+						logger.error(String.format("@sunshine: apns丢失数据了  %s Received error response. commend: %s, size: %s", connName, command, size));
 					}
 				} catch (Exception e) {
 					errorHappendedLastConn=true;

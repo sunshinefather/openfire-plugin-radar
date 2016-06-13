@@ -54,7 +54,7 @@ public class PushMessage {
 			config99.setKeyStore(is);
 			config99.setDevEnv(false);
 			config99.setPassword(KSPASSWORD);
-			config99.setPoolSize(12);
+			config99.setPoolSize(8);
 			config99.setName("IOS99");
 			service99= ApnsServiceImpl.createInstance(config99);
 		} catch (FileNotFoundException e) {
@@ -89,6 +89,7 @@ public class PushMessage {
 		param.addParam("dataType",1);
 		param.addParam("dataId",message.getID());
 		push(param, deviceToken);
+		clearInvalidToken();
 	}
 	public static void pushNoticeMessage(final Message message) throws Exception{
 		final String msgType;
@@ -135,9 +136,7 @@ public class PushMessage {
 				i++;
 			}
 			//log.info("@sunshine:apsn实际推送通知"+i+"条,"+message.getSubject());
-			if(null==jid){
-				clearInvalidToken();
-			}
+			clearInvalidToken();
 		}
 	}
 	
