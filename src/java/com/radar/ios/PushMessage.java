@@ -247,7 +247,7 @@ public class PushMessage {
 	public static void clearInvalidToken(){
 		if(service99!=null){
 			List<Feedback>  list = service99.getFeedbacks();
-			if(list!=null && list.isEmpty()){
+			if(list!=null && !list.isEmpty()){
 				for(Feedback fb:list){
 					IosTokenDao.getInstance().delUserByToken(fb.getToken());
 				}
@@ -277,15 +277,15 @@ public class PushMessage {
 		}
 		service99.remainConnPoolSize();//目前线程池中有多少条线程,总线程数-剩余线程数=正在使用的线程数据
 	  */
-		/**获取失效token
+		/**获取失效token*/
 		if(service99!=null){
 			List<Feedback>  list = service99.getFeedbacks();
-			if(list!=null && list.isEmpty()){
+			if(list!=null && !list.isEmpty()){
 				for(Feedback fb:list){
 					System.out.println("失效token:"+IosTokenDao.getInstance().delUserByToken(fb.getToken()));
 				}
 			}
 		}
-		*/
+		
 	}
 }
