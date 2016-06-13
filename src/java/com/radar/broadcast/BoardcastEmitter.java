@@ -96,7 +96,7 @@ public class BoardcastEmitter
         	XMPPServer.getInstance().getSessionManager().userBroadcast(userName, packet);
             return true;
         }else{
-            log.debug(userName+"：发送广播对象为空");
+            log.debug(userName+"：发送定向消息接收者为空");
             return false;
         }
     }

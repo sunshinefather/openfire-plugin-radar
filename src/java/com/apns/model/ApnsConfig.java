@@ -36,14 +36,14 @@ public class ApnsConfig {
 	/**
 	 *发送错误重试次数
 	 */
-	private int retries = 4;
+	private int retries = 5;
 	/**
 	 * 如果两条通知的间隔时间超过10分钟，就重新建立连接
 	 */
 	private int intervalTime = 10 * 60 * 1000; // 10 minutes
 	
 	// socket read 超时时间 0秒表示不超时
-	private int timeout = 0 * 1000; // 0 seconds
+	private int timeout = 10 * 60 * 1000; // 0 seconds
 	
 	public InputStream getKeyStore() {
 		return keyStore;

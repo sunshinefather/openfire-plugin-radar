@@ -41,7 +41,7 @@ public class PushConfigStatusIQHander extends IQHandler {
         }
         if(StringUtils.isEmpty(userName) || StringUtils.isEmpty(groupId)){
         	replay.setType(Type.error);
-        	log.info("查询群是否走推送失败:参数错误");
+        	log.info("查询群是否走推送失败:参数错误userName:"+userName+"groupId:"+groupId);
         	return replay;
         }
         ImCrmPushConfig pushconfig =new ImCrmPushConfig();

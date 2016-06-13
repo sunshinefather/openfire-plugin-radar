@@ -255,7 +255,7 @@ public class PushMessage {
 		}
 	}
 	public static void main(String[] args) {
-		/**		*/
+		/**	
 		String token = 
 				       "c258538e942bc449bb78d124a5bf98e29d6da93efec48651bcb41d27effccd7a"//黄
 				      + ",fdc8760fd9dc2e17ef338a6c65f8234a8319a8f0781a7f86cbc65111d439c01c"//许
@@ -276,5 +276,16 @@ public class PushMessage {
 			service99.sendNotification(tk, payload);
 		}
 		service99.remainConnPoolSize();//目前线程池中有多少条线程,总线程数-剩余线程数=正在使用的线程数据
+	  */
+		/**获取失效token
+		if(service99!=null){
+			List<Feedback>  list = service99.getFeedbacks();
+			if(list!=null && list.isEmpty()){
+				for(Feedback fb:list){
+					System.out.println("失效token:"+IosTokenDao.getInstance().delUserByToken(fb.getToken()));
+				}
+			}
+		}
+		*/
 	}
 }

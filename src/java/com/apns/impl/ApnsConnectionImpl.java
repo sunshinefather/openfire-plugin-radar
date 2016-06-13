@@ -125,6 +125,7 @@ public class ApnsConnectionImpl implements IApnsConnection {
 					if (exceedIntervalTime) {
 						closeSocket(socket);
 						socket = null;
+						logger.error("@sunshine:apns推送断开,超过10分钟未发送出消息");
 					}
 					
 					if (socket == null || socket.isClosed() || socket.isOutputShutdown()) {
@@ -137,13 +138,12 @@ public class ApnsConnectionImpl implements IApnsConnection {
 					isSuccessful = true;
 					break;
 				} catch (Exception e) {
-					e.printStackTrace();
-					logger.error("@sunshine:apns推送异常:"+connName + " " + e.getMessage(), e);
+					logger.error(connName+"@sunshine:apns推送异常:第"+retries + "次 " ,e);
 					closeSocket(socket);
 					socket = null;
 				}
 				try {
-					Thread.sleep(500);
+					Thread.sleep(1000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -288,7 +288,6 @@ public class ApnsConnectionImpl implements IApnsConnection {
 						logger.info(String.format("@sunshine: apns丢失数据了  %s Received error response. commend: %s, size: %s", connName, command, size));
 					}
 				} catch (Exception e) {
-					e.printStackTrace();
 					errorHappendedLastConn=true;
 					logger.error("@sunshine:apns监听异常:"+connName ,e);
 				} finally {
