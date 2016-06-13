@@ -283,10 +283,11 @@ public class ApnsConnectionImpl implements IApnsConnection {
 									resentQueue.addAll(notificationCachedQueue);
 									notificationCachedQueue.clear();
 								}
-								logger.error(String.format("@sunshine:apns重推  %s 队列中未找到重发数据.缓存队列全部重推送. id: %s",connName,errorId));
+								logger.error(String.format("@sunshine:apns已推送队列未找到失效数据  %s 已推送队列全部重推送. id: %s",connName,errorId));
 							}
 						//}
 						if (!resentQueue.isEmpty()) {
+							logger.error(String.format("@sunshine:apns重推  %s 条数据",connName,errorId));
 							ApnsResender.getInstance().resend(name, resentQueue);
 						}
 					} else {
