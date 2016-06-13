@@ -43,7 +43,7 @@ public class ApnsConfig {
 	private int intervalTime = 10 * 60 * 1000; // 10 minutes
 	
 	// socket read 超时时间 0秒表示不超时
-	private int timeout = 10 * 60 * 1000; // 10 minutes
+	private int timeout = 10 * 1000; // 10 seconds
 	
 	public InputStream getKeyStore() {
 		return keyStore;
