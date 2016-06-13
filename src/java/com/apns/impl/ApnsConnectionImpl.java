@@ -287,7 +287,7 @@ public class ApnsConnectionImpl implements IApnsConnection {
 							}
 						//}
 						if (!resentQueue.isEmpty()) {
-							logger.error(String.format("@sunshine:apns重推  %s 条数据",connName,errorId));
+							logger.error(String.format("@sunshine:apns重推  %s 条数据",resentQueue.size()));
 							ApnsResender.getInstance().resend(name, resentQueue);
 						}
 					} else {
