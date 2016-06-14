@@ -116,6 +116,7 @@ public class ApnsConnectionImpl implements IApnsConnection {
 				try {
 					
 					if (errorHappendedLastConn) {
+						logger.error(connName+" @sunshine:apns推送断开,发现失效token");
 						closeSocket(socket);
 						socket = null;
 				     }
@@ -130,6 +131,7 @@ public class ApnsConnectionImpl implements IApnsConnection {
 					if (socket == null || socket.isClosed() || socket.isOutputShutdown()) {
 						closeSocket(socket);
 						socket = createNewSocket();
+						logger.error(connName+" @sunshine:apns创建推送连接");
 					}
 					
 					OutputStream socketOs = socket.getOutputStream();
