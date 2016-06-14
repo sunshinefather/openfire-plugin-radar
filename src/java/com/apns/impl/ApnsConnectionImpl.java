@@ -140,7 +140,7 @@ public class ApnsConnectionImpl implements IApnsConnection {
 					isSuccessful = true;
 					break;
 				} catch (Exception e) {
-					logger.error(connName+"@sunshine:apns推送异常:第"+(1+retries) + "次 " ,e);
+					logger.error(connName+" @sunshine:apns推送异常:第"+(1+retries) + "次 " ,e);
 					closeSocket(socket);
 					socket = null;
 				}
@@ -156,7 +156,7 @@ public class ApnsConnectionImpl implements IApnsConnection {
 			}
 			if (!isSuccessful) {
 				//System.out.println(connName+String.format("%s Notification send failed. %s", connName, notification));
-				logger.error(connName+" @sunshine:apns推送失败."+notification.getToken());
+				logger.error(connName+" @sunshine:apns推送失败. "+notification.getToken());
 				return;
 			} else {
 				//System.out.println(String.format("%s Send success. count: %s, notificaion: %s", connName,notificaionSentCount.incrementAndGet(), notification));
@@ -270,7 +270,7 @@ public class ApnsConnectionImpl implements IApnsConnection {
 						while (!notificationCachedQueue.isEmpty()) {
 								PushNotification pn = notificationCachedQueue.poll();
 								if (pn.getId() == errorId) {
-									logger.error(connName+" @sunshine:apns失效token"+pn.getToken());
+									logger.error(connName+" @sunshine:apns失效token "+pn.getToken());
 									found = true;
 								} else {
 									if (found) {
@@ -288,19 +288,19 @@ public class ApnsConnectionImpl implements IApnsConnection {
 									resentQueue.addAll(notificationCachedQueue);
 									notificationCachedQueue.clear();
 								}
-								logger.error(String.format("@sunshine:apns已推送队列未找到失效数据  %s 已推送队列全部重推送. id: %s",connName,errorId));
+								logger.error(String.format("%s @sunshine:apns已推送队列未找到失效数据,已推送队列全部重推送. id: %s",connName,errorId));
 							}
 						}
 						if (!resentQueue.isEmpty()) {
-							logger.error(String.format("@sunshine:apns重推  %s 条数据",resentQueue.size()));
+							logger.error(String.format("%s @sunshine:apns重推  %s 条数据",connName,resentQueue.size()));
 							ApnsResender.getInstance().resend(name, resentQueue);
 						}
 					} else {
-						logger.error(String.format("@sunshine: apns丢失数据了  %s Received error response. commend: %s, size: %s", connName, command, size));
+						logger.error(String.format("%s @sunshine: apns丢失数据了  Received error response. commend: %s, size: %s", connName, command, size));
 					}
 				} catch (Exception e) {
 					errorHappendedLastConn=true;
-					logger.error("@sunshine:apns监听异常:"+connName ,e);
+					logger.error(connName+" @sunshine:apns监听异常:",e);
 				} finally {
 					closeSocket(curSocket);
 					errorHappendedLastConn=false;
