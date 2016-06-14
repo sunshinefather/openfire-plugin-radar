@@ -120,7 +120,7 @@ public class PushMessage {
 				list.add(deviceToken);
 				
 			}
-			//log.info("@sunshine:apns应推送通知"+list.size()+"条,"+message.getSubject());
+			log.info("@sunshine:apns应推送通知"+list.size()+"条,"+message.getSubject());
 			int i=0;
 			for(final String str:list){
 				ThreadPool.addWork(new QueueTask() {
@@ -136,7 +136,7 @@ public class PushMessage {
 				});
 				i++;
 			}
-			//log.info("@sunshine:apsn实际推送通知"+i+"条,"+message.getSubject());
+			log.info("@sunshine:apsn实际推送通知"+i+"条,"+message.getSubject());
 		}
 	}
 	
