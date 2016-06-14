@@ -44,7 +44,7 @@ public class ApnsServiceImpl implements IApnsService {
 					conn = getConnection();
 					conn.sendNotification(token, payload);
 				} catch (Exception e) {
-					logger.error(e.getMessage(), e);
+					logger.error("@sunshine:apns推送网络异常", e);
 				} finally {
 					if (conn != null) {
 						connPool.returnConn(conn);
@@ -63,7 +63,7 @@ public class ApnsServiceImpl implements IApnsService {
 					conn = getConnection();
 					conn.sendNotification(notification);
 				} catch (Exception e) {
-					logger.error("@sunshine:apns推送网络异常 "+e.getMessage(), e);
+					logger.error("@sunshine:apns推送网络异常 ", e);
 				} finally {
 					if (conn != null) {
 						connPool.returnConn(conn);
@@ -117,7 +117,7 @@ public class ApnsServiceImpl implements IApnsService {
 		try {
 			service.awaitTermination(10, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
-            logger.warn("Shutdown ApnsService interrupted", e);
+            logger.warn("@sunshine:apns服务器关闭", e);
         }
         connPool.close();
 	}

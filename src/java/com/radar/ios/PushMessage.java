@@ -54,7 +54,7 @@ public class PushMessage {
 			config99.setKeyStore(is);
 			config99.setDevEnv(false);
 			config99.setPassword(KSPASSWORD);
-			config99.setPoolSize(8);
+			config99.setPoolSize(12);
 			config99.setName("IOS99");
 			service99= ApnsServiceImpl.createInstance(config99);
 		} catch (FileNotFoundException e) {

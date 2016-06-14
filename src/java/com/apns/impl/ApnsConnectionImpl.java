@@ -100,7 +100,6 @@ public class ApnsConnectionImpl implements IApnsConnection {
 				logger.error("@sunshine:推送消息截取后:" + notification.getPayload().toString());
 			}
 		} catch (UnsupportedEncodingException e) {
-			//System.out.println("@sunshine:"+e.getMessage());
 			logger.error("@sunshine:"+e.getMessage(), e);
 			return;
 		}
@@ -128,7 +127,7 @@ public class ApnsConnectionImpl implements IApnsConnection {
 						logger.error(connName+" @sunshine:apns推送断开,超过10分钟未发送出消息");
 					}
 					
-					if (socket == null || socket.isClosed() || socket.isOutputShutdown()) {
+					if (!isSocketAlive(socket)) {
 						closeSocket(socket);
 						socket = createNewSocket();
 						logger.error(connName+" @sunshine:apns创建推送连接");
@@ -155,15 +154,13 @@ public class ApnsConnectionImpl implements IApnsConnection {
 				logger.error("@sunshine:apns超过推送次数:"+maxRetries+",放弃推送");
 			}
 			if (!isSuccessful) {
-				//System.out.println(connName+String.format("%s Notification send failed. %s", connName, notification));
 				logger.error(connName+" @sunshine:apns推送失败. "+notification.getToken());
 				return;
 			} else {
-				//System.out.println(String.format("%s Send success. count: %s, notificaion: %s", connName,notificaionSentCount.incrementAndGet(), notification));
 				logger.info(String.format("%s @sunshine:apns推送成功. count: %s, notificaion: %s", connName,notificaionSentCount.incrementAndGet(), notification));
 				
 				notificationCachedQueue.offer(notification);
-				lastSuccessfulTime = System.currentTimeMillis();	
+				lastSuccessfulTime = System.currentTimeMillis();
 				
 				if (notificationCachedQueue.size() > maxCacheLength) {
 					notificationCachedQueue.poll();
@@ -197,6 +194,7 @@ public class ApnsConnectionImpl implements IApnsConnection {
 				}
 		     }
 		}
+		startErrorWorker();
 		return socket;
 	}
 	
@@ -260,7 +258,7 @@ public class ApnsConnectionImpl implements IApnsConnection {
 						int status = res[1];
 						int errorId = ApnsTools.parse4ByteInt(res[2], res[3], res[4], res[5]);
 						if (logger.isInfoEnabled()) {
-							logger.error(String.format("@sunshine:apns服务器响应  %s 收到错误响应. status: %s, id: %s, error-desc: %s", connName, status, errorId, ErrorResponse.desc(status)));
+							logger.error(String.format("%s @sunshine:收到apns服务器错误响应. status: %s, id: %s, error-desc: %s", connName, status, errorId, ErrorResponse.desc(status)));
 						}
 						
 						Queue<PushNotification> resentQueue = new LinkedList<PushNotification>();
@@ -291,12 +289,14 @@ public class ApnsConnectionImpl implements IApnsConnection {
 								logger.error(String.format("%s @sunshine:apns已推送队列未找到失效数据,已推送队列全部重推送. id: %s",connName,errorId));
 							}
 						}
+						
+						logger.error(String.format("%s @sunshine:apns重推  %s 条数据",connName,resentQueue.size()));
 						if (!resentQueue.isEmpty()) {
-							logger.error(String.format("%s @sunshine:apns重推  %s 条数据",connName,resentQueue.size()));
 							ApnsResender.getInstance().resend(name, resentQueue);
 						}
+						
 					} else {
-						logger.error(String.format("%s @sunshine: apns丢失数据了  Received error response. commend: %s, size: %s", connName, command, size));
+						logger.error(String.format("%s @sunshine: apns可能丢失数据了  Received error response. commend: %s, size: %s", connName, command, size));
 					}
 				} catch (Exception e) {
 					errorHappendedLastConn=true;
@@ -307,7 +307,6 @@ public class ApnsConnectionImpl implements IApnsConnection {
 				}
 			}
 		});
-		
 		thread.start();
 	}
 }
