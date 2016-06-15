@@ -5,14 +5,12 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmpp.packet.JID;
 import org.xmpp.packet.Message;
 import org.xmpp.packet.PacketExtension;
-
 import com.apns.IApnsService;
 import com.apns.impl.ApnsServiceImpl;
 import com.apns.model.ApnsConfig;
@@ -54,7 +52,7 @@ public class PushMessage {
 			config99.setKeyStore(is);
 			config99.setDevEnv(false);
 			config99.setPassword(KSPASSWORD);
-			config99.setPoolSize(12);
+			config99.setPoolSize(1);
 			config99.setName("IOS99");
 			service99= ApnsServiceImpl.createInstance(config99);
 		} catch (FileNotFoundException e) {
@@ -92,7 +90,6 @@ public class PushMessage {
 		clearInvalidToken();
 	}
 	public static void pushNoticeMessage(final Message message) throws Exception{
-		clearInvalidToken();
 		final String msgType;
 		final String sendUserName;
 		List<String> list=new ArrayList<String>();
@@ -138,6 +135,7 @@ public class PushMessage {
 			}
 			log.info("@sunshine:apsn实际推送通知"+i+"条,"+message.getSubject());
 		}
+		clearInvalidToken();
 	}
 	
     /**
@@ -151,7 +149,6 @@ public class PushMessage {
      * @throws
      */
 	public static void pushGroupChatMessage(Message message) throws Exception {
-		clearInvalidToken();
 		String groupUid = message.getTo().getNode();
 		String from = message.getFrom().getNode();
 		//String groupName = GroupAction.queryGroupName(groupUid);
@@ -183,6 +180,7 @@ public class PushMessage {
 	        }
 		}
 		//log.info("@sunshine:apns实际推送群聊"+i+"条,"+message.getBody());
+		clearInvalidToken();
 	}
 
 	/**
@@ -250,20 +248,21 @@ public class PushMessage {
 				for(Feedback fb:list){
 					IosTokenDao.getInstance().delUserByToken(fb.getToken());
 				}
+				log.error("删除失效token"+list.size()+"条");
 			}
 		}
 	}
 	public static void main(String[] args) {
-		/**	
-		String token = 
-				       "c258538e942bc449bb78d124a5bf98e29d6da93efec48651bcb41d27effccd7a"//黄
-				      + ",fdc8760fd9dc2e17ef338a6c65f8234a8319a8f0781a7f86cbc65111d439c01c"//许
-				      + ",d08e660bf425bfa16be88b564a9b77422e16aaf02022f1cd06226cb2a92e0e2d"//王勇
+		/**	*/
+		String token = "591f899e2cc270866d47bda56ad8a43f588b2b4613282d82e622227aff68171b";
+				       //+",c258538e942bc449bb78d124a5bf98e29d6da93efec48651bcb41d27effccd7a"//黄
+				     // + ",fdc8760fd9dc2e17ef338a6c65f8234a8319a8f0781a7f86cbc65111d439c01c"//许
+				     // + ",d08e660bf425bfa16be88b564a9b77422e16aaf02022f1cd06226cb2a92e0e2d"//王勇
 				     //+ ",33b25c77e4cb4844d42905f5f624385d7c7cecdad5cf3dc0a7bb167ba282f56b,"
-				      +",f8d4794aa2e7b4c49b2b2dd1baa42fc3c2c2172891670839adc09f5ef9673730"//崔
+				     // +",f8d4794aa2e7b4c49b2b2dd1baa42fc3c2c2172891670839adc09f5ef9673730"//崔
 		               //+ ",193858a0e2e2d62271088aef80ad8ff6bd3ebc92928a9ff897e53b0e3de6d491"
-		+ ",0019a78ef1e62005b74ae119fbf30ba3869637fff8cc65f01787edad5aca91e3"//李
-		+ ",3eba95fb65a5e2b9f4a6a60b0353531a24cb1da4c38a5aaae1c9228c6ae293d1";//姜
+		//+ ",0019a78ef1e62005b74ae119fbf30ba3869637fff8cc65f01787edad5aca91e3"//李
+		//+ ",3eba95fb65a5e2b9f4a6a60b0353531a24cb1da4c38a5aaae1c9228c6ae293d1";//姜
 		Payload payload = new Payload();
 		payload.setAlert("推送测试");
 		payload.setBadge(1);
@@ -275,7 +274,7 @@ public class PushMessage {
 			service99.sendNotification(tk, payload);
 		}
 		service99.remainConnPoolSize();//目前线程池中有多少条线程,总线程数-剩余线程数=正在使用的线程数据
-	  */
+	  /***/
 		/**获取失效token*/
 		if(service99!=null){
 			List<Feedback>  list = service99.getFeedbacks();
