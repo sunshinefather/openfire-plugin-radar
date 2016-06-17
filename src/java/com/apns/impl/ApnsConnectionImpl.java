@@ -64,7 +64,7 @@ public class ApnsConnectionImpl implements IApnsConnection {
 	
 	private long lastSuccessfulTime = 0;
 	
-	//private AtomicInteger notificaionSentCount = new AtomicInteger(0);
+	private AtomicInteger notificaionSentCount = new AtomicInteger(0);
 	
 	private Object lock = new Object();
 	
@@ -165,7 +165,7 @@ public class ApnsConnectionImpl implements IApnsConnection {
 				logger.error(connName+" @sunshine:apns推送失败. "+notification.getToken());
 				return;
 			} else {
-				//logger.info(String.format("%s @sunshine:apns推送成功. count: %s, notificaion: %s", connName,notificaionSentCount.incrementAndGet(), notification));
+				logger.info(String.format("%s @sunshine:apns推送成功. count: %s, notificaion: %s", connName,notificaionSentCount.incrementAndGet(), notification));
 				
 				notificationCachedQueue.offer(notification);
 				lastSuccessfulTime = System.currentTimeMillis();
