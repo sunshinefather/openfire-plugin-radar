@@ -44,7 +44,7 @@ public class ApnsConnectionImpl implements IApnsConnection {
 
 	private volatile boolean errorHappendedLastConn = false;
 	
-	private boolean isFirstWrite = false;
+	private volatile boolean isFirstWrite = false;
 	
 	private int maxRetries;
 	
@@ -64,9 +64,11 @@ public class ApnsConnectionImpl implements IApnsConnection {
 	
 	private long lastSuccessfulTime = 0;
 	
-	private AtomicInteger notificaionSentCount = new AtomicInteger(0);
+	//private AtomicInteger notificaionSentCount = new AtomicInteger(0);
 	
 	private Object lock = new Object();
+	
+	private Thread thread=null;
 	
 	public ApnsConnectionImpl(SocketFactory factory, String host, int port, int maxRetries, 
 			int maxCacheLength, String name, String connName, int intervalTime, int timeout) {
@@ -91,6 +93,7 @@ public class ApnsConnectionImpl implements IApnsConnection {
 		sendNotification(notification);
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	public void sendNotification(PushNotification notification) {
 		byte[] plBytes = null;
@@ -144,6 +147,7 @@ public class ApnsConnectionImpl implements IApnsConnection {
 					isSuccessful = true;
 					break;
 				} catch (Exception e) {
+					errorHappendedLastConn=true;
 					logger.error(connName+" @sunshine:apns推送异常:第"+(1+retries) + "次 " ,e);
 					closeSocket(socket);
 					socket = null;
@@ -156,7 +160,7 @@ public class ApnsConnectionImpl implements IApnsConnection {
 				retries++;
 			}
 			if(retries>=maxRetries){
-				logger.error("@sunshine:apns超过推送次数:"+maxRetries+",放弃推送");
+				logger.error("@sunshine:apns推送超过:"+maxRetries+"次,放弃推送");
 			}
 			if (!isSuccessful) {
 				logger.error(connName+" @sunshine:apns推送失败. "+notification.getToken());
@@ -226,7 +230,7 @@ public class ApnsConnectionImpl implements IApnsConnection {
 	}
 	
 	private void startErrorWorker() {
-		Thread thread = new Thread(new Runnable() {
+		thread = new Thread(new Runnable() {
 
 			@Override
 			public void run() {
@@ -239,14 +243,14 @@ public class ApnsConnectionImpl implements IApnsConnection {
 				    byte[] res = new byte[ERROR_RESPONSE_BYTES_LENGTH];
 					int size = 0;
 					
-					while (true) {
+					while (!errorHappendedLastConn) {
 						try {
 							size = socketIs.read(res);
 							if (size > 0 || size == -1) {
 								break;
 							}
 						}catch (SocketTimeoutException e) {
-							Thread.sleep(10);
+							
 						}catch (Exception e) {
 							logger.error(connName+" @sunshine:apns读取失败",e);
 							break;
@@ -258,15 +262,14 @@ public class ApnsConnectionImpl implements IApnsConnection {
 					/**
 					 * 一旦遇到错误返回就关闭连接，并且重新发送在它之后发送的通知
 					 */			
+					Queue<PushNotification> resentQueue = new LinkedList<PushNotification>();
+					synchronized (lock) {
 					if (size == res.length && (command == Command.INVALID_TOKEN || command == Command.SHUTDOWN)) {
 						int status = res[1];
 						int errorId = ApnsTools.parse4ByteInt(res[2], res[3], res[4], res[5]);
 						if (logger.isInfoEnabled()) {
 							logger.error(String.format("%s @sunshine:收到apns服务器错误响应. status: %s, id: %s, error-desc: %s", connName, status, errorId, ErrorResponse.desc(status)));
 						}
-						
-						Queue<PushNotification> resentQueue = new LinkedList<PushNotification>();
-						synchronized (lock) {
 						boolean found = false;
 						errorHappendedLastConn = true;
 						while (!notificationCachedQueue.isEmpty()) {
@@ -292,16 +295,23 @@ public class ApnsConnectionImpl implements IApnsConnection {
 								}
 								logger.error(String.format("%s @sunshine:apns已推送队列未找到失效数据,已推送队列全部重推送. id: %s",connName,errorId));
 							}
-						}
 						
-						logger.error(String.format("%s @sunshine:apns重推  %s 条数据",connName,resentQueue.size()));
-						if (!resentQueue.isEmpty()) {
-							ApnsResender.getInstance().resend(name, resentQueue);
-						}
 						
-					} else {
-						logger.error(String.format("%s @sunshine: apns可能丢失数据了  Received error response. commend: %s, size: %s", connName, command, size));
+						
+					} else if(command ==0 && size==0 && errorHappendedLastConn) {
+						logger.error(String.format("%s @sunshine: apns异常断开 ,队列重发 %s", connName,notificationCachedQueue.size()));
+						if(!notificationCachedQueue.isEmpty()){
+							resentQueue.addAll(notificationCachedQueue);
+							notificationCachedQueue.clear();
+						}
 					}
+				}
+	
+				logger.error(String.format("%s @sunshine:apns重推  %s 条数据",connName,resentQueue.size()));
+				if (!resentQueue.isEmpty()) {
+						ApnsResender.getInstance().resend(name, resentQueue);
+					}
+				
 				} catch (Exception e) {
 					errorHappendedLastConn=true;
 					logger.error(connName+" @sunshine:apns监听异常:",e);
