@@ -93,7 +93,6 @@ public class ApnsConnectionImpl implements IApnsConnection {
 		sendNotification(notification);
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Override
 	public void sendNotification(PushNotification notification) {
 		byte[] plBytes = null;
@@ -299,11 +298,13 @@ public class ApnsConnectionImpl implements IApnsConnection {
 						
 						
 					} else if(command ==0 && size==0 && errorHappendedLastConn) {
-						logger.error(String.format("%s @sunshine: apns异常断开 ,队列重发 %s", connName,notificationCachedQueue.size()));
+						logger.error(String.format("%s @sunshine: apns异常断开 ,队列重发 %s ", connName,notificationCachedQueue.size()));
 						if(!notificationCachedQueue.isEmpty()){
 							resentQueue.addAll(notificationCachedQueue);
 							notificationCachedQueue.clear();
 						}
+					}else{
+						logger.error(String.format("%s @sunshine: apns推送正常结束,command: %s  size: %s .", connName,command,size));
 					}
 				}
 	
