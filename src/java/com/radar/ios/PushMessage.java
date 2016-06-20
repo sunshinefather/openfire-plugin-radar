@@ -133,7 +133,7 @@ public class PushMessage {
 				});
 				i++;
 			}
-			log.info("@sunshine:apsn实际推送通知"+i+"条,"+message.getSubject());
+			log.info("@sunshine:apns实际推送通知"+i+"条,"+message.getSubject());
 		}
 		clearInvalidToken();
 	}
