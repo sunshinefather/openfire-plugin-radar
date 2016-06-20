@@ -165,7 +165,7 @@ public class PushMessage {
 		for(ImCrmPushConfig _imCrmPushConfig :list){
 			listUserName.add(_imCrmPushConfig.getUserName().toLowerCase());
 		}
-		//log.info("@sunshine:apns应推送群聊(包含没有token的和已屏蔽接受推送的)"+itmes.size()+"条,"+message.getBody());
+		log.info("@sunshine:apns应推送群聊(包含没有token的和已屏蔽接受推送的)"+itmes.size()+"条,"+message.getBody());
 		int i=0;
 		for (String name : itmes) {
 			String deviceToken=null;
@@ -179,7 +179,7 @@ public class PushMessage {
 				push(param, deviceToken);
 	        }
 		}
-		//log.info("@sunshine:apns实际推送群聊"+i+"条,"+message.getBody());
+		log.info("@sunshine:apns实际推送群聊"+i+"条,"+message.getBody());
 		clearInvalidToken();
 	}
 
