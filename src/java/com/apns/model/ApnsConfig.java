@@ -26,7 +26,7 @@ public class ApnsConfig {
 	/**
 	 *连接池
 	 */
-	private int poolSize = 4;
+	private int poolSize = 8;
     
 	/**
 	 * 发送堆积池

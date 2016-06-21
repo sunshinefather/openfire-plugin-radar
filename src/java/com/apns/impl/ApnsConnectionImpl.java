@@ -3,7 +3,6 @@ package com.apns.impl;
 import static com.apns.model.ApnsConstants.CHARSET_ENCODING;
 import static com.apns.model.ApnsConstants.ERROR_RESPONSE_BYTES_LENGTH;
 import static com.apns.model.ApnsConstants.PAY_LOAD_MAX_LENGTH;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -14,12 +13,9 @@ import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicInteger;
-
 import javax.net.SocketFactory;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.apns.IApnsConnection;
 import com.apns.model.Command;
 import com.apns.model.ErrorResponse;
@@ -107,7 +103,7 @@ public class ApnsConnectionImpl implements IApnsConnection {
 				logger.error("@sunshine:推送消息截取后:" + notification.getPayload().toString());
 			}
 		} catch (UnsupportedEncodingException e) {
-			logger.error("@sunshine:"+e.getMessage(), e);
+			logger.error("@sunshine: apns不支持的字符串", e);
 			return;
 		}
 		
@@ -131,7 +127,7 @@ public class ApnsConnectionImpl implements IApnsConnection {
 					if (exceedIntervalTime) {
 						closeSocket(socket);
 						socket = null;
-						logger.error(connName+" @sunshine:apns推送断开,超过10分钟未发送出消息");
+						logger.error(connName+" @sunshine:apns推送断开,超过30分钟未发送出消息");
 					}
 					
 					if (!isSocketAlive(socket)) {
@@ -249,7 +245,7 @@ public class ApnsConnectionImpl implements IApnsConnection {
 								break;
 							}
 						}catch (SocketTimeoutException e) {
-							
+							Thread.sleep(10);
 						}catch (Exception e) {
 							logger.error(connName+" @sunshine:apns读取失败",e);
 							break;
