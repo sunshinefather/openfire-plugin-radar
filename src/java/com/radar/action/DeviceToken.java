@@ -2,8 +2,11 @@ package com.radar.action;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
+
 import com.radar.extend.IosTokenDao;
+import com.radar.extend.PaginationAble;
 
 /**
  * IOS设备的deviceToken值的管理：包括deviceToken的保存(更新)、获取、删除
@@ -72,7 +75,7 @@ public class DeviceToken {
 	}
 	
 	/**
-	 * 获取所有IOS用户设备deviceToken
+	 * 获取所有IOS用户设备deviceToken(数据量小可以使用)
 	 * @Title: getALL
 	 * @Description: TODO  
 	 * @param: @return      
@@ -80,13 +83,28 @@ public class DeviceToken {
 	 * @author: sunshine  
 	 * @throws
 	 */
+	@Deprecated
 	public static List<String> getAllDeviceTokens(){
 		List<String> list =new ArrayList<String>();
 		list.addAll(IosTokenDao.getInstance().getAllUser().keySet());
 		return list;
 	}
+	
 	/**
-	 * 获取所有IOS用户设备对应的用户
+	 * 分页获取设备
+	 * @Title: getDeviceTokensByPage
+	 * @Description: TODO  
+	 * @param: @return      
+	 * @return: List<String>
+	 * @author: sunshine  
+	 * @throws
+	 */
+	public static PaginationAble getDeviceTokensByPage(PaginationAble page){
+		page.setTotalResults(IosTokenDao.getInstance().getTotal());
+		return IosTokenDao.getInstance().getTokenByPage(page);
+	}
+	/**
+	 * 获取所有IOS用户设备对应的用户(数据量小可以使用)
 	 * @Title: getAllUserNames
 	 * @Description: TODO  
 	 * @param: @return      
@@ -94,12 +112,13 @@ public class DeviceToken {
 	 * @author: sunshine  
 	 * @throws
 	 */
+	@Deprecated
 	public static List<String> getAllUserNames(){
 		List<String> list =new ArrayList<String>();
 		 list.addAll(IosTokenDao.getInstance().getAllUser().values());
 		return list;
 	}
-	
+
 	public static String getUserNameByToken(String token){
 		if(StringUtils.isEmpty(token)){
 			return null;

@@ -1,17 +1,23 @@
 package com.apns.impl;
 
+import static com.apns.model.ApnsConstants.HOST_DEVELOPMENT_ENV;
+import static com.apns.model.ApnsConstants.HOST_PRODUCTION_ENV;
+import static com.apns.model.ApnsConstants.PORT_DEVELOPMENT_ENV;
+import static com.apns.model.ApnsConstants.PORT_PRODUCTION_ENV;
 import java.io.Closeable;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import javax.net.SocketFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.apns.IApnsConnection;
 import com.apns.model.ApnsConfig;
-import static com.apns.model.ApnsConstants.*;
 public class ApnsConnectionPool implements Closeable {
 	private static int CONN_ID_SEQ = 1;
 	private SocketFactory factory;
 	private BlockingQueue<IApnsConnection> connQueue = null;
-	
+	private static final Logger log = LoggerFactory.getLogger(ApnsConnectionPool.class);
 	private ApnsConnectionPool(ApnsConfig config, SocketFactory factory) {
 		this.factory = factory;
 		
@@ -36,7 +42,7 @@ public class ApnsConnectionPool implements Closeable {
 		try {
 			return connQueue.take();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("@sunshine:apns 获取连接失败");
 		}
 		return null;
 	}

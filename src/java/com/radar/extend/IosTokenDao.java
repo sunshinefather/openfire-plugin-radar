@@ -3,7 +3,9 @@ package com.radar.extend;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.jivesoftware.database.DbConnectionManager;
@@ -22,6 +24,16 @@ public class IosTokenDao {
      * 查询所有设备token
      */
     public static final String QUERY_ALL_IOSTOKEN ="SELECT userName,iosToken FROM ofdevicetoken";
+    
+    /**
+     * 分页查询设备token
+     */
+    public static final String QUERY_IOSTOKEN_PAGE ="SELECT userName,iosToken FROM ofdevicetoken limit ?,?";
+    
+    /**
+     * 统计设备token数据
+     */
+    public static final String QUERY_IOSTOKEN_TOTAL ="SELECT count(*) as ct from ofdevicetoken";
     
     /**
      * 根据用户查询设备token
@@ -60,6 +72,7 @@ public class IosTokenDao {
      * @author: sunshine  
      * @throws
      */
+    @Deprecated
     public Map<String,String> getAllUser()
     {
         Map<String,String> userMap =new HashMap<String,String>();
@@ -118,6 +131,77 @@ public class IosTokenDao {
         }
 		return userName;
     }
+    
+    /**
+     * 统计设备token
+     * @Title: getTotal
+     * @Description: TODO  
+     * @param: @return      
+     * @return: int
+     * @author: sunshine  
+     * @throws
+     */
+    public int getTotal()
+    {
+    	Connection conn = null;
+    	PreparedStatement pts = null;
+    	ResultSet rs =null;
+    	int total=0;
+    	try{
+    		conn = DbConnectionManager.getConnection();
+            pts = conn.prepareStatement(QUERY_IOSTOKEN_TOTAL);
+            rs = pts.executeQuery();
+    		boolean hasNext =  rs.next();
+    		if(hasNext){
+    			total = rs.getInt("ct");
+    		}
+    	}catch(Exception e){
+    		e.printStackTrace();
+    		log.warn("@sunshine:统计设备数错误",e);
+    	}finally{
+    		DbConnectionManager.closeConnection(rs, pts, conn);
+    	}
+    	return total;
+    }
+    /**
+     * 分页获取token
+     * @Title: getTokenByPage
+     * @Description: TODO  
+     * @param: @param page
+     * @param: @return      
+     * @return: PaginationAble
+     * @author: sunshine  
+     * @throws
+     */
+    public PaginationAble getTokenByPage(PaginationAble page)
+    {
+        List<String> list =new ArrayList<String>();
+        Connection conn = null;
+        PreparedStatement pts = null;
+        ResultSet rs =null;
+        try{
+        conn = DbConnectionManager.getConnection();
+        pts = conn.prepareStatement(QUERY_IOSTOKEN_PAGE);
+        pts.setInt(1,page.getCurrentResult());
+        pts.setInt(2,page.getPageSize());
+        
+        rs = pts.executeQuery();
+        while (rs.next())
+        {
+            String iosToken = rs.getString("iosToken");
+            list.add(iosToken);
+        }
+        page.setResults(list);
+        }catch(Exception e){
+        	e.printStackTrace();
+        	log.error("@sunshine:分页获取token失败",e);
+        }finally{
+        	DbConnectionManager.closeConnection(rs, pts, conn);
+        }
+        
+        return page;
+    }
+    
     /**
      * 根据用户查询token
      * @Title: getTokenByUserName

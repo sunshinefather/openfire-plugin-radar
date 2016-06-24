@@ -21,7 +21,7 @@ public class TestCacheService implements ICacheService {
 	public <T> T get(String name, Class<T> cls) {
 	    try
 	    {
-	      Object value = client.get("openfire_" + name);
+	      Object value = client.get(PREFIX + name);
 	      return (T)value;
 	    }
 	    catch (Exception e) {
@@ -34,7 +34,7 @@ public class TestCacheService implements ICacheService {
 		Map<String,Object> map=null;
 	    try
 	    {
-	      Object obj = client.get("openfire_" + name);
+	      Object obj = client.get(PREFIX + name);
 	      if(obj!=null ){
 	    	  map=(Map)obj;
 	      }
@@ -60,7 +60,7 @@ public class TestCacheService implements ICacheService {
 			   map=new HashMap<String, Object>();
 		   }
 		   map.put(mapKey, value);
-	      client.put("openfire_" + name,map);
+	      client.put(PREFIX + name,map);
 	    }
 	    catch (Exception localException)
 	    {
@@ -73,7 +73,7 @@ public class TestCacheService implements ICacheService {
 	    List<T> rList = new ArrayList<T>();
 	    try
 	    {
-	      Object obj = client.get("openfire_" + name);
+	      Object obj = client.get(PREFIX + name);
 	      if(obj!=null ){
 	    	  map=(Map)obj;
 	      }
@@ -99,7 +99,7 @@ public class TestCacheService implements ICacheService {
 	    Long result = Long.valueOf(1L);
 	    try
 	    {
-	      client.remove("openfire_" + name);
+	      client.remove(PREFIX + name);
 	    }
 	    catch (Exception localException)
 	    {
@@ -113,7 +113,7 @@ public class TestCacheService implements ICacheService {
 		Map<String,Object> map=null;
 	    try
 	    {
-	      Object obj = client.get("openfire_" + name);
+	      Object obj = client.get(PREFIX + name);
 	      if(obj!=null )
 	       {
 	    	  map=(Map)obj;
@@ -133,7 +133,7 @@ public class TestCacheService implements ICacheService {
 	public void set(String name, Object value) {
 	    try
 	    {
-	      client.put("openfire_" + name,value);
+	      client.put(PREFIX + name,value);
 	    }
 	    catch (Exception localException)
 	    {

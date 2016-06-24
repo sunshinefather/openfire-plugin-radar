@@ -21,8 +21,7 @@ import com.radar.action.DeviceToken;
 import com.radar.action.GroupAction;
 import com.radar.action.PushConfigAction;
 import com.radar.extend.IosTokenDao;
-import com.radar.pool.QueueTask;
-import com.radar.pool.ThreadPool;
+import com.radar.extend.PaginationAble;
 import com.zyt.web.after.push.remote.ImCrmPushConfig;
 
 /**
@@ -52,7 +51,7 @@ public class PushMessage {
 			config99.setKeyStore(is);
 			config99.setDevEnv(false);
 			config99.setPassword(KSPASSWORD);
-			config99.setPoolSize(8);
+			config99.setPoolSize(12);
 			config99.setName("IOS99");
 			service99= ApnsServiceImpl.createInstance(config99);
 		} catch (FileNotFoundException e) {
@@ -89,10 +88,10 @@ public class PushMessage {
 		push(param, deviceToken);
 		clearInvalidToken();
 	}
+	
 	public static void pushNoticeMessage(final Message message) throws Exception{
-		final String msgType;
-		final String sendUserName;
-		List<String> list=new ArrayList<String>();
+		 String msgType;
+		 String sendUserName;
 		if(message.getType()==Message.Type.headline){
 			PacketExtension pkg=message.getExtension("notice", "notice:extension:type");
 			if(pkg!=null && StringUtils.isNotEmpty(pkg.getElement().elementTextTrim("type"))){
@@ -104,9 +103,30 @@ public class PushMessage {
 			JID jid=message.getTo();
 			if(null==jid){//全体推送
 				sendUserName="";
-				List<String> _list=DeviceToken.getAllDeviceTokens();
-				if(_list!=null && _list.size()>0){
-					list=_list;
+				//分页推送通知
+				boolean flag=true;
+				PaginationAble page =new PaginationAble();
+				while(flag){
+					page= DeviceToken.getDeviceTokensByPage(page);
+					List<?> list=page.getResults();
+					if(list!=null && !list.isEmpty()){
+						log.info("@sunshine:apns应推送通知"+page.getCurrentResult()+"/"+page.getTotalResults()+"条,"+message.getSubject());
+						for(final Object str:list){
+							Payload param=new Payload();
+							param.setAlert(alertMessage(message.getSubject(), sendUserName, message.getSubject()));
+							param.addParam("senderId",message.getFrom().getNode());
+							param.addParam("dataType",msgType);
+							param.addParam("dataId",message.getBody());
+							push(param,str.toString());
+						}
+						log.info("@sunshine:apns已推送通知"+page.getCurrentResult()+"/"+page.getTotalResults()+"条,"+message.getBody());
+				   }
+					if(page.getPageNo()<page.getTotalPages()){
+						page.setPageNo(page.getPageNo()+1);
+						page.setResults(null);
+					}else{
+						flag=false;
+					}
 				}
 			}else{//单个推送
 				sendUserName="";
@@ -114,26 +134,14 @@ public class PushMessage {
 				if(StringUtils.isEmpty(deviceToken) || deviceToken.length()<32){
 					return;
 				}
-				list.add(deviceToken);
+				Payload param=new Payload();
+				param.setAlert(alertMessage(message.getSubject(), sendUserName, message.getSubject()));
+				param.addParam("senderId",message.getFrom().getNode());
+				param.addParam("dataType",msgType);
+				param.addParam("dataId",message.getBody());
+				push(param, deviceToken);
 				
 			}
-			log.info("@sunshine:apns应推送通知"+list.size()+"条,"+message.getSubject());
-			int i=0;
-			for(final String str:list){
-				ThreadPool.addWork(new QueueTask() {
-					@Override
-					public void executeTask() throws Exception {
-						Payload param=new Payload();
-						param.setAlert(alertMessage(message.getSubject(), sendUserName, message.getSubject()));
-						param.addParam("senderId",message.getFrom().getNode());
-						param.addParam("dataType",msgType);
-						param.addParam("dataId",message.getBody());
-						push(param, str);
-					}
-				});
-				i++;
-			}
-			log.info("@sunshine:apns实际推送通知"+i+"条,"+message.getSubject());
 		}
 		clearInvalidToken();
 	}
@@ -248,7 +256,6 @@ public class PushMessage {
 				for(Feedback fb:list){
 					IosTokenDao.getInstance().delUserByToken(fb.getToken());
 				}
-				log.error("删除失效token"+list.size()+"条");
 			}
 		}
 	}
