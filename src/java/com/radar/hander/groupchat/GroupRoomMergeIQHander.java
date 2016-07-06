@@ -42,6 +42,7 @@ public class GroupRoomMergeIQHander extends IQHandler
         String groupDesc=null;
         String memberSize=null;
         String roomPassword=null;
+        String groupType=null;
         Element query = packet.getChildElement();
         List<?> node =  query.elements();
         for (Object object : node) {
@@ -51,6 +52,7 @@ public class GroupRoomMergeIQHander extends IQHandler
             groupDesc=elm.attributeValue("groupDesc");
             memberSize=elm.attributeValue("memberSize");
             roomPassword=elm.attributeValue("roomPassword");
+            groupType=elm.attributeValue("groupType");
         }
         if(StringUtils.isEmpty(groupId)){
         	replay.setType(IQ.Type.error);
@@ -60,6 +62,8 @@ public class GroupRoomMergeIQHander extends IQHandler
         	imCrmGroupRoom.setGroupName(groupName);
         	imCrmGroupRoom.setGroupId(groupId);
         	imCrmGroupRoom.setGroupDesc(groupDesc);
+        	imCrmGroupRoom.setRoomPassword(roomPassword);
+        	imCrmGroupRoom.setGroupType(groupType);
         	if(StringUtils.isNotEmpty(memberSize)){
         		imCrmGroupRoom.setMemberSize(memberSize);
             }

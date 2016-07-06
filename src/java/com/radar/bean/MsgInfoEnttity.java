@@ -99,23 +99,26 @@ public class MsgInfoEnttity
 
 
 	public enum Type {
-		MESSAGE(1), SOUND(2),IMAGE(3), FILE(4),OTHER(5);
+		DIVIDER(0),MESSAGE(1), SOUND(2),IMAGE(3), FILE(4),SVIDEO(5),VIDEO(6),VOICE(7),OTHER(10);
+		
 		private int code;
 
 		Type(int code) {
 			this.code = code;
 		}
+		
 		public int getCode() {
 			return code;
 		}
-
+		
 		public void setCode(int code) {
 			this.code = code;
 		}
-
+		
 		@Override
 		public String toString() {
 			return String.valueOf(this.code);
 		}
+		
 	}
 }

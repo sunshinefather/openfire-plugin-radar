@@ -3,7 +3,6 @@ package com.apns.impl;
 import static com.apns.model.ApnsConstants.CHARSET_ENCODING;
 import static com.apns.model.ApnsConstants.ERROR_RESPONSE_BYTES_LENGTH;
 import static com.apns.model.ApnsConstants.PAY_LOAD_MAX_LENGTH;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -14,12 +13,9 @@ import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicInteger;
-
 import javax.net.SocketFactory;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.apns.IApnsConnection;
 import com.apns.model.Command;
 import com.apns.model.ErrorResponse;
@@ -100,11 +96,9 @@ public class ApnsConnectionImpl implements IApnsConnection {
 		try {
 			plBytes = payload.getBytes(CHARSET_ENCODING);
 			if (plBytes.length > PAY_LOAD_MAX_LENGTH) {
-				logger.error("@sunshine:推送消息截取前:" + payload);
 				String alert=notification.getPayload().getAlert();
 				int pct=PAY_LOAD_MAX_LENGTH-(plBytes.length-alert.getBytes(CHARSET_ENCODING).length)/("中".getBytes(CHARSET_ENCODING).length);
 				notification.getPayload().setAlert(alert.substring(0,pct));
-				logger.error("@sunshine:推送消息截取后:" + notification.getPayload().toString());
 			}
 		} catch (UnsupportedEncodingException e) {
 			logger.error("@sunshine: apns不支持的字符串", e);
@@ -120,20 +114,19 @@ public class ApnsConnectionImpl implements IApnsConnection {
 			int retries = 0;
 			while (retries < maxRetries) {
 				try {
-					
 					if (errorHappendedLastConn) {
-						closeSocket(socket);
 						socket = null;
 				     }
 					
 					boolean exceedIntervalTime = lastSuccessfulTime > 0 && (System.currentTimeMillis() - lastSuccessfulTime) > intervalTime;
 					if (exceedIntervalTime) {
+						logger.error(connName+" @sunshine:apns推送强制断开,超过30分钟未发送出消息");
 						closeSocket(socket);
 						socket = null;
-						logger.error(connName+" @sunshine:apns推送断开,超过30分钟未发送出消息");
 					}
 					
 					if (!isSocketAlive(socket)) {
+						logger.error(connName+" @sunshine:apns推送连接已断开");
 						closeSocket(socket);
 						socket = createNewSocket();
 					}
@@ -144,10 +137,13 @@ public class ApnsConnectionImpl implements IApnsConnection {
 					isSuccessful = true;
 					break;
 				} catch (Exception e) {
-					errorHappendedLastConn=true;
 					logger.error(connName+" @sunshine:apns推送异常:第"+(1+retries) + "次 " ,e);
-					closeSocket(socket);
 					socket = null;
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e1) {
+						e1.printStackTrace();
+					}
 				}
 				retries++;
 			}
@@ -156,7 +152,6 @@ public class ApnsConnectionImpl implements IApnsConnection {
 				return;
 			} else {
 				logger.info(String.format("%s @sunshine:apns推送成功. count: %s, notificaion: %s", connName,notificaionSentCount.incrementAndGet(), notification));
-				
 				notificationCachedQueue.offer(notification);
 				lastSuccessfulTime = System.currentTimeMillis();
 				
@@ -164,7 +159,8 @@ public class ApnsConnectionImpl implements IApnsConnection {
 					notificationCachedQueue.poll();
 				}
 			}
-		 }//
+		 }
+		
 		if (isFirstWrite) {
 			isFirstWrite = false;
 			startErrorWorker();
@@ -220,7 +216,7 @@ public class ApnsConnectionImpl implements IApnsConnection {
 				    byte[] res = new byte[ERROR_RESPONSE_BYTES_LENGTH];
 					int size = 0;
 					
-					while (!errorHappendedLastConn) {
+					while (true) {
 						try {
 							size = socketIs.read(res);
 							if (size > 0 || size == -1) {
@@ -242,7 +238,6 @@ public class ApnsConnectionImpl implements IApnsConnection {
 					Queue<PushNotification> resentQueue = new LinkedList<PushNotification>();
 					synchronized (lock) {
 					errorHappendedLastConn = true;
-					isFirstWrite=true;
 					if (size == res.length && (command == Command.INVALID_TOKEN || command == Command.SHUTDOWN)) {
 						int status = res[1];
 						int errorId = ApnsTools.parse4ByteInt(res[2], res[3], res[4], res[5]);
@@ -272,12 +267,8 @@ public class ApnsConnectionImpl implements IApnsConnection {
 						
 						
 						
-					} else if(command ==0 && size==0 && errorHappendedLastConn) {
+					} else if(command ==0 && size==0) {
 						logger.error(String.format("%s @sunshine:apns异常断开 ,当前队列已发数据  %s ", connName,notificationCachedQueue.size()));
-						//if(!notificationCachedQueue.isEmpty()){
-							//resentQueue.addAll(notificationCachedQueue);
-							//notificationCachedQueue.clear();
-						//}
 					}else{
 						logger.error(String.format("%s @sunshine:apns异常断开 ,command: %s  size: %s .", connName,command,size));
 					}
@@ -289,10 +280,9 @@ public class ApnsConnectionImpl implements IApnsConnection {
 					}
 				
 				} catch (Exception e) {
-					errorHappendedLastConn=true;
-					isFirstWrite=true;
 					logger.error(connName+" @sunshine:apns监听异常:",e);
 				} finally {
+					closeSocket(curSocket);
 				}
 			}
 		});

@@ -59,6 +59,10 @@ public class MessageLogTask implements QueueTask {
  				 imCrmMessage.setMessagesize(pkg.getElement().elementTextTrim("size"));
  			  }
  		}
+ 		//如果messageId长度为32位UUID则保存此ID
+ 		if(message.getID()!=null && message.getID().length()==32){
+ 			imCrmMessage.setMessageId(message.getID());
+ 		}
 	}
 
 	@Override

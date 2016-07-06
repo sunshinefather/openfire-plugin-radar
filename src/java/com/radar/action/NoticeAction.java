@@ -1,9 +1,7 @@
 package com.radar.action;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.radar.broadcast.notice.NoticeBroadcast;
 import com.radar.common.EnvConstant;
 import com.radar.common.ThriftClientInfo;
@@ -30,6 +28,7 @@ public class NoticeAction {
 	public static boolean sendNotice(ImCrmNotice imCrmNotice,String[] toUserNames,Boolean... forceNotStore){
 		NoticeBroadcast.pushNotice(imCrmNotice,toUserNames,forceNotStore);
 		boolean tag=true;
+		/**取消保存通知
 		if(toUserNames!=null && toUserNames.length>0 && !(forceNotStore!=null && forceNotStore.length>0 && forceNotStore[0])){
 			ThriftClientInfo clientinfo=null;
 			try {
@@ -46,7 +45,7 @@ public class NoticeAction {
 			}finally{
 				ThriftClientManager.closeClient(clientinfo);
 			}
-		}
+		}*/
 		return tag;
 	}
 	/**

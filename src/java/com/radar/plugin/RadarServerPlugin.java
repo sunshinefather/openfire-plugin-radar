@@ -177,6 +177,7 @@ public class RadarServerPlugin implements Plugin
         JiveGlobals.setProperty("jdbcAuthProvider.passwordType","plain");
         //允许登陆控制台的账户,多个用','逗号分割
         JiveGlobals.setProperty("admin.authorizedJIDs","admin@localhost");
+        JiveGlobals.setProperty("sasl.mechs","ANONYMOUS,PLAIN,DIGEST-MD5,CRAM-MD5,JIVE-SHAREDSECRET");
         
 */         
         //JiveGlobals.setProperty("jdbcAuthProvider.setPasswordSQL","");

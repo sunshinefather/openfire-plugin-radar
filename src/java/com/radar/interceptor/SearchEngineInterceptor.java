@@ -123,14 +123,24 @@ public class SearchEngineInterceptor implements PacketInterceptor {
 	 * @return 提示消息内容
 	 */
 	private static Type messageType(String subject){
-		if ("image".equals(subject)) {
+		if ("message".equals(subject)) {
+			return Type.MESSAGE;
+		}else if("image".equals(subject)){
 			return Type.IMAGE;
 		}else if ("sound".equals(subject)) {
 			return Type.SOUND;
 		} else if ("attachment".equals(subject)) {
 			return Type.FILE;
+		}else if ("svideo".equals(subject)) {
+			return Type.SVIDEO;
+		}else if ("video".equals(subject)) {
+			return Type.VIDEO;
+		}else if ("voice".equals(subject)) {
+			return Type.VOICE;
 		}else if ("other".equals(subject)) {
 			return Type.OTHER;
+		}else if ("divider".equals(subject)) {
+			return Type.DIVIDER;
 		}else{
 			return Type.MESSAGE;
 		    }

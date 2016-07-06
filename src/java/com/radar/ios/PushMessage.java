@@ -119,7 +119,7 @@ public class PushMessage {
 							param.addParam("dataId",message.getBody());
 							push(param,str.toString());
 						}
-						log.info("@sunshine:apns已推送通知"+page.getCurrentResult()+"/"+page.getTotalResults()+"条,"+message.getBody());
+						log.info("@sunshine:apns已推送通知"+page.getCurrentResult()+"/"+page.getTotalResults()+"条,"+message.getSubject());
 				   }
 					if(page.getPageNo()<page.getTotalPages()){
 						page.setPageNo(page.getPageNo()+1);
@@ -187,7 +187,7 @@ public class PushMessage {
 				push(param, deviceToken);
 	        }
 		}
-		log.info("@sunshine:apns实际推送群聊"+i+"条,"+message.getBody());
+		log.info("@sunshine:apns已推送群聊"+i+"条,"+message.getBody());
 		clearInvalidToken();
 	}
 
@@ -227,6 +227,14 @@ public class PushMessage {
 			message = "[语音]";
 		}else if ("attachment".equals(subject)) {
 			message = "[文件]";
+		}else if ("svideo".equals(subject)) {
+			message = "[小视频]";
+		}else if ("video".equals(subject)) {
+			message = "[视频请求]";
+		}else if ("voice".equals(subject)) {
+			message = "[语音请求]";
+		}else if ("divider".equals(subject)) {
+			message = "[结束会话]";
 		}else {
 			return subMessage(headMessage+message);
 		}
