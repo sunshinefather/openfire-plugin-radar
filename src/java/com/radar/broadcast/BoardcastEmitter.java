@@ -1,14 +1,20 @@
 package com.radar.broadcast;
 
 import java.util.Collection;
+
 import org.apache.commons.lang.StringUtils;
 import org.jivesoftware.openfire.XMPPServer;
+import org.jivesoftware.openfire.session.ClientSession;
+import org.jivesoftware.openfire.user.User;
+import org.jivesoftware.openfire.user.UserManager;
+import org.jivesoftware.openfire.user.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmpp.packet.IQ;
 import org.xmpp.packet.Message;
 import org.xmpp.packet.Packet;
 import org.xmpp.packet.Presence;
+
 import com.radar.extend.OfflineDao;
 import com.radar.utils.HixinUtils;
 /**
@@ -57,9 +63,29 @@ public class BoardcastEmitter
      * @author: sunshine  
      * @throws
      */
-    public static boolean sendBoardCastServer(Message message){
-    	XMPPServer.getInstance().getSessionManager().broadcast(message);
-    	return true;
+    public static boolean sendBoardCastServer(Message message,String... userType){
+    	boolean tag =false;
+    	String utype="300";
+    	if(userType!=null && userType.length>0 && StringUtils.isNotEmpty(userType[0])){
+    		utype=userType[0];
+    	}
+    	//XMPPServer.getInstance().getSessionManager().broadcast(message);
+    	Collection<ClientSession> ccsess= XMPPServer.getInstance().getSessionManager().getSessions();
+    	UserManager userManager =  XMPPServer.getInstance().getUserManager();
+    	for(ClientSession sess:ccsess){
+    		try {
+				String userName = sess.getUsername();
+				if(StringUtils.isNotEmpty(userName)){
+					User user = userManager.getUser(userName);
+					 if(user!=null && utype.equals(user.getEmail())){//email目前用作业务用户类型使用
+						 XMPPServer.getInstance().getSessionManager().userBroadcast(userName, message);
+					 }
+				}
+			} catch (UserNotFoundException e) {
+				e.printStackTrace();
+			}
+    	}
+    	return tag;
     }
     /**
      * 向所有在线用户发送系统广播消息

@@ -5,12 +5,16 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
+import org.jivesoftware.openfire.XMPPServer;
+import org.jivesoftware.openfire.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmpp.packet.JID;
 import org.xmpp.packet.Message;
 import org.xmpp.packet.PacketExtension;
+
 import com.apns.IApnsService;
 import com.apns.impl.ApnsServiceImpl;
 import com.apns.model.ApnsConfig;
@@ -39,21 +43,32 @@ public class PushMessage {
 	/** start 环境配置  */
 	private static String KSPASSWORD="1234";// 证书密码
 	
-	private static String CERTIFICATE_URL=PushMessage.class.getResource("mom_push_product_99.p12").getPath();//99证书名称
+	private static String MOM_CERTIFICATE_URL=PushMessage.class.getResource("mom_push_product_99.p12").getPath();
+	private static String DOCTOR_CERTIFICATE_URL=PushMessage.class.getResource("doctor_push_product_99.p12").getPath();
 	/** end 环境配置  */
 	
-	public static IApnsService service99;
+	public static IApnsService serviceMom;
+	public static IApnsService serviceDoctor;
 	
 	static{
-		ApnsConfig config99 = new ApnsConfig();
+		ApnsConfig mom_config99 = new ApnsConfig();
+		ApnsConfig doctor_config99 = new ApnsConfig();
 		try {
-			InputStream is = new FileInputStream(CERTIFICATE_URL);
-			config99.setKeyStore(is);
-			config99.setDevEnv(false);
-			config99.setPassword(KSPASSWORD);
-			config99.setPoolSize(12);
-			config99.setName("IOS99");
-			service99= ApnsServiceImpl.createInstance(config99);
+			InputStream mom_is = new FileInputStream(MOM_CERTIFICATE_URL);
+			mom_config99.setKeyStore(mom_is);
+			mom_config99.setDevEnv(false);
+			mom_config99.setPassword(KSPASSWORD);
+			mom_config99.setPoolSize(12);
+			mom_config99.setName("mom_app");
+			serviceMom= ApnsServiceImpl.createInstance(mom_config99);
+			
+			InputStream doctor_is = new FileInputStream(DOCTOR_CERTIFICATE_URL);
+			doctor_config99.setKeyStore(doctor_is);
+			doctor_config99.setDevEnv(false);
+			doctor_config99.setPassword(KSPASSWORD);
+			doctor_config99.setPoolSize(12);
+			doctor_config99.setName("doctor_app");
+			serviceDoctor= ApnsServiceImpl.createInstance(doctor_config99);
 		} catch (FileNotFoundException e) {
 			log.error("@sunshine:启动apns推送池失败 "+e.getMessage(),e);
 		}
@@ -85,7 +100,15 @@ public class PushMessage {
 		param.addParam("senderId",sendUser);
 		param.addParam("dataType",1);
 		param.addParam("dataId",message.getID());
-		push(param, deviceToken);
+		User user= XMPPServer.getInstance().getUserManager().getUser(message.getTo().getNode());
+		if(user!=null ){
+			if("300".equals(user.getEmail())){
+				push2Mom(param, deviceToken);
+			}else if("201".equals(user.getEmail())){
+				push2Doctor(param, deviceToken);
+			}
+		}
+		
 		clearInvalidToken();
 	}
 	
@@ -117,7 +140,20 @@ public class PushMessage {
 							param.addParam("senderId",message.getFrom().getNode());
 							param.addParam("dataType",msgType);
 							param.addParam("dataId",message.getBody());
-							push(param,str.toString());
+							String[] userAndToken =str.toString().split("[,]");
+							if(userAndToken!=null && userAndToken.length==2){
+								String userName=userAndToken[0];
+								String token=userAndToken[1];
+								User user= XMPPServer.getInstance().getUserManager().getUser(userName);
+								if(user!=null ){
+									if("300".equals(user.getEmail())){
+										 push2Mom(param,token);
+									 }else if("201".equals(user.getEmail())){
+										 push2Doctor(param, token);
+									 }
+								}
+								push2Mom(param,str.toString());
+							}
 						}
 						log.info("@sunshine:apns已推送通知"+page.getCurrentResult()+"/"+page.getTotalResults()+"条,"+message.getSubject());
 				   }
@@ -129,8 +165,9 @@ public class PushMessage {
 					}
 				}
 			}else{//单个推送
+				String userName = jid.getNode();
 				sendUserName="";
-				String deviceToken=DeviceToken.get(jid.getNode());
+				String deviceToken=DeviceToken.get(userName);
 				if(StringUtils.isEmpty(deviceToken) || deviceToken.length()<32){
 					return;
 				}
@@ -139,7 +176,14 @@ public class PushMessage {
 				param.addParam("senderId",message.getFrom().getNode());
 				param.addParam("dataType",msgType);
 				param.addParam("dataId",message.getBody());
-				push(param, deviceToken);
+				User user= XMPPServer.getInstance().getUserManager().getUser(userName);
+				if(user!=null){
+					 if("300".equals(user.getEmail())){
+						 push2Mom(param, deviceToken);
+					 }else if("201".equals(user.getEmail())){
+						 push2Doctor(param, deviceToken);
+					 }
+				}
 				
 			}
 		}
@@ -184,7 +228,14 @@ public class PushMessage {
 			}
 			if(StringUtils.isNotEmpty(deviceToken) && !listUserName.contains(name.toLowerCase())){
 				i++;
-				push(param, deviceToken);
+				User user= XMPPServer.getInstance().getUserManager().getUser(name);
+				if(user!=null){
+					 if("300".equals(user.getEmail())){
+						 push2Mom(param, deviceToken);
+					 }else if("201".equals(user.getEmail())){
+						 push2Doctor(param, deviceToken);
+					 }
+				}
 	        }
 		}
 		log.info("@sunshine:apns已推送群聊"+i+"条,"+message.getBody());
@@ -204,12 +255,21 @@ public class PushMessage {
     }
     
 	/**
-	 * 推送消息
+	 * 推送消息到mom_app
 	 * @param param 推送参数
 	 * @param deviceToken ios设备deviceToken值
 	 */
-	private static void push(Payload param, String deviceToken){
-		service99.sendNotification(deviceToken, param);
+	private static void push2Mom(Payload param, String deviceToken){
+		serviceMom.sendNotification(deviceToken, param);
+	}
+	
+	/**
+	 * 推送消息到Doctor_app
+	 * @param param 推送参数
+	 * @param deviceToken ios设备deviceToken值
+	 */
+	private static void push2Doctor(Payload param, String deviceToken){
+		serviceDoctor.sendNotification(deviceToken, param);
 	}
 	/**
 	 * 提示消息
@@ -258,8 +318,16 @@ public class PushMessage {
 	}
 	
 	public static void clearInvalidToken(){
-		if(service99!=null){
-			List<Feedback>  list = service99.getFeedbacks();
+		if(serviceMom!=null){
+			List<Feedback>  list = serviceMom.getFeedbacks();
+			if(list!=null && !list.isEmpty()){
+				for(Feedback fb:list){
+					IosTokenDao.getInstance().delUserByToken(fb.getToken());
+				}
+			}
+		}
+		if(serviceDoctor!=null){
+			List<Feedback>  list = serviceDoctor.getFeedbacks();
 			if(list!=null && !list.isEmpty()){
 				for(Feedback fb:list){
 					IosTokenDao.getInstance().delUserByToken(fb.getToken());
@@ -286,13 +354,13 @@ public class PushMessage {
 		payload.addParam("dataId","5554920f16074f6e9269e4ad3548cd99");
 		String[] tokens = token.split("[,]");
 		for(String tk:tokens){
-			service99.sendNotification(tk, payload);
+			serviceMom.sendNotification(tk, payload);
 		}
-		service99.remainConnPoolSize();//目前线程池中有多少条线程,总线程数-剩余线程数=正在使用的线程数据
+		serviceMom.remainConnPoolSize();//目前线程池中有多少条线程,总线程数-剩余线程数=正在使用的线程数据
 	  /***/
 		/**获取失效token*/
-		if(service99!=null){
-			List<Feedback>  list = service99.getFeedbacks();
+		if(serviceMom!=null){
+			List<Feedback>  list = serviceMom.getFeedbacks();
 			if(list!=null && !list.isEmpty()){
 				for(Feedback fb:list){
 					System.out.println("失效token:"+fb.getToken());

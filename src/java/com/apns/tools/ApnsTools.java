@@ -46,7 +46,16 @@ public class ApnsTools {
 		}
 		return sb.toString();
 	}
-	
+	/**
+	 * 设备token解码为16进制byte
+	 * @Title: decodeHex
+	 * @Description: TODO  
+	 * @param: @param hex
+	 * @param: @return      
+	 * @return: byte[]
+	 * @author: sunshine  
+	 * @throws
+	 */
 	public static byte[] decodeHex(String hex) {
 		byte[] bytes = new byte[hex.length() / 2];
 		for (int i = 0; i < bytes.length; i++) {

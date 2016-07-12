@@ -164,7 +164,7 @@ public class IosTokenDao {
     	return total;
     }
     /**
-     * 分页获取token
+     * 分页获取 userName+","+token
      * @Title: getTokenByPage
      * @Description: TODO  
      * @param: @param page
@@ -188,8 +188,9 @@ public class IosTokenDao {
         rs = pts.executeQuery();
         while (rs.next())
         {
+            String userName = rs.getString("userName");
             String iosToken = rs.getString("iosToken");
-            list.add(iosToken);
+            list.add(userName+","+iosToken);
         }
         page.setResults(list);
         }catch(Exception e){

@@ -28,7 +28,7 @@ public class NoticeAction {
 	public static boolean sendNotice(ImCrmNotice imCrmNotice,String[] toUserNames,Boolean... forceNotStore){
 		NoticeBroadcast.pushNotice(imCrmNotice,toUserNames,forceNotStore);
 		boolean tag=true;
-		/**取消保存通知
+		/**
 		if(toUserNames!=null && toUserNames.length>0 && !(forceNotStore!=null && forceNotStore.length>0 && forceNotStore[0])){
 			ThriftClientInfo clientinfo=null;
 			try {
@@ -45,7 +45,8 @@ public class NoticeAction {
 			}finally{
 				ThriftClientManager.closeClient(clientinfo);
 			}
-		}*/
+		}
+		*/
 		return tag;
 	}
 	/**

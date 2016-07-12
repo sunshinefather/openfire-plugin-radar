@@ -22,7 +22,6 @@ import com.apns.model.ErrorResponse;
 import com.apns.model.Payload;
 import com.apns.model.PushNotification;
 import com.apns.tools.ApnsTools;
-import com.radar.extend.IosTokenDao;
 
 public class ApnsConnectionImpl implements IApnsConnection {
 	
@@ -109,7 +108,7 @@ public class ApnsConnectionImpl implements IApnsConnection {
          *如果发现当前连接有error-response，加锁等待，直到另外一个线程把重发做完后再继续发送  
 		 */
 		synchronized (lock) {
-			byte[] data = notification.generateData(plBytes);
+			byte[] data = notification.generateData();
 			boolean isSuccessful = false;
 			int retries = 0;
 			while (retries < maxRetries) {
@@ -248,7 +247,6 @@ public class ApnsConnectionImpl implements IApnsConnection {
 						while (!notificationCachedQueue.isEmpty()) {
 								PushNotification pn = notificationCachedQueue.poll();
 								if (pn.getId() == errorId) {
-									IosTokenDao.getInstance().delUserByToken(pn.getToken());
 									found = true;
 								} else {
 									if (found) {

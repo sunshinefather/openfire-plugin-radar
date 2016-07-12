@@ -1,8 +1,10 @@
 package com.apns.model;
 
+import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
+
 import com.apns.tools.ApnsTools;
 
 public class PushNotification {
@@ -42,11 +44,15 @@ public class PushNotification {
 		this.payload = payload;
 	}
 
-	public byte[] generateData(byte[] payloads) {
+	public byte[] generateData() {
 		byte[] tokens = ApnsTools.decodeHex(getToken());
 		List<FrameItem> list = new LinkedList<FrameItem>();
 		list.add(new FrameItem(FrameItem.ITEM_ID_DEVICE_TOKEN, tokens));
-		list.add(new FrameItem(FrameItem.ITEM_ID_PAYLOAD, payloads));
+		try {
+			list.add(new FrameItem(FrameItem.ITEM_ID_PAYLOAD,getPayload().toString().getBytes(ApnsConstants.CHARSET_ENCODING)));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		list.add(new FrameItem(FrameItem.ITEM_ID_NOTIFICATION_IDENTIFIER, ApnsTools.intToBytes(getId(), 4)));
 		list.add(new FrameItem(FrameItem.ITEM_ID_EXPIRATION_DATE, ApnsTools.intToBytes(getExpire(), 4)));
 		list.add(new FrameItem(FrameItem.ITEM_ID_PRIORITY, ApnsTools.intToBytes(getPriority(), 1)));
