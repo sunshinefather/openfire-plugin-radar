@@ -13,7 +13,7 @@ public class EnvConstant
     /**
      * imcrm服务器地址
      */
-	public static  String IMCRMHOST="192.168.1.245";//(内网内)192.168.1.245;(华西内)192.168.43.154(移动),192.168.0.20
+	public static  String IMCRMHOST="192.168.66.20";//(内网内)192.168.1.245;192.168.43.154(移动),192.168.66.20(华为)
      /**
       * imcrm服务器端口
       */
