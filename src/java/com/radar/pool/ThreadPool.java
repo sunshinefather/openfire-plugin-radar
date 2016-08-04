@@ -8,20 +8,15 @@ import org.slf4j.LoggerFactory;
 public class ThreadPool
 {
 	
-	private static ExecutorService executorService;
+	private static ExecutorService executorService = Executors.newFixedThreadPool(256);
 	private static final Logger log = LoggerFactory.getLogger(ThreadPool.class);
     
-    private ThreadPool(){}
+    private ThreadPool(){
+    	throw new RuntimeException("不允许实例化ThreadPool");
+    }
     
     public static void addWork(final QueueTask task){
-		if (executorService == null) {
-			synchronized (ThreadPool.class) {
-				if (executorService == null) {
-					executorService = Executors.newFixedThreadPool(256);
-				}
-			}
-		}
-        
+    	
         executorService.execute(new Runnable() {
 			@Override
 			public void run() {

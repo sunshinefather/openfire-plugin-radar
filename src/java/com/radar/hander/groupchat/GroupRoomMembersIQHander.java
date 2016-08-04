@@ -36,6 +36,7 @@ public class GroupRoomMembersIQHander extends IQHandler
     public IQ handleIQ(IQ packet) throws UnauthorizedException
     {
     	IQ replay=IQ.createResultIQ(packet);
+    	replay.setChildElement("query", NAME_SPACE);
         String groupId = null;
         String pageSize = null;
         String pageNo = null;
@@ -57,7 +58,6 @@ public class GroupRoomMembersIQHander extends IQHandler
         		replay.setType(IQ.Type.error);
         		log.info("获取群成员列表失败");
         	}else{
-            	replay.setChildElement("query", NAME_SPACE);
             	replay.getChildElement().addElement("groupMembersJson").addCDATA(memberList);
         	}
         }

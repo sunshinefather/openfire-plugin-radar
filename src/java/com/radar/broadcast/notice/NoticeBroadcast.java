@@ -22,12 +22,14 @@ public class NoticeBroadcast {
 		Message msg=new Message();
 		msg.setType(Message.Type.headline);
 		msg.setSubject(imCrmNotice.getNoticeSubject());
-		msg.setBody(imCrmNotice.getNoticeId());
 		msg.setFrom(new JID(imCrmNotice.getSender()+"@"+HixinUtils.getDomain()));
-		msg.setID(imCrmNotice.getNoticeId());
 		PacketExtension pkg=new PacketExtension("notice", "notice:extension:type");
 		pkg.getElement().addElement("type").setText(imCrmNotice.getNoticeType());
 		msg.addExtension(pkg);
+		msg.setBody(imCrmNotice.getNoticeId());
+		if(StringUtils.isNotEmpty(imCrmNotice.getNoticeId())){
+			msg.setID(imCrmNotice.getNoticeId());
+		}
 	    if(toUserNames!=null && toUserNames.length>0){
 			for(String username:toUserNames){
 				if(StringUtils.isNotEmpty(username)){
@@ -35,8 +37,7 @@ public class NoticeBroadcast {
 				}
 			}
 	    }else{
-	    	ThreadPool.addWork(new SendBoardcastTask(msg,forceNotStore));
+	    	ThreadPool.addWork(new SendBoardcastTask(imCrmNotice.getExtension1(),imCrmNotice.getExtension2(),msg,forceNotStore));
 	    }
 	}
 }
-	

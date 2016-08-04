@@ -33,14 +33,15 @@ public class RemoveDeviceTokenHandler extends IQHandler {
 
 	@Override
 	public IQ handleIQ(IQ iq) throws UnauthorizedException {
-		IQ reply = IQ.createResultIQ(iq);
+		IQ replay = IQ.createResultIQ(iq);
+		replay.setChildElement("query", NAME_SPACE);
 		try {
 			String userName = iq.getChildElement().element("username").getText();
 			DeviceToken.remove(userName);
 		} catch (Exception e) {
 			log.error("删除DeviceToken失败", e.getMessage());
-			reply.setType(IQ.Type.error);
+			replay.setType(IQ.Type.error);
 		}
-        return reply;
+        return replay;
 	}
 }

@@ -87,7 +87,7 @@ public class SearchEngineInterceptor implements PacketInterceptor {
 	 * @param session 当前用户session
 	 */
 	private void handerMessageInfo(Message message) {
-		log.debug("Message:"+message.toString());
+		log.debug("Message:"+message.toXML());
 		
 		//一对一聊天，单人模式
 		if (message.getType() == Message.Type.chat) { 
@@ -141,6 +141,8 @@ public class SearchEngineInterceptor implements PacketInterceptor {
 			return Type.OTHER;
 		}else if ("divider".equals(subject)) {
 			return Type.DIVIDER;
+		}else if("patient".equals(subject)){
+			return Type.PATIENT;
 		}else{
 			return Type.MESSAGE;
 		    }

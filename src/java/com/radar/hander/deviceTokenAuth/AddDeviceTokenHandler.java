@@ -35,7 +35,8 @@ public class AddDeviceTokenHandler extends IQHandler{
 	@Override
 	public IQ handleIQ(IQ iq) throws UnauthorizedException {
 		//创建需要返回IQ包
-		IQ reply = IQ.createResultIQ(iq);		
+		IQ replay = IQ.createResultIQ(iq);	
+		replay.setChildElement("query", NAME_SPACE);
 		//获取deviceToken并保存
 		try {
 			String userName = iq.getChildElement().element("username").getText();
@@ -46,9 +47,9 @@ public class AddDeviceTokenHandler extends IQHandler{
 			}
 		} catch (Exception e) {
 			log.error("添加deviceToken失败：", e.getMessage());
-			reply.setType(IQ.Type.error);
+			replay.setType(IQ.Type.error);
 		}
 		
-        return reply;
+        return replay;
 	}
 }

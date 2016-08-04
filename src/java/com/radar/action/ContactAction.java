@@ -222,11 +222,18 @@ public class ContactAction {
      * @throws
      */
 	public static String queryNickeName(String userName) {
+		String userFullName="";
 		User userEntity=queryUser(userName);
 		if(userEntity!=null && userEntity.getExtUser()!=null){
-			return userEntity.getExtUser().getNickName();
+			userFullName = userEntity.getExtUser().getNickName();
+			if(StringUtils.isEmpty(userFullName)){
+				userFullName = userEntity.getExtUser().getFullName();
+			}
+			if(StringUtils.isEmpty(userFullName)){
+				userFullName = userName;
+			}
 		}
-		return userName;
+		return userFullName;
 	}
 	/**
 	 * 根据用户名称或者用户ID查询用户

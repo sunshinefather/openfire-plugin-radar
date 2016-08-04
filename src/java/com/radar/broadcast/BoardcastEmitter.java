@@ -15,6 +15,7 @@ import org.xmpp.packet.Message;
 import org.xmpp.packet.Packet;
 import org.xmpp.packet.Presence;
 
+import com.radar.common.EnvConstant;
 import com.radar.extend.OfflineDao;
 import com.radar.utils.HixinUtils;
 /**
@@ -63,30 +64,51 @@ public class BoardcastEmitter
      * @author: sunshine  
      * @throws
      */
-    public static boolean sendBoardCastServer(Message message,String... userType){
-    	boolean tag =false;
-    	String utype="300";
-    	if(userType!=null && userType.length>0 && StringUtils.isNotEmpty(userType[0])){
-    		utype=userType[0];
-    	}
+    public static boolean sendBoardCastServer(String appName,String accepterType,Message message){
     	//XMPPServer.getInstance().getSessionManager().broadcast(message);
+    	boolean tag =false;
     	Collection<ClientSession> ccsess= XMPPServer.getInstance().getSessionManager().getSessions();
     	UserManager userManager =  XMPPServer.getInstance().getUserManager();
-    	for(ClientSession sess:ccsess){
-    		try {
-				String userName = sess.getUsername();
-				if(StringUtils.isNotEmpty(userName)){
-					User user = userManager.getUser(userName);
-					 if(user!=null && utype.equals(user.getEmail())){//email目前用作业务用户类型使用
-						 XMPPServer.getInstance().getSessionManager().userBroadcast(userName, message);
-					 }
-				}
-			} catch (UserNotFoundException e) {
-				e.printStackTrace();
-			}
-    	}
+    	
+    	if(EnvConstant.APPS.ALLAPP.toString().equals(appName)){
+    		XMPPServer.getInstance().getSessionManager().broadcast(message);
+	    }else{
+	    	for(ClientSession sess:ccsess){
+        		try {
+    				String userName = sess.getUsername();
+    				if(StringUtils.isNotEmpty(userName)){
+    					User user = userManager.getUser(userName);
+    					 if(user!=null){
+    						 if(StringUtils.isEmpty(accepterType) && StringUtils.isEmpty(appName)){
+    	    					 if(EnvConstant.defaultAccepterType.toString().equals(user.getEmail())){//email目前用作业务用户类型使用
+    	    						 XMPPServer.getInstance().getSessionManager().userBroadcast(userName, message);
+    	    					 }
+    					       }else if(StringUtils.isNotEmpty(accepterType)){
+    					    	   if(accepterType.equals(user.getEmail())){//email目前用作业务用户类型使用
+      	    						 XMPPServer.getInstance().getSessionManager().userBroadcast(userName, message);
+      	    					   }
+    					       }else if(StringUtils.isNotEmpty(appName)){
+    					    	   EnvConstant.APPS app =EnvConstant.APPS.valueOf(appName);
+    					    	   if(app == EnvConstant.APPS.MOM){
+    					    		   if("300".equals(user.getEmail())){//email目前用作业务用户类型使用
+    	      	    						 XMPPServer.getInstance().getSessionManager().userBroadcast(userName, message);
+    	      	    					   }
+    					    	   }else if(app == EnvConstant.APPS.DOCTOR){
+    					    		   if("201".equals(user.getEmail())){//email目前用作业务用户类型使用
+  	      	    						 XMPPServer.getInstance().getSessionManager().userBroadcast(userName, message);
+  	      	    					   }
+    					    	   }
+    						    }
+    					 }
+    				}
+    			} catch (UserNotFoundException e) {
+    				e.printStackTrace();
+    			}
+        	}
+	    }
     	return tag;
     }
+    
     /**
      * 向所有在线用户发送系统广播消息
      * @Title: sendServerMessage

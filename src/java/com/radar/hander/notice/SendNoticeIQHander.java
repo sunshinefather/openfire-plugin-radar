@@ -1,8 +1,6 @@
 package com.radar.hander.notice;
 
-import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Element;
 import org.jivesoftware.openfire.IQHandlerInfo;
@@ -16,7 +14,6 @@ import org.xmpp.packet.IQ.Type;
 import com.radar.action.NoticeAction;
 import com.radar.common.IqConstant;
 import com.zyt.web.after.notice.remote.bean.ImCrmNotice;
-import com.zyt.web.after.notice.remote.bean.ImCrmNoticeDetail;
 
 public class SendNoticeIQHander extends IQHandler {
 
@@ -31,48 +28,46 @@ public class SendNoticeIQHander extends IQHandler {
 
 	@Override
 	public IQ handleIQ(IQ packet) throws UnauthorizedException {
+		if(log.isDebugEnabled()){
+			log.debug("@sunshine:发送通知的xml:",packet.toXML());
+		}
 		IQ replay=IQ.createResultIQ(packet);
+		replay.setChildElement("query", NAME_SPACE);
 		Element query = packet.getChildElement();
         List<?> node =  query.elements();
         String noticeId="";
         String noticeType="";
         String noticeSubject="";
         String toUserName="";
-        String noticeContent="";
         String forceNotStore="";
+        String appName="";
+        String accepterType="";
         for (Object object : node) {
             Element elm = (Element)object;  
-            noticeId=elm.attributeValue("noticeId");
             noticeType=elm.attributeValue("noticeType");
             noticeSubject=elm.attributeValue("noticeSubject");
-            noticeContent=elm.attributeValue("noticeContent");
+            noticeId=elm.attributeValue("noticeId");
             toUserName=elm.attributeValue("toUserName");
+            appName=elm.attributeValue("appName");
+            accepterType=elm.attributeValue("accepterType");
             forceNotStore=elm.attributeValue("forceNotStore");
         }
-        if(StringUtils.isEmpty(noticeSubject) || StringUtils.isEmpty(noticeType) || (StringUtils.isEmpty(toUserName) && StringUtils.isEmpty(noticeId)) || (StringUtils.isEmpty(noticeContent) && StringUtils.isEmpty(noticeId))){
+        if(StringUtils.isEmpty(noticeSubject) || StringUtils.isEmpty(noticeType)){
         	replay.setType(Type.error);
-        	log.info("推送失败:参数错误");
+        	log.error("@sunshine:发送通知参数错误",packet.toXML());
         	return replay;
         }
         String[] toUserNames=null;
         if(StringUtils.isNotEmpty(toUserName)){
-        	toUserNames=toUserName.split(",");
+        	toUserNames=toUserName.split("[,]");
         }
         ImCrmNotice imCrmNotice=new ImCrmNotice();
         imCrmNotice.setNoticeId(noticeId);
         imCrmNotice.setSender(packet.getFrom().getNode());
         imCrmNotice.setNoticeType(noticeType);
         imCrmNotice.setNoticeSubject(noticeSubject);
-        imCrmNotice.setNoticeContent(noticeContent);
-        List<ImCrmNoticeDetail> details=new ArrayList<ImCrmNoticeDetail>();
-        if(toUserNames!=null && toUserNames.length>0){
-            for(String username:toUserNames){
-            	ImCrmNoticeDetail e=new ImCrmNoticeDetail();
-            	e.setAccepter(username);
-            	details.add(e);
-            }
-        }
-        imCrmNotice.setDetails(details);
+        imCrmNotice.setExtension1(appName);
+        imCrmNotice.setExtension2(accepterType);
         boolean force=false;
         if(StringUtils.isNotEmpty(forceNotStore) && ("true".equalsIgnoreCase(forceNotStore) || "1".equals(forceNotStore) || "y".equalsIgnoreCase(forceNotStore))){
         	force=true;

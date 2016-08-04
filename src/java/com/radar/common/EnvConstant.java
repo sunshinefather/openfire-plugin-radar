@@ -13,7 +13,7 @@ public class EnvConstant
     /**
      * imcrm服务器地址
      */
-	public static  String IMCRMHOST="192.168.66.20";//(内网内)192.168.1.245;192.168.43.154(移动),192.168.66.20(华为)
+	public static  String IMCRMHOST="127.0.0.1";//(内网内)192.168.1.245;192.168.43.154(移动),192.168.66.20(华为)
      /**
       * imcrm服务器端口
       */
@@ -45,4 +45,16 @@ public class EnvConstant
      * 环境
      */
     public static boolean IS_PRODUCT_ENV;
+    /**
+     * 默认用户类型
+     */
+    public static String defaultAccepterType="300";
+    /**
+     * 默认AppName
+     */
+    public static APPS defaultAppName=APPS.MOM;
+    
+    public enum APPS{
+    	MOM,DOCTOR,ALLAPP
+    }
 }

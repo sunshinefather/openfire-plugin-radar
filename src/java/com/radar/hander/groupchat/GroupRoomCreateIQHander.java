@@ -37,12 +37,16 @@ public class GroupRoomCreateIQHander extends IQHandler
     public IQ handleIQ(IQ packet) throws UnauthorizedException
     {
     	IQ replay=IQ.createResultIQ(packet);
+    	replay.setChildElement("query", NAME_SPACE);
         String groupName = null;
         String createUserId  = null;
         String groupType=null;
         String groupDesc=null;
         String memberSize=null;
         String roomPassword=null;
+        String extension1=null;
+        String extension2=null;
+        String userId=null;
         Element query = packet.getChildElement();
         List<?> node =  query.elements();
         for (Object object : node) {
@@ -53,6 +57,12 @@ public class GroupRoomCreateIQHander extends IQHandler
             groupDesc=elm.attributeValue("groupDesc");
             memberSize=elm.attributeValue("memberSize");
             roomPassword=elm.attributeValue("roomPassword");
+            extension1=elm.attributeValue("extension1");
+            extension2=elm.attributeValue("extension2");
+            userId=elm.attributeValue("userId");
+        }
+        if(StringUtils.isNotBlank(userId)){
+        	createUserId = createUserId+","+userId;
         }
         
         if(StringUtils.isEmpty(groupName) || StringUtils.isEmpty(createUserId)){
@@ -70,9 +80,10 @@ public class GroupRoomCreateIQHander extends IQHandler
         		imCrmGroupRoom.setMemberSize(memberSize);
             }
         	imCrmGroupRoom.setRoomPassword(roomPassword);
+        	imCrmGroupRoom.setExtension1(extension1);
+        	imCrmGroupRoom.setExtension2(extension2);
         	imCrmGroupRoom=GroupAction.createGroupRoom(imCrmGroupRoom);
         	if(imCrmGroupRoom!=null && StringUtils.isNotEmpty(imCrmGroupRoom.getGroupId())){
-            	replay.setChildElement("query", NAME_SPACE);
             	replay.getChildElement().addElement("groupRoom")
             	.addAttribute("groupId",imCrmGroupRoom.getGroupId())
             	.addAttribute("groupName",imCrmGroupRoom.getGroupName())
@@ -80,7 +91,9 @@ public class GroupRoomCreateIQHander extends IQHandler
             	.addAttribute("memberSize",imCrmGroupRoom.getMemberSize())
             	.addAttribute("roomPassword",imCrmGroupRoom.getRoomPassword())
             	.addAttribute("groupDesc",imCrmGroupRoom.getGroupDesc())
-            	.addAttribute("groupType",imCrmGroupRoom.getGroupType());
+            	.addAttribute("groupType",imCrmGroupRoom.getGroupType())
+            	.addAttribute("extension1",imCrmGroupRoom.getExtension1())
+            	.addAttribute("extension2",imCrmGroupRoom.getExtension2());
             }else{
             	replay.setType(IQ.Type.error);
             	log.info("创建群组失败");

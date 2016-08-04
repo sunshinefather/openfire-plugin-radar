@@ -31,6 +31,7 @@ public class ContactListIQHander extends IQHandler {
 	@Override
 	public IQ handleIQ(IQ packet) throws UnauthorizedException {
 		IQ replay=IQ.createResultIQ(packet);
+		replay.setChildElement("query", NAME_SPACE);
 		Element query = packet.getChildElement();
         List<?> node =  query.elements();
         String userId="";
@@ -45,7 +46,6 @@ public class ContactListIQHander extends IQHandler {
         }
 		Map<ImCrmFriendGroups, List<ImCrmFriends>> map=ContactAction.friendsList(userId,userFrom);
 		if(map!=null && map.size()>0){
-			replay.setChildElement("query", NAME_SPACE);
 			for(ImCrmFriendGroups imfg:map.keySet()){
 				Element elm=replay.getChildElement()
 						.addElement("friendGroup")

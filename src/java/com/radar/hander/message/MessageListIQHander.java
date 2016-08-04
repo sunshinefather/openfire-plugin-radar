@@ -28,6 +28,7 @@ public class MessageListIQHander extends IQHandler {
 	@Override
 	public IQ handleIQ(IQ packet) throws UnauthorizedException {
 		IQ replay=IQ.createResultIQ(packet);
+		replay.setChildElement("query", NAME_SPACE);
 		Element query = packet.getChildElement();
         List<?> node =  query.elements();
         String userId="";
@@ -65,7 +66,6 @@ public class MessageListIQHander extends IQHandler {
         		replay.setType(IQ.Type.error);
         		log.info("获取聊天记录失败");
         	}else{
-            	replay.setChildElement("query", NAME_SPACE);
             	replay.getChildElement().addElement("messagesJson").addCDATA(msglist);
         	}
         }

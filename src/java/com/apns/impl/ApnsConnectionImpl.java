@@ -244,6 +244,7 @@ public class ApnsConnectionImpl implements IApnsConnection {
 							logger.error(String.format("%s @sunshine:收到apns服务器响应. status: %s, id: %s, error-desc: %s", connName, status, errorId, ErrorResponse.desc(status)));
 						}
 						boolean found = false;
+						int notifiqueueSize=notificationCachedQueue.size();
 						while (!notificationCachedQueue.isEmpty()) {
 								PushNotification pn = notificationCachedQueue.poll();
 								if (pn.getId() == errorId) {
@@ -260,7 +261,7 @@ public class ApnsConnectionImpl implements IApnsConnection {
 							}
 						
 							if (!found) {
-								logger.error(String.format("%s @sunshine:apns异常断开 ,未找到失效token数据. id: %s",connName,errorId));
+								logger.error(String.format("%s @sunshine:apns异常断开 ,从 %s 条发送数据中未找到失效token数据. id: %s",connName,notifiqueueSize,errorId));
 							}
 						
 						

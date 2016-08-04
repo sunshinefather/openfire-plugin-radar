@@ -31,7 +31,7 @@ public class ApnsConfig {
 	/**
 	 * 发送堆积池
 	 */
-	private int cacheLength = 1000;
+	private int cacheLength = 500;
 	
 	/**
 	 *发送错误重试次数

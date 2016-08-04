@@ -27,27 +27,7 @@ public class NoticeAction {
 	 */
 	public static boolean sendNotice(ImCrmNotice imCrmNotice,String[] toUserNames,Boolean... forceNotStore){
 		NoticeBroadcast.pushNotice(imCrmNotice,toUserNames,forceNotStore);
-		boolean tag=true;
-		/**
-		if(toUserNames!=null && toUserNames.length>0 && !(forceNotStore!=null && forceNotStore.length>0 && forceNotStore[0])){
-			ThriftClientInfo clientinfo=null;
-			try {
-				clientinfo = ThriftClientManager.getExpendClient(HOST, PORT, ImCrmNoticeService.Client.class);
-				ImCrmNoticeService.Client clent=(ImCrmNoticeService.Client)clientinfo.getTserviceClient();
-				if(StringUtils.isNotEmpty(clent.send(imCrmNotice).getNoticeId())){
-					tag=true;
-				}else{
-					tag=false;
-				}
-			} catch (Exception e) {
-				tag=false;
-				log.error("保存通知异常",e);
-			}finally{
-				ThriftClientManager.closeClient(clientinfo);
-			}
-		}
-		*/
-		return tag;
+		return true;
 	}
 	/**
 	 * 修改通知状态

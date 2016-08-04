@@ -58,7 +58,7 @@ public class PushMessage {
 			mom_config99.setKeyStore(mom_is);
 			mom_config99.setDevEnv(false);
 			mom_config99.setPassword(KSPASSWORD);
-			mom_config99.setPoolSize(12);
+			mom_config99.setPoolSize(15);
 			mom_config99.setName("mom_app");
 			serviceMom= ApnsServiceImpl.createInstance(mom_config99);
 			
@@ -66,7 +66,7 @@ public class PushMessage {
 			doctor_config99.setKeyStore(doctor_is);
 			doctor_config99.setDevEnv(false);
 			doctor_config99.setPassword(KSPASSWORD);
-			doctor_config99.setPoolSize(12);
+			doctor_config99.setPoolSize(15);
 			doctor_config99.setName("doctor_app");
 			serviceDoctor= ApnsServiceImpl.createInstance(doctor_config99);
 		} catch (FileNotFoundException e) {
@@ -101,18 +101,11 @@ public class PushMessage {
 		param.addParam("dataType",1);
 		param.addParam("dataId",message.getID());
 		User user= XMPPServer.getInstance().getUserManager().getUser(message.getTo().getNode());
-		if(user!=null ){
-			if("300".equals(user.getEmail())){
-				push2Mom(param, deviceToken);
-			}else if("201".equals(user.getEmail())){
-				push2Doctor(param, deviceToken);
-			}
-		}
-		
+		push(user,param, deviceToken);
 		clearInvalidToken();
 	}
 	
-	public static void pushNoticeMessage(final Message message) throws Exception{
+	public static void pushNoticeMessage(final String appName,final String accepterType,final Message message) throws Exception{
 		 String msgType;
 		 String sendUserName;
 		if(message.getType()==Message.Type.headline){
@@ -145,14 +138,7 @@ public class PushMessage {
 								String userName=userAndToken[0];
 								String token=userAndToken[1];
 								User user= XMPPServer.getInstance().getUserManager().getUser(userName);
-								if(user!=null ){
-									if("300".equals(user.getEmail())){
-										 push2Mom(param,token);
-									 }else if("201".equals(user.getEmail())){
-										 push2Doctor(param, token);
-									 }
-								}
-								push2Mom(param,str.toString());
+								push(user,param, token);
 							}
 						}
 						log.info("@sunshine:apns已推送通知"+page.getCurrentResult()+"/"+page.getTotalResults()+"条,"+message.getSubject());
@@ -177,13 +163,7 @@ public class PushMessage {
 				param.addParam("dataType",msgType);
 				param.addParam("dataId",message.getBody());
 				User user= XMPPServer.getInstance().getUserManager().getUser(userName);
-				if(user!=null){
-					 if("300".equals(user.getEmail())){
-						 push2Mom(param, deviceToken);
-					 }else if("201".equals(user.getEmail())){
-						 push2Doctor(param, deviceToken);
-					 }
-				}
+				push(user,param, deviceToken);
 				
 			}
 		}
@@ -229,13 +209,7 @@ public class PushMessage {
 			if(StringUtils.isNotEmpty(deviceToken) && !listUserName.contains(name.toLowerCase())){
 				i++;
 				User user= XMPPServer.getInstance().getUserManager().getUser(name);
-				if(user!=null){
-					 if("300".equals(user.getEmail())){
-						 push2Mom(param, deviceToken);
-					 }else if("201".equals(user.getEmail())){
-						 push2Doctor(param, deviceToken);
-					 }
-				}
+				push(user,param, deviceToken);
 	        }
 		}
 		log.info("@sunshine:apns已推送群聊"+i+"条,"+message.getBody());
@@ -271,6 +245,29 @@ public class PushMessage {
 	private static void push2Doctor(Payload param, String deviceToken){
 		serviceDoctor.sendNotification(deviceToken, param);
 	}
+	
+	/**
+	 * apns推送
+	 * @Title: push
+	 * @Description: TODO  
+	 * @param: @param user
+	 * @param: @param param
+	 * @param: @param deviceToken      
+	 * @return: void
+	 * @author: sunshine  
+	 * @throws
+	 */
+	private static void push(User user,Payload param, String deviceToken){
+		if(user!=null){
+			 if("300".equals(user.getEmail())){
+				 push2Mom(param, deviceToken);
+			 }else if("201".equals(user.getEmail())){
+				 push2Doctor(param, deviceToken);
+			 }
+		}
+	}
+	
+	
 	/**
 	 * 提示消息
 	 * @param subject 消息类型(文本,图片,语音等)
@@ -294,7 +291,9 @@ public class PushMessage {
 		}else if ("voice".equals(subject)) {
 			message = "[语音请求]";
 		}else if ("divider".equals(subject)) {
-			message = "[结束会话]";
+			message = "[咨询已结束]";
+		}else if ("patient".equals(subject)) {
+			message = "[病历]";
 		}else {
 			return subMessage(headMessage+message);
 		}

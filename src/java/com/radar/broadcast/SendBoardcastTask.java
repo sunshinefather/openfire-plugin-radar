@@ -22,20 +22,23 @@ public class SendBoardcastTask implements QueueTask {
     private boolean forceNotStore;
     private IQ iq;
     private boolean isIQ = false;
-    private String userType;//暂未使用
+    private String accepterType;
+    private String appName;
     private static final Logger log = LoggerFactory.getLogger(SendBoardcastTask.class);
     
     public SendBoardcastTask (String userName,Message message,Boolean... forceNotStore){
     	this.userName = userName;
     	this.message = message;
-    	if(forceNotStore!=null && forceNotStore.length==1){
+    	if(forceNotStore!=null && forceNotStore.length>0){
     		this.forceNotStore=forceNotStore[0];
     	}else{
     		this.forceNotStore=false;
     	}
     }
-    public SendBoardcastTask (Message message,Boolean... forceNotStore){
+    public SendBoardcastTask (String appName,String accepterType,Message message,Boolean... forceNotStore){
     	this.message = message;
+    	this.appName=appName;
+    	this.accepterType=accepterType;
     	if(forceNotStore!=null && forceNotStore.length==1){
     		this.forceNotStore=forceNotStore[0];
     	}else{
@@ -62,7 +65,7 @@ public class SendBoardcastTask implements QueueTask {
 			
 			if(StringUtils.isEmpty(userName)){
 				log.info("xmpp通知推送-广播:"+message.toXML());
-				BoardcastEmitter.sendBoardCastServer(message);
+				BoardcastEmitter.sendBoardCastServer(appName,accepterType,message);
 			}else{
 				message.setTo(userName +"@"+HixinUtils.getDomain());
 				log.info("xmpp通知推送-指定人:"+message.toXML());
@@ -72,9 +75,9 @@ public class SendBoardcastTask implements QueueTask {
 					BoardcastEmitter.sendBoardCastAndStoreServer(userName, message);
 				}
 			}
-			//IOS推送消息
+			//IOS推送通知消息
 	    	if(message.getType() == Message.Type.headline){
-	            ThreadPool.addWork(new PushMessageTask(message.createCopy()));
+	            ThreadPool.addWork(new PushMessageTask(appName,accepterType,message.createCopy()));
 			}
 		}
 	}

@@ -29,6 +29,7 @@ public class ContactAddMemberIQHander extends IQHandler {
 	@Override
 	public IQ handleIQ(IQ packet) throws UnauthorizedException {
 		IQ replay=IQ.createResultIQ(packet);
+		replay.setChildElement("query", NAME_SPACE);
 		Element query = packet.getChildElement();
         List<?> node =  query.elements();
         String fgId="";
@@ -50,7 +51,6 @@ public class ContactAddMemberIQHander extends IQHandler {
         	imCrmFriends.setFriendDesc(friendDesc);
         	imCrmFriends=ContactAction.addMember(imCrmFriends);
             if(imCrmFriends!=null && StringUtils.isNotEmpty(imCrmFriends.getFriendId())){
-            	replay.setChildElement("query", NAME_SPACE);
             	replay.getChildElement().addElement("friends").addAttribute("friendId",imCrmFriends.getFriendId());
             }else{
             	replay.setType(IQ.Type.error);

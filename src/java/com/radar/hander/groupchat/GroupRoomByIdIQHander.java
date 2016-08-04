@@ -37,6 +37,7 @@ public class GroupRoomByIdIQHander extends IQHandler
     public IQ handleIQ(IQ packet) throws UnauthorizedException
     {
     	IQ replay=IQ.createResultIQ(packet);
+    	replay.setChildElement("query", NAME_SPACE);
     	String groupId=null;
         Element query = packet.getChildElement();
         List<?> node =  query.elements();
@@ -51,7 +52,6 @@ public class GroupRoomByIdIQHander extends IQHandler
         }else {
         	ImCrmGroupRoom imCrmGroupRoom=GroupAction.getGroupRoomById(groupId);
         	if(imCrmGroupRoom!=null){
-            	replay.setChildElement("query", NAME_SPACE);
         		replay.getChildElement().addElement("groupRoom")
             	.addAttribute("groupId",imCrmGroupRoom.getGroupId())
             	.addAttribute("groupName",imCrmGroupRoom.getGroupName())

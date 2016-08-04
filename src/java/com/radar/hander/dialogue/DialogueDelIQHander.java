@@ -28,6 +28,7 @@ public class DialogueDelIQHander extends IQHandler {
 	@Override
 	public IQ handleIQ(IQ packet) throws UnauthorizedException {
 		IQ replay=IQ.createResultIQ(packet);
+		replay.setChildElement("query", NAME_SPACE);
 		Element query = packet.getChildElement();
         List<?> node =  query.elements();
         String userId="";
@@ -46,7 +47,6 @@ public class DialogueDelIQHander extends IQHandler {
         }else {
         	boolean bool=DialogueAction.delDialogues(userId, dialogueIds);
         	if(bool){
-            	replay.setChildElement("query", NAME_SPACE);
             	replay.getChildElement().addElement("dialogueIds").setText(dialogueIds);
         	}else{
             	replay.setType(IQ.Type.error);

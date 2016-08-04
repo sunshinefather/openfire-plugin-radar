@@ -99,7 +99,7 @@ public class MsgInfoEnttity
 
 
 	public enum Type {
-		DIVIDER(0),MESSAGE(1), SOUND(2),IMAGE(3), FILE(4),SVIDEO(5),VIDEO(6),VOICE(7),OTHER(10);
+		DIVIDER(0),MESSAGE(1), SOUND(2),IMAGE(3), FILE(4),SVIDEO(5),VIDEO(6),VOICE(7),PATIENT(8),OTHER(10);
 		
 		private int code;
 

@@ -10,7 +10,6 @@ import org.jivesoftware.openfire.handler.IQHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmpp.packet.IQ;
-
 import com.radar.action.GroupAction;
 import com.radar.common.IqConstant;
 import com.zyt.web.after.grouproom.remote.ImCrmGroupMember;
@@ -37,6 +36,7 @@ public class GroupRoomAddMemberIQHander extends IQHandler
     public IQ handleIQ(IQ packet) throws UnauthorizedException
     {
     	IQ replay=IQ.createResultIQ(packet);
+    	replay.setChildElement("query", NAME_SPACE);
         String groupId = null;
         String userId  = null;
         Element query = packet.getChildElement();
@@ -56,7 +56,6 @@ public class GroupRoomAddMemberIQHander extends IQHandler
         	imCrmGroupMember.setUserName(userId);
         	imCrmGroupMember=GroupAction.addMember(imCrmGroupMember,packet.getFrom().getNode());
         	if(imCrmGroupMember!=null && StringUtils.isNotEmpty(imCrmGroupMember.getGroupUserId())){
-            	replay.setChildElement("query", NAME_SPACE);
             	replay.getChildElement().addElement("groupRoomMember")
             	.addAttribute("groupUserId",imCrmGroupMember.getGroupUserId());
             }else{

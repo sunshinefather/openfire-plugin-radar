@@ -31,6 +31,7 @@ public class NoticeByIdIQHander extends IQHandler {
 	@Override
 	public IQ handleIQ(IQ packet) throws UnauthorizedException {
 		IQ replay=IQ.createResultIQ(packet);
+		replay.setChildElement("query", NAME_SPACE);
 		Element query = packet.getChildElement();
         List<?> node =  query.elements();
         String userId="";
@@ -55,7 +56,7 @@ public class NoticeByIdIQHander extends IQHandler {
     		replay.setType(IQ.Type.error);
     		log.info("获取通知失败");
     	}else{
-        	Element element= replay.setChildElement("query", NAME_SPACE);
+        	Element element= replay.getChildElement();
         	Element noticeNode=element.addElement("notice")
         			                  .addAttribute("noticeId", notice.getNoticeId())
         			                  .addAttribute("sender", notice.getSender())

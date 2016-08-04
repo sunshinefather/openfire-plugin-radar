@@ -1,7 +1,6 @@
 package com.radar.hander.groupchat;
 
 import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Element;
 import org.jivesoftware.openfire.IQHandlerInfo;
@@ -10,12 +9,11 @@ import org.jivesoftware.openfire.handler.IQHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmpp.packet.IQ;
-
 import com.radar.action.GroupAction;
 import com.radar.common.IqConstant;
 import com.zyt.web.after.grouproom.remote.ImCrmGroupMember;
 /**
- * 移除群成员
+ * 移除群成员,当userLoginName值为:allUsers清空除群创建者以外的所有人
  * @ClassName:  GroupRoomRemoveMemberIQHander   
  * @Description:TODO   
  * @author: sunshine  
@@ -37,6 +35,7 @@ public class GroupRoomRemoveMemberIQHander extends IQHandler
     public IQ handleIQ(IQ packet) throws UnauthorizedException
     {
     	IQ replay=IQ.createResultIQ(packet);
+    	replay.setChildElement("query", NAME_SPACE);
         String groupUserId = null;
         String userLoginName=null;
         String groupid=null;
@@ -48,8 +47,13 @@ public class GroupRoomRemoveMemberIQHander extends IQHandler
             userLoginName = elm.attributeValue("userLoginName");
             groupid=elm.attributeValue("groupId");
         }
-        
+        if(StringUtils.isEmpty(userLoginName)){
+        	userLoginName=packet.getFrom().getNode();
+        }
         if(StringUtils.isNotEmpty(groupUserId) || (StringUtils.isNotEmpty(userLoginName) && StringUtils.isNotEmpty(groupid))){
+        	if("allUsers".equals(userLoginName)){//userLoginName为allUsers清空除群管理员以外的所有成员
+            	userLoginName=null;
+            }
         	ImCrmGroupMember imCrmGroupMember=new ImCrmGroupMember();
         	imCrmGroupMember.setGroupUserId(groupUserId);
         	imCrmGroupMember.setGroupId(groupid);
@@ -57,11 +61,11 @@ public class GroupRoomRemoveMemberIQHander extends IQHandler
         	boolean rt=GroupAction.delMember(imCrmGroupMember,packet.getFrom().getNode());
         	if(!rt){
         		replay.setType(IQ.Type.error);
-            	log.info("移除群成员失败");
+            	log.error("移除群成员失败",packet.toXML());
             }
         }else{
         	replay.setType(IQ.Type.error);
-        	log.info("移除群成员参数错误");
+        	log.error("移除群成员参数错误",packet.toXML());
         }
         return replay;
     }

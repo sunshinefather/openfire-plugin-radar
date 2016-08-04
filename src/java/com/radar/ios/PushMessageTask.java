@@ -15,10 +15,17 @@ import com.radar.pool.QueueTask;
 public class PushMessageTask implements QueueTask {
 
 	private Message message;
+    private String accepterType;
+    private String appName;
 	private static final Logger log = LoggerFactory.getLogger(PushMessageTask.class);
-	
+
 	public PushMessageTask(Message message){
 		this.message = message;
+	}
+	public PushMessageTask(String appName,String accepterType,Message message){
+		this.message = message;
+		this.appName=appName;
+		this.accepterType=accepterType;
 	}
 	@Override
 	public void executeTask() throws Exception {
@@ -29,7 +36,7 @@ public class PushMessageTask implements QueueTask {
 			}else if (Message.Type.groupchat.equals(message.getType())) {
 				PushMessage.pushGroupChatMessage(message);
 			}else if(Message.Type.headline.equals(message.getType())){
-				PushMessage.pushNoticeMessage(message);
+				PushMessage.pushNoticeMessage(appName,accepterType,message);
 			}
 		} catch (Exception e) {
 			log.error("推送消息失败：" + e.getMessage());
