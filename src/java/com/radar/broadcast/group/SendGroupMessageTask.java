@@ -33,13 +33,15 @@ public class SendGroupMessageTask implements QueueTask{
 		 try
 	        {
 			 List<String> item = queryGroupMember(message.getTo().getNode());
-	            for (String userName : item)
-	            {
-	                if (!message.getFrom().getNode().equalsIgnoreCase(userName))
-	                {
-	                    this.sendGroupMessage(userName, message.createCopy());
-	                }
-	            }
+			 if(item.contains(message.getFrom().getNode())){
+				 for (String userName : item)
+		            {
+		                if (!message.getFrom().getNode().equalsIgnoreCase(userName))
+		                {
+		                    this.sendGroupMessage(userName, message.createCopy());
+		                }
+		            }
+			 }
 	        } catch (Exception e)
 	        {
 	            log.error("发送群消息失败,message=" + message.toString(), e);

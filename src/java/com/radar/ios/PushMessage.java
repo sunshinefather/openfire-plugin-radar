@@ -189,31 +189,34 @@ public class PushMessage {
 		param.addParam("senderId",groupUid+"/"+from);
 		param.addParam("dataType",2);//群聊
 		param.addParam("dataId",message.getID());
+		
 		List<String> itmes = queryGroupMember(groupUid);
-		ImCrmPushConfig imCrmPushConfig = new ImCrmPushConfig();
-		imCrmPushConfig.setGroupId(groupUid);
-		List<ImCrmPushConfig> list= PushConfigAction.findPushConfig(imCrmPushConfig);
-		List<String> listUserName= new ArrayList<>();//不走apns推送的用户列表
-		for(ImCrmPushConfig _imCrmPushConfig :list){
-			listUserName.add(_imCrmPushConfig.getUserName().toLowerCase());
-		}
-		log.info("@sunshine:apns应推送群聊(包含没有token的和已屏蔽接受推送的)"+itmes.size()+"条,"+message.getBody());
-		int i=0;
-		for (String name : itmes) {
-			String deviceToken=null;
-			if(from.equalsIgnoreCase(name.trim())){
-				continue;
-			}else {
-				deviceToken = DeviceToken.get(name);
+		if(itmes.contains(from)){
+			ImCrmPushConfig imCrmPushConfig = new ImCrmPushConfig();
+			imCrmPushConfig.setGroupId(groupUid);
+			List<ImCrmPushConfig> list= PushConfigAction.findPushConfig(imCrmPushConfig);
+			List<String> listUserName= new ArrayList<>();//不走apns推送的用户列表
+			for(ImCrmPushConfig _imCrmPushConfig :list){
+				listUserName.add(_imCrmPushConfig.getUserName().toLowerCase());
 			}
-			if(StringUtils.isNotEmpty(deviceToken) && !listUserName.contains(name.toLowerCase())){
-				i++;
-				User user= XMPPServer.getInstance().getUserManager().getUser(name);
-				push(user,param, deviceToken);
-	        }
+			log.info("@sunshine:apns应推送群聊(包含没有token的和已屏蔽接受推送的)"+itmes.size()+"条,"+message.getBody());
+			int i=0;
+			for (String name : itmes) {
+				String deviceToken=null;
+				if(from.equalsIgnoreCase(name.trim())){
+					continue;
+				}else {
+					deviceToken = DeviceToken.get(name);
+				}
+				if(StringUtils.isNotEmpty(deviceToken) && !listUserName.contains(name.toLowerCase())){
+					i++;
+					User user= XMPPServer.getInstance().getUserManager().getUser(name);
+					push(user,param, deviceToken);
+		        }
+			}
+			log.info("@sunshine:apns已推送群聊"+i+"条,"+message.getBody());
+			clearInvalidToken();
 		}
-		log.info("@sunshine:apns已推送群聊"+i+"条,"+message.getBody());
-		clearInvalidToken();
 	}
 
 	/**
