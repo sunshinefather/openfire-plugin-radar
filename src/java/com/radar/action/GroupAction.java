@@ -1,9 +1,12 @@
 package com.radar.action;
 
 import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.radar.broadcast.group.GroupBroadcast;
 import com.radar.common.EnvConstant;
 import com.radar.common.ThriftClientInfo;
 import com.radar.common.ThriftClientManager;
@@ -111,7 +114,7 @@ public class GroupAction {
 		try {
 			clientinfo = ThriftClientManager.getExpendClient(HOST, PORT, ImCrmGroupRoomService.Client.class);
 			ImCrmGroupRoomService.Client clent=(ImCrmGroupRoomService.Client)clientinfo.getTserviceClient();
-			//GroupBroadcast.memberExitBoard(imCrmGroupMember.getUserLoginName(), imCrmGroupMember.getGroupid(), from);
+			GroupBroadcast.memberExitBoard(imCrmGroupMember.getUserName(),imCrmGroupMember.getGroupId(),from);
 			boolean rt=clent.delMember(imCrmGroupMember);
             return rt;
 		} catch (Exception e) {

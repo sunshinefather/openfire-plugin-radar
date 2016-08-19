@@ -40,7 +40,7 @@ public class GroupBroadcast {
 				}
 			}
 			if(StringUtils.isNotEmpty(sendUserName) && StringUtils.isNotEmpty(sb.toString())){
-				ThreadPool.addWork(new GroupBroadcastTask("《"+sendUserName+ "》邀请 《" + sb.toString() + "》加入该群组",groupUid));
+				//ThreadPool.addWork(new GroupBroadcastTask("《"+sendUserName+ "》邀请 《" + sb.toString() + "》加入该群组",groupUid));
 			}
 		}
 	}
@@ -48,16 +48,14 @@ public class GroupBroadcast {
 	/**
 	 * 退出群 通知
 	 * 
-	 * @param nameItem 加入群的用户列表
-	 * @param groupUid 群UID
+	 * @param exitUsersName 用户列表
+	 * @param groupUid 群id
 	 * @param from　发送人
 	 */
 	public static void memberExitBoard(String exitUsersName, String groupUid,
 			String from) {
-		if(exitUsersName.equals(from)){
-			ThreadPool.addWork(new GroupBroadcastTask("《"+ContactAction.queryNickeName(exitUsersName) + "》已退出该群组",groupUid));
-		}else{
-			ThreadPool.addWork(new GroupBroadcastTask("管理员《"+ContactAction.queryNickeName(from) +"》从该群踢出《"+ContactAction.queryNickeName(exitUsersName)+"》",groupUid));
+		if(StringUtils.isNotEmpty(exitUsersName)){
+			ThreadPool.addWork(new GroupBroadcastTask("您已被移出该群",groupUid,exitUsersName));
 		}
 	}
 
@@ -69,6 +67,6 @@ public class GroupBroadcast {
 	 */
 	public static void groupRenameBoard(String groupName, String groupUid,
 			String from) {
-		ThreadPool.addWork(new GroupBroadcastTask("《"+ContactAction.queryNickeName(from) + "》将该群组名称修改为：" + groupName, groupUid));
+		//ThreadPool.addWork(new GroupBroadcastTask("《"+ContactAction.queryNickeName(from) + "》将该群组名称修改为：" + groupName, groupUid));
 	}
 }
