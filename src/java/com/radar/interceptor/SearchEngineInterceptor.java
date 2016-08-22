@@ -48,7 +48,9 @@ public class SearchEngineInterceptor implements PacketInterceptor {
 			// 接收人不为空（可能接收人就是服务器）过滤回执消息
 			Message message = (Message)packet;
 			if(Message.Type.normal.equals(message.getType()) || HixinUtils.MESSAGE_RECEIVED.equals(message.getSubject()))
-				return ;
+			{
+				return;
+			}
 			Long currentTimeMillis = System.currentTimeMillis();
 			if(StringUtils.isNotBlank(message.getID())){
 				receiptIQ(message.getFrom() ,message.getID());
