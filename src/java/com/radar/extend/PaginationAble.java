@@ -45,7 +45,7 @@ public class PaginationAble implements Serializable {
 	}
 
 	public PaginationAble(int pageNo) {
-		this(pageNo,200);
+		this(pageNo,1000);
 	}
 
 	public PaginationAble(int pageNo, int pageSize) {

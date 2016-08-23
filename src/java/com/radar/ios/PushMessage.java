@@ -58,7 +58,7 @@ public class PushMessage {
 			mom_config99.setKeyStore(mom_is);
 			mom_config99.setDevEnv(false);
 			mom_config99.setPassword(KSPASSWORD);
-			mom_config99.setPoolSize(15);
+			mom_config99.setPoolSize(12);
 			mom_config99.setName("mom_app");
 			serviceMom= ApnsServiceImpl.createInstance(mom_config99);
 			
@@ -142,6 +142,8 @@ public class PushMessage {
 							}
 						}
 						log.info("@sunshine:apns已推送通知"+page.getCurrentResult()+"/"+page.getTotalResults()+"条,"+message.getSubject());
+				   }else{
+					   flag=false;
 				   }
 					if(page.getPageNo()<page.getTotalPages()){
 						page.setPageNo(page.getPageNo()+1);

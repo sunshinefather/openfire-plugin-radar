@@ -28,7 +28,7 @@ public class IosTokenDao {
     /**
      * 分页查询设备token
      */
-    public static final String QUERY_IOSTOKEN_PAGE ="SELECT userName,iosToken FROM ofdevicetoken limit ?,?";
+    public static final String QUERY_IOSTOKEN_PAGE ="SELECT userName,iosToken FROM ofdevicetoken ORDER BY userName limit ?,?";
     
     /**
      * 统计设备token数据
