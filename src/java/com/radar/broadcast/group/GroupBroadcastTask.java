@@ -19,17 +19,19 @@ import com.radar.utils.UUIDUtils;
  */
 public class GroupBroadcastTask implements QueueTask {
 
-	private String message;
+	private String messageInfo;
 	private String groupUid;
 	private String userName;
+	private String messageType;
 
 	private static final String RESOURCE = "system"; // 表明是系统消息
 	private static final Logger log = LoggerFactory.getLogger(GroupBroadcastTask.class);
 
-	public GroupBroadcastTask(String message, String groupUid,String userName) {
-		this.message = message;
+	public GroupBroadcastTask(String message, String groupUid,String userName,String messageType) {
+		this.messageInfo = message;
 		this.groupUid = groupUid;
 		this.userName = userName;
+		this.messageType=messageType;
 	}
 
 	@Override
@@ -39,8 +41,8 @@ public class GroupBroadcastTask implements QueueTask {
 		Element sendTime = sendMsg.addChildElement("sendTime", "urn:xmpp:time");
 		sendTime.addAttribute("stamp", System.currentTimeMillis() + "");
 		
-		sendMsg.setBody(message);
-		sendMsg.setSubject("removeGroup");
+		sendMsg.setBody(messageInfo);
+		sendMsg.setSubject(messageType);
 		sendMsg.setType(Message.Type.groupchat);
 		sendMsg.setFrom(groupUid + "@" + HixinUtils.getGroupDomain() + "/"+ RESOURCE);
         if(userName!=null && StringUtils.isNotEmpty(userName)){

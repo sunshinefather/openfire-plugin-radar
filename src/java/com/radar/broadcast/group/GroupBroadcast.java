@@ -24,25 +24,26 @@ public class GroupBroadcast {
 		if(StringUtils.isEmpty(addUsersName) || StringUtils.isEmpty(groupUid)){
 			return;
 		}
-		String sendUserName = ContactAction.queryNickeName(from);
-		String[] addUsersNames=addUsersName.split(",");
-		StringBuffer sb=new StringBuffer();
-		int lent=addUsersNames.length;
-		if(lent>0){
-			int j=1;
-			for(String username:addUsersNames){
-				String acceptUserName=ContactAction.queryNickeName(username);
-				if(StringUtils.isNotEmpty(acceptUserName)){
-					sb.append(acceptUserName);
-					if(j++<lent){
-						sb.append(",");
-					}
-				}
-			}
-			if(StringUtils.isNotEmpty(sendUserName) && StringUtils.isNotEmpty(sb.toString())){
+		//String sendUserName = ContactAction.queryNickeName(from);
+		//String[] addUsersNames=addUsersName.split(",");
+		//StringBuffer sb=new StringBuffer();
+		//int lent=addUsersNames.length;
+		//if(lent>0){
+			//int j=1;
+			//for(String username:addUsersNames){
+				ThreadPool.addWork(new GroupBroadcastTask("您被邀请加入该群",groupUid,addUsersName,"joinGroup"));
+				//String acceptUserName=ContactAction.queryNickeName(username);
+				//if(StringUtils.isNotEmpty(acceptUserName)){
+					//sb.append(acceptUserName);
+					//if(j++<lent){
+						//sb.append(",");
+					//}
+				//}
+			//}
+			//if(StringUtils.isNotEmpty(sendUserName) && StringUtils.isNotEmpty(sb.toString())){
 				//ThreadPool.addWork(new GroupBroadcastTask("《"+sendUserName+ "》邀请 《" + sb.toString() + "》加入该群组",groupUid));
-			}
-		}
+			//}
+		//}
 	}
 	
 	/**
@@ -55,7 +56,7 @@ public class GroupBroadcast {
 	public static void memberExitBoard(String exitUsersName, String groupUid,
 			String from) {
 		if(StringUtils.isNotEmpty(exitUsersName)){
-			ThreadPool.addWork(new GroupBroadcastTask("您已被移出该群",groupUid,exitUsersName));
+			ThreadPool.addWork(new GroupBroadcastTask("您已被管理员移出该群",groupUid,exitUsersName,"removeGroup"));
 		}
 	}
 

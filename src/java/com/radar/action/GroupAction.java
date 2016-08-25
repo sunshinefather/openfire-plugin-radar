@@ -85,8 +85,8 @@ public class GroupAction {
 			clientinfo = ThriftClientManager.getExpendClient(HOST, PORT, ImCrmGroupRoomService.Client.class);
 			ImCrmGroupRoomService.Client clent=(ImCrmGroupRoomService.Client)clientinfo.getTserviceClient();
 			ImCrmGroupMember _imCrmGroupMember=clent.addMember(imCrmGroupMember);
-			if(StringUtils.isNotEmpty(_imCrmGroupMember.getGroupUserId())){
-				//GroupBroadcast.memberJoinBoard(imCrmGroupMember.getUserId(), imCrmGroupMember.getGroupid(),from);
+			if(StringUtils.isNotEmpty(_imCrmGroupMember.getGroupUserId()) && "0".equals(getGroupRoomById(imCrmGroupMember.getGroupId()).getGroupType())){
+			  GroupBroadcast.memberJoinBoard(imCrmGroupMember.getUserName(), imCrmGroupMember.getGroupId(),from);
 			}else{
 				log.info("添加群成员失败:imcrm");
 			}
@@ -114,11 +114,14 @@ public class GroupAction {
 		try {
 			clientinfo = ThriftClientManager.getExpendClient(HOST, PORT, ImCrmGroupRoomService.Client.class);
 			ImCrmGroupRoomService.Client clent=(ImCrmGroupRoomService.Client)clientinfo.getTserviceClient();
-			GroupBroadcast.memberExitBoard(imCrmGroupMember.getUserName(),imCrmGroupMember.getGroupId(),from);
 			boolean rt=clent.delMember(imCrmGroupMember);
+			if(rt && StringUtils.isNotEmpty(imCrmGroupMember.getGroupId()) && "0".equals(getGroupRoomById(imCrmGroupMember.getGroupId()).getGroupType())){
+				GroupBroadcast.memberExitBoard(imCrmGroupMember.getUserName(),imCrmGroupMember.getGroupId(),from);
+			}
             return rt;
 		} catch (Exception e) {
 			e.printStackTrace();
+			
 		}finally{
 			ThriftClientManager.closeClient(clientinfo);
 		}
@@ -171,7 +174,7 @@ public class GroupAction {
 		}finally{
 			ThriftClientManager.closeClient(clientinfo);
 		}
-		return null;
+		return new ImCrmGroupRoom();
 	}
 	/**
 	 * 获取群成员列表

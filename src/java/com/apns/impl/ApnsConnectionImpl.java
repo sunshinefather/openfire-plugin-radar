@@ -112,6 +112,7 @@ public class ApnsConnectionImpl implements IApnsConnection {
 			boolean isSuccessful = false;
 			int retries = 0;
 			while (retries < maxRetries) {
+				boolean isNewCreaded=false;
 				try {
 					if (errorHappendedLastConn) {
 						socket = null;
@@ -128,6 +129,7 @@ public class ApnsConnectionImpl implements IApnsConnection {
 						logger.error(connName+" @sunshine:apns推送连接已断开");
 						closeSocket(socket);
 						socket = createNewSocket();
+						isNewCreaded=true;
 					}
 					
 					OutputStream socketOs = socket.getOutputStream();
@@ -137,6 +139,9 @@ public class ApnsConnectionImpl implements IApnsConnection {
 					break;
 				} catch (Exception e) {
 					logger.error(connName+" @sunshine:apns推送异常:第"+(1+retries) + "次 " ,e);
+					if(isNewCreaded){
+						closeSocket(socket);
+					}
 					socket = null;
 					try {
 						Thread.sleep(1000);
