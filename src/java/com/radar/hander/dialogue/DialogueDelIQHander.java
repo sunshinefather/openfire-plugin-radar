@@ -33,19 +33,21 @@ public class DialogueDelIQHander extends IQHandler {
         List<?> node =  query.elements();
         String userId="";
         String dialogueIds="";
+        String targetId="";
         for (Object object : node) {
             Element elm = (Element)object;  
             userId=elm.attributeValue("userId");
             dialogueIds=elm.attributeValue("dialogueIds");
+            targetId=elm.attributeValue("targetId");
             if(StringUtils.isEmpty(userId)){
             	userId=packet.getFrom().getNode();
             }
         }
-        if(StringUtils.isEmpty(userId) || StringUtils.isEmpty(dialogueIds)){
+        if(StringUtils.isEmpty(userId) || (StringUtils.isEmpty(dialogueIds) && StringUtils.isEmpty(targetId) )){
         	replay.setType(IQ.Type.error);
         	log.info("删除会话参数错误");
         }else {
-        	boolean bool=DialogueAction.delDialogues(userId, dialogueIds);
+        	boolean bool=DialogueAction.delDialogues(userId, dialogueIds,targetId);
         	if(bool){
             	replay.getChildElement().addElement("dialogueIds").setText(dialogueIds);
         	}else{

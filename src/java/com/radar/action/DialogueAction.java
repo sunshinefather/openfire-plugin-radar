@@ -46,7 +46,7 @@ public class DialogueAction {
 	 * @author: sunshine  
 	 * @throws
 	 */
-	public static boolean delDialogues(String userId,String dialogueIds){
+	public static boolean delDialogues(String userId,String dialogueIds,String targetId){
 		ThriftClientInfo clientinfo=null;
 		try {
 			clientinfo = ThriftClientManager.getExpendClient(HOST, PORT, ImCrmDialogueService.Client.class);
