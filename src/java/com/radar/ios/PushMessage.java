@@ -20,12 +20,16 @@ import com.apns.impl.ApnsServiceImpl;
 import com.apns.model.ApnsConfig;
 import com.apns.model.Feedback;
 import com.apns.model.Payload;
+import com.jpush.ios.DoctorClientPush;
+import com.jpush.ios.MomClientPush;
 import com.radar.action.ContactAction;
 import com.radar.action.DeviceToken;
 import com.radar.action.GroupAction;
 import com.radar.action.PushConfigAction;
+import com.radar.common.EnvConstant;
 import com.radar.extend.IosTokenDao;
 import com.radar.extend.PaginationAble;
+import com.zyt.web.after.grouproom.remote.ImCrmGroupRoom;
 import com.zyt.web.after.push.remote.ImCrmPushConfig;
 
 /**
@@ -39,6 +43,8 @@ import com.zyt.web.after.push.remote.ImCrmPushConfig;
 public class PushMessage {
 	
 	private static final Logger log = LoggerFactory.getLogger(PushMessage.class);
+	/**证书推送环境*/
+	public static final boolean  IOS_PRODUCT_ENV=true;
 
 	/** start 环境配置  */
 	private static String KSPASSWORD="1234";// 证书密码
@@ -51,12 +57,16 @@ public class PushMessage {
 	public static IApnsService serviceDoctor;
 	
 	static{
+		if(!PushMessage.IOS_PRODUCT_ENV){
+			MOM_CERTIFICATE_URL=PushMessage.class.getResource("mom_push_dev_99.p12").getPath();
+			DOCTOR_CERTIFICATE_URL=PushMessage.class.getResource("doctor_push_dev_99.p12").getPath();
+		}
 		ApnsConfig mom_config99 = new ApnsConfig();
 		ApnsConfig doctor_config99 = new ApnsConfig();
 		try {
 			InputStream mom_is = new FileInputStream(MOM_CERTIFICATE_URL);
 			mom_config99.setKeyStore(mom_is);
-			mom_config99.setDevEnv(false);
+			mom_config99.setDevEnv(!PushMessage.IOS_PRODUCT_ENV);
 			mom_config99.setPassword(KSPASSWORD);
 			mom_config99.setPoolSize(12);
 			mom_config99.setName("mom_app");
@@ -64,7 +74,7 @@ public class PushMessage {
 			
 			InputStream doctor_is = new FileInputStream(DOCTOR_CERTIFICATE_URL);
 			doctor_config99.setKeyStore(doctor_is);
-			doctor_config99.setDevEnv(false);
+			doctor_config99.setDevEnv(!PushMessage.IOS_PRODUCT_ENV);
 			doctor_config99.setPassword(KSPASSWORD);
 			doctor_config99.setPoolSize(15);
 			doctor_config99.setName("doctor_app");
@@ -85,15 +95,8 @@ public class PushMessage {
      */
 	public static void pushChatMessage(Message message) throws Exception{
 		String sendUser = message.getFrom().getNode();
-    	String deviceToken = message.getTo().getResource();
+    	String deviceToken = DeviceToken.get(message.getTo().getNode(),true);
     	
-        if(StringUtils.isEmpty(deviceToken)){
-        	deviceToken=DeviceToken.get(message.getTo().getNode());
-        }
-    	// 没有获取到token值，不发生推送消息
-        if(StringUtils.isEmpty(deviceToken) || deviceToken.length()<32){
-        	return;
-        }
 		String sendUserName = ContactAction.queryNickeName(sendUser);
 		Payload param=new Payload();
 		param.setAlert(alertMessage(message.getSubject(), sendUserName + ":", message.getBody()));
@@ -101,23 +104,52 @@ public class PushMessage {
 		param.addParam("dataType",1);
 		param.addParam("dataId",message.getID());
 		User user= XMPPServer.getInstance().getUserManager().getUser(message.getTo().getNode());
-		push(user,param, deviceToken);
-		clearInvalidToken();
+    	// 没有获取到token值，不发生推送消息
+        if(StringUtils.isEmpty(deviceToken)){
+        	if("300".equals(user.getEmail())){
+				MomClientPush.push(param.getAlert(),message.getID(), sendUser,"1","1",new String[]{message.getTo().getNode()});
+			}else if("201".equals(user.getEmail())){
+				DoctorClientPush.push(param.getAlert(),message.getID(), sendUser,"1","1",new String[]{message.getTo().getNode()});
+			}
+        }else{
+			push(user,param, deviceToken);
+			clearInvalidToken();
+		}
 	}
 	
 	public static void pushNoticeMessage(final String appName,final String accepterType,final Message message) throws Exception{
-		 String msgType;
-		 String sendUserName;
+		String msgType;
+		 String sendUserName="";
 		if(message.getType()==Message.Type.headline){
 			PacketExtension pkg=message.getExtension("notice", "notice:extension:type");
 			if(pkg!=null && StringUtils.isNotEmpty(pkg.getElement().elementTextTrim("type"))){
 				msgType=pkg.getElement().elementTextTrim("type");
 			}else{
-				log.debug("通知类型为空不能推送");
 				return;
 			}
 			JID jid=message.getTo();
-			if(null==jid){//全体推送
+			if(null==jid || StringUtils.isEmpty(jid.getNode())){//全体推送
+				if(StringUtils.isEmpty(accepterType) && StringUtils.isEmpty(appName)){
+					MomClientPush.push(alertMessage(message.getSubject(), sendUserName, message.getSubject()), message.getBody(), message.getFrom().getNode(), msgType, msgType);
+				}else if(StringUtils.isNotEmpty(accepterType)){
+					if("300".equals(accepterType)){
+						MomClientPush.push(alertMessage(message.getSubject(), sendUserName, message.getSubject()), message.getBody(), message.getFrom().getNode(), msgType, msgType);
+					}else if("201".equals(accepterType)){
+						DoctorClientPush.push(alertMessage(message.getSubject(), sendUserName, message.getSubject()), message.getBody(), message.getFrom().getNode(), msgType, msgType);
+					}
+					
+				}else if(StringUtils.isNotEmpty(appName)){
+					EnvConstant.APPS app =EnvConstant.APPS.valueOf(appName);
+					 if(app == EnvConstant.APPS.MOM){
+						 MomClientPush.push(alertMessage(message.getSubject(), sendUserName, message.getSubject()), message.getBody(), message.getFrom().getNode(), msgType, msgType);
+					 }else if(app == EnvConstant.APPS.DOCTOR){
+						 DoctorClientPush.push(alertMessage(message.getSubject(), sendUserName, message.getSubject()), message.getBody(), message.getFrom().getNode(), msgType, msgType);
+					 }else if(app == EnvConstant.APPS.ALLAPP){
+						 MomClientPush.push(alertMessage(message.getSubject(), sendUserName, message.getSubject()), message.getBody(), message.getFrom().getNode(), msgType, msgType);
+						 DoctorClientPush.push(alertMessage(message.getSubject(), sendUserName, message.getSubject()), message.getBody(), message.getFrom().getNode(), msgType, msgType);
+					 }
+				}
+				
 				sendUserName="";
 				//分页推送通知
 				boolean flag=true;
@@ -126,23 +158,54 @@ public class PushMessage {
 					page= DeviceToken.getDeviceTokensByPage(page);
 					List<?> list=page.getResults();
 					if(list!=null && !list.isEmpty()){
-						log.info("@sunshine:apns应推送通知"+page.getCurrentResult()+"/"+page.getTotalResults()+"条,"+message.getSubject());
-						for(final Object str:list){
+						if(log.isDebugEnabled()){
+						  log.debug("@sunshine:apns应推送通知"+page.getCurrentResult()+"/"+page.getTotalResults()+"条,"+message.getSubject());
+						}
+						 for(final Object str:list){
 							Payload param=new Payload();
 							param.setAlert(alertMessage(message.getSubject(), sendUserName, message.getSubject()));
 							param.addParam("senderId",message.getFrom().getNode());
 							param.addParam("dataType",msgType);
 							param.addParam("dataId",message.getBody());
 							String[] userAndToken =str.toString().split("[,]");
-							if(userAndToken!=null && userAndToken.length==2){
+							if(userAndToken!=null && userAndToken.length>=2){
 								String userName=userAndToken[0];
 								String token=userAndToken[1];
+								try{
 								User user= XMPPServer.getInstance().getUserManager().getUser(userName);
-								push(user,param, token);
+								if(user!=null){
+									if(StringUtils.isEmpty(accepterType) && StringUtils.isEmpty(appName)){
+										if("300".equals(user.getEmail())){
+											push(user, param, token);
+										}
+									}else if(StringUtils.isNotEmpty(accepterType)){
+										if(user.getEmail().equals(accepterType)){
+											push(user, param, token);
+										}
+									}else if(StringUtils.isNotEmpty(appName)){
+										EnvConstant.APPS app =EnvConstant.APPS.valueOf(appName);
+										 if(app == EnvConstant.APPS.MOM){
+											 if("300".equals(user.getEmail())){
+												 push(user, param, token);			 
+											 }
+										 }else if(app == EnvConstant.APPS.DOCTOR){
+											 if("201".equals(user.getEmail())){
+												 push(user, param, token);			 
+											 }
+										 }else if(app == EnvConstant.APPS.ALLAPP){
+											 push(user, param, token);
+										 }
+									}
+								}
+								}catch(Exception e){
+									log.error("@sunshine 找不到用户:"+userName);
+								}
 							}
 						}
-						log.info("@sunshine:apns已推送通知"+page.getCurrentResult()+"/"+page.getTotalResults()+"条,"+message.getSubject());
-				   }else{
+						if(log.isDebugEnabled()){
+						   log.debug("@sunshine:apns已推送通知"+page.getCurrentResult()+"/"+page.getTotalResults()+"条,"+message.getSubject());
+						  }
+						}else{
 					   flag=false;
 				   }
 					if(page.getPageNo()<page.getTotalPages()){
@@ -155,17 +218,24 @@ public class PushMessage {
 			}else{//单个推送
 				String userName = jid.getNode();
 				sendUserName="";
-				String deviceToken=DeviceToken.get(userName);
-				if(StringUtils.isEmpty(deviceToken) || deviceToken.length()<32){
-					return;
-				}
+				String deviceToken=DeviceToken.get(message.getTo().getNode(),true);
+				
 				Payload param=new Payload();
 				param.setAlert(alertMessage(message.getSubject(), sendUserName, message.getSubject()));
 				param.addParam("senderId",message.getFrom().getNode());
 				param.addParam("dataType",msgType);
 				param.addParam("dataId",message.getBody());
 				User user= XMPPServer.getInstance().getUserManager().getUser(userName);
-				push(user,param, deviceToken);
+				
+				if(StringUtils.isEmpty(deviceToken) || deviceToken.length()<32){
+					if("300".equals(user.getEmail())){
+						MomClientPush.push(param.getAlert(),message.getBody(),message.getFrom().getNode(),msgType,msgType,new String[]{userName});
+					}else if("201".equals(user.getEmail())){
+						DoctorClientPush.push(param.getAlert(),message.getBody(),message.getFrom().getNode(),msgType,msgType,new String[]{userName});
+					}
+				}else{
+					push(user,param, deviceToken);
+				}
 				
 			}
 		}
@@ -185,7 +255,11 @@ public class PushMessage {
 	public static void pushGroupChatMessage(Message message) throws Exception {
 		String groupUid = message.getTo().getNode();
 		String from = message.getFrom().getNode();
-		//String groupName = GroupAction.queryGroupName(groupUid);
+		ImCrmGroupRoom groupRoom = GroupAction.getGroupRoomById(groupUid);
+		String grouptype="2";
+		if(groupRoom!=null && StringUtils.isNotEmpty(groupRoom.getGroupType())){
+			grouptype=groupRoom.getGroupType();
+		}
 		Payload param=new Payload();
 		param.setAlert(alertMessage(message.getSubject(), ContactAction.queryNickeName(from)+":", message.getBody()));
 		param.addParam("senderId",groupUid+"/"+from);
@@ -201,8 +275,12 @@ public class PushMessage {
 			for(ImCrmPushConfig _imCrmPushConfig :list){
 				listUserName.add(_imCrmPushConfig.getUserName().toLowerCase());
 			}
-			log.info("@sunshine:apns应推送群聊(包含没有token的和已屏蔽接受推送的)"+itmes.size()+"条,"+message.getBody());
-			int i=0;
+			if(log.isDebugEnabled()){
+			  log.debug("@sunshine:apns应推送群聊(包含没有token的和已屏蔽接受推送的)"+itmes.size()+"条,"+message.getBody());
+			 }
+			  int i=0;
+			List<String> list300=new ArrayList<String>();
+			List<String> list201=new ArrayList<String>();
 			for (String name : itmes) {
 				String deviceToken=null;
 				if(from.equalsIgnoreCase(name.trim())){
@@ -210,13 +288,31 @@ public class PushMessage {
 				}else {
 					deviceToken = DeviceToken.get(name);
 				}
+				User user= XMPPServer.getInstance().getUserManager().getUser(name);
 				if(StringUtils.isNotEmpty(deviceToken) && !listUserName.contains(name.toLowerCase())){
 					i++;
-					User user= XMPPServer.getInstance().getUserManager().getUser(name);
 					push(user,param, deviceToken);
+		        }else if(StringUtils.isEmpty(deviceToken) && !listUserName.contains(name.toLowerCase())){
+		        	if("300".equals(user.getEmail())){
+		        		list300.add(user.getUsername());
+		        	}else if("201".equals(user.getEmail())){
+		        		list201.add(user.getUsername());
+		        	}
 		        }
 			}
-			log.info("@sunshine:apns已推送群聊"+i+"条,"+message.getBody());
+			if(list300!=null && !list300.isEmpty()){
+				String[] users =new String[list300.size()];
+				list300.toArray(users);
+				MomClientPush.push(param.getAlert(),message.getID(),groupUid+"/"+from,"2",grouptype,users);
+			}
+			if(list201!=null && !list201.isEmpty()){
+				String[] users =new String[list201.size()];
+				list201.toArray(users);
+				DoctorClientPush.push(param.getAlert(),message.getID(),groupUid+"/"+from,"2",grouptype,users);
+			}
+			if(log.isDebugEnabled()){
+			 log.debug("@sunshine:apns已推送群聊"+i+"条,"+message.getBody());
+			 }
 			clearInvalidToken();
 		}
 	}

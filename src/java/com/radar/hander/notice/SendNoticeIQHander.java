@@ -29,7 +29,7 @@ public class SendNoticeIQHander extends IQHandler {
 	@Override
 	public IQ handleIQ(IQ packet) throws UnauthorizedException {
 		if(log.isDebugEnabled()){
-			log.debug("@sunshine:发送通知的xml:",packet.toXML());
+			log.debug("@sunshine:发送通知的xml:"+packet.toXML());
 		}
 		IQ replay=IQ.createResultIQ(packet);
 		replay.setChildElement("query", NAME_SPACE);

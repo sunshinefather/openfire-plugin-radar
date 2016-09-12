@@ -66,12 +66,20 @@ public class DeviceToken {
 	 * @param key 用户名
 	 * @return
 	 */
-	public static String get(String key){
+	public static String get(String key,boolean... isgetVersion){
 		if(StringUtils.isEmpty(key)){
 			return null;
 		}
 		key = key.trim().toLowerCase();
-		return IosTokenDao.getInstance().getTokenByUserName(key);
+		String token = IosTokenDao.getInstance().getTokenByUserName(key);
+		/*
+		if(isgetVersion==null || isgetVersion.length==0){
+			if(StringUtils.isNotEmpty(token)){
+				token=token.split("[,]")[0];
+			}
+		}
+		*/
+		return token;
 	}
 	
 	/**
@@ -139,7 +147,7 @@ public class DeviceToken {
 		
 		key = key.trim().toLowerCase();
 		String token = get(key);
-		if(!StringUtils.isEmpty(token)){
+		if(StringUtils.isNotEmpty(token)){
 			IosTokenDao.getInstance().delUserByToken(token);
 		}
 		IosTokenDao.getInstance().delTokenByUser(key);

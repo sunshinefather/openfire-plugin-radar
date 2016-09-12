@@ -8,9 +8,8 @@ import org.slf4j.LoggerFactory;
 public class ThreadPool
 {
 	
-	private static ExecutorService executorService = Executors.newFixedThreadPool(256);
+	private static ExecutorService executorService = Executors.newFixedThreadPool(512);
 	private static final Logger log = LoggerFactory.getLogger(ThreadPool.class);
-    
     private ThreadPool(){
     	throw new RuntimeException("不允许实例化ThreadPool");
     }

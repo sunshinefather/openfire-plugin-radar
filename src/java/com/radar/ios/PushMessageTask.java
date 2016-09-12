@@ -3,7 +3,6 @@ package com.radar.ios;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmpp.packet.Message;
-
 import com.radar.pool.QueueTask;
 /**
  * ios 消息推送
@@ -39,7 +38,7 @@ public class PushMessageTask implements QueueTask {
 				PushMessage.pushNoticeMessage(appName,accepterType,message);
 			}
 		} catch (Exception e) {
-			log.error("推送消息失败：" + e.getMessage());
+			log.error("推送消息失败：",e);
 		}
 	}
 }

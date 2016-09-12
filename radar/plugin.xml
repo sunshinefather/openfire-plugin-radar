@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+	<class>com.radar.plugin.RadarServerPlugin</class>
+	<name>radar</name>
+    <description>消息存储 会话管理 发送广播通知 IOS推送 </description>
+    <author>sunshine</author>
+    <version>1.1.0</version>
+    <date>01/29/2015</date>
+    <minServerVersion>0.1</minServerVersion>
+	<!--
+	<adminconsole>		
+        <tab id="tab-server"> 
+            <sidebar id="sidebar-server-settings">
+                <item id="radar" name="雷达配置" url="radar_index.jsp"
+                     description="Click to manage the service that allows remote admin of users" />
+            </sidebar>
+        </tab>
+    </adminconsole>
+    -->
+</plugin>

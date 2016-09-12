@@ -16,6 +16,7 @@ import org.xmpp.packet.Presence;
 import com.radar.action.DeviceToken;
 import com.radar.utils.HixinUtils;
 /**
+ * 取消绑定ios设备token，由极光维护 ，旧版本保持不变
  * 1.拦截资源绑定保存IOSdeviceToken
  * 2.拦截IOSdeviceToken：移除deviceToken
  * @ClassName:  IQInterceptor
