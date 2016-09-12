@@ -77,7 +77,6 @@ public class SendBoardcastTask implements QueueTask {
 			}
 			//IOS推送通知消息
 	    	if(message.getType() == Message.Type.headline){
-	    		log.error("@sunshine 进入apns推送线程流程："+message.toXML());
 	            ThreadPool.addWork(new PushMessageTask(appName,accepterType,message.createCopy()));
 			}
 		}
