@@ -64,19 +64,20 @@ public class SendBoardcastTask implements QueueTask {
 		}else{
 			
 			if(StringUtils.isEmpty(userName)){
-				log.info("xmpp通知推送-广播:"+message.toXML());
-				BoardcastEmitter.sendBoardCastServer(appName,accepterType,message);
+				log.debug("xmpp通知推送-广播:"+message.toXML());
+				BoardcastEmitter.sendBoardCastServer(appName,accepterType,message.createCopy());
 			}else{
 				message.setTo(userName +"@"+HixinUtils.getDomain());
-				log.info("xmpp通知推送-指定人:"+message.toXML());
+				log.debug("xmpp通知推送-指定人:"+message.toXML());
 				if(forceNotStore){
-					BoardcastEmitter.sendBoardCastServer(userName, message);
+					BoardcastEmitter.sendBoardCastServer(userName, message.createCopy());
 				}else{
-					BoardcastEmitter.sendBoardCastAndStoreServer(userName, message);
+					BoardcastEmitter.sendBoardCastAndStoreServer(userName, message.createCopy());
 				}
 			}
 			//IOS推送通知消息
 	    	if(message.getType() == Message.Type.headline){
+	    		log.error("@sunshine 进入apns推送线程流程："+message.toXML());
 	            ThreadPool.addWork(new PushMessageTask(appName,accepterType,message.createCopy()));
 			}
 		}
