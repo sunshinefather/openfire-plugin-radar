@@ -68,7 +68,7 @@ public class DoctorClientPush {
 		        } catch (APIConnectionException e) {
 		        	Log.error("android doctor 不能连接到极光推送服务器",e);
 		        } catch (APIRequestException e) {
-		        	Log.error(String.format("android doctor http status: %s ,error code: %s,error message: %s",e.getStatus(),e.getErrorCode(),e.getErrorMessage()),e);
+		        	Log.error(String.format("android doctor http status: %s ,error code: %s,error message: %s",e.getStatus(),e.getErrorCode(),e.getErrorMessage()));
 		        }
 			}
 		});

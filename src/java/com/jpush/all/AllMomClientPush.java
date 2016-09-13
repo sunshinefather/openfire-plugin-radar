@@ -93,7 +93,7 @@ public class AllMomClientPush {
 		        } catch (APIConnectionException e) {
 		        	Log.error("android mom不能连接到极光推送服务器",e);
 		        } catch (APIRequestException e) {
-		        	Log.error(String.format("android mom http status: %s ,error code: %s,error message: %s",e.getStatus(),e.getErrorCode(),e.getErrorMessage()),e);
+		        	Log.error(String.format("android mom http status: %s ,error code: %s,error message: %s",e.getStatus(),e.getErrorCode(),e.getErrorMessage()));
 		        }
 			}
 		});
