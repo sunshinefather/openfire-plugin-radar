@@ -225,8 +225,8 @@ public class PushMessage {
 				param.addParam("senderId",message.getFrom().getNode());
 				param.addParam("dataType",msgType);
 				param.addParam("dataId",message.getBody());
+				try{
 				User user= XMPPServer.getInstance().getUserManager().getUser(userName);
-				
 				if(StringUtils.isEmpty(deviceToken) || deviceToken.length()<32){
 					if("300".equals(user.getEmail())){
 						MomClientPush.push(param.getAlert(),message.getBody(),message.getFrom().getNode(),msgType,msgType,new String[]{userName});
@@ -236,7 +236,9 @@ public class PushMessage {
 				}else{
 					push(user,param, deviceToken);
 				}
-				
+				}catch(Exception e){
+					log.error("@sunshine:单个通知推送失败:用户名("+userName+"),推送类型:"+msgType,e);
+				}
 			}
 		}
 		clearInvalidToken();
