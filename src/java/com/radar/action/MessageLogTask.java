@@ -72,7 +72,7 @@ public class MessageLogTask implements QueueTask {
 	 		if(rt){
 	 			log.debug(sendDate + " 聊天记录存入成功：" + sender);
 	 		}else{
-	 			log.error(DateUtil.formatDate(new Date(sendDate),"yyyy-MM-dd HH:mm:ss")+ ":聊天记录保存失败:" + sender);
+	 			log.error(DateUtil.formatDate(new Date(sendDate),"yyyy-MM-dd HH:mm:ss")+ ":聊天记录保存失败,from:" + sender+"\t to:"+accepter);
 	 		}
 		 }else{
 			 log.debug("@sunshine 空错误, 发送者:" + sender);

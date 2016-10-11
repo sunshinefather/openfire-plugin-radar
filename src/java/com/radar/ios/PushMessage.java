@@ -44,7 +44,7 @@ public class PushMessage {
 	
 	private static final Logger log = LoggerFactory.getLogger(PushMessage.class);
 	/**证书推送环境*/
-	public static final boolean  IOS_PRODUCT_ENV=true;
+	public static final boolean  IOS_PRODUCT_ENV=false;
 
 	/** start 环境配置  */
 	private static String KSPASSWORD="1234";// 证书密码
