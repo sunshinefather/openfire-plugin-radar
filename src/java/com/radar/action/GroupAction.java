@@ -88,12 +88,11 @@ public class GroupAction {
 			if(StringUtils.isNotEmpty(_imCrmGroupMember.getGroupUserId()) && "0".equals(getGroupRoomById(imCrmGroupMember.getGroupId()).getGroupType())){
 			  GroupBroadcast.memberJoinBoard(imCrmGroupMember.getUserName(), imCrmGroupMember.getGroupId(),from);
 			}else{
-				log.info("添加群成员失败:imcrm");
+				log.error("@sunshine:添加群成员失败:imcrm=("+imCrmGroupMember.getUserName()+","+imCrmGroupMember.getGroupId()+")");
 			}
             return _imCrmGroupMember;
 		} catch (Exception e) {
-			log.info("添加群成员异常:"+e.getMessage());
-			e.printStackTrace();
+			log.error("@sunshine:添加群成员异常("+imCrmGroupMember.getUserName()+","+imCrmGroupMember.getGroupId()+")",e);
 		}finally{
 			ThriftClientManager.closeClient(clientinfo);
 		}
@@ -146,7 +145,7 @@ public class GroupAction {
 			List<ImCrmGroupRoom> grouplist=clent.groupRoomList(userId, userFrom);
             return grouplist;
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("@sunshine:获取群列表失败,用户id:"+userId,e);
 		}finally{
 			ThriftClientManager.closeClient(clientinfo);
 		}
@@ -225,7 +224,7 @@ public class GroupAction {
 			List<String> memberlist=clent.getGroupMemberListWithUserName(groupId);
 			return memberlist;
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("@sunshine:根据群id获取群成员登陆名失败,群id:"+groupId,e);
 		}finally{
 			ThriftClientManager.closeClient(clientinfo);
 		}
@@ -235,19 +234,15 @@ public class GroupAction {
     /**
      * 根据群ID查询群名称
      * @Title: queryGroupName
-     * @Description: TODO  
      * @param: @param groupUid
-     * @param: @return      
      * @return: String
      * @author: sunshine  
-     * @throws
      */
 	public static String queryGroupName(String groupUid) {
         try{
-        	return getGroupRoomById(groupUid).getGroupName();
+        	groupUid=getGroupRoomById(groupUid).getGroupName();
         }catch(Exception e){
-        	e.printStackTrace();
-           System.out.println("查询群名称失败!");
+        	log.error("@sunshine:查询群名称失败,群id:"+groupUid,e);
         }
 		return groupUid;
 	}

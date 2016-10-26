@@ -38,7 +38,7 @@ public class SendGroupMessageTask implements QueueTask{
 		            {
 		                if (!message.getFrom().getNode().equalsIgnoreCase(userName))
 		                {
-		                    this.sendGroupMessage(userName, message.createCopy());
+		                    this.sendGroupMessage(userName.toLowerCase(), message.createCopy());
 		                }
 		            }
 			 }

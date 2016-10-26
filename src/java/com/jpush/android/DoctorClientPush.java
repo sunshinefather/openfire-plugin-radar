@@ -17,8 +17,8 @@ import cn.jpush.api.push.model.notification.AndroidNotification;
 import cn.jpush.api.push.model.notification.Notification;
 
 public class DoctorClientPush {
-    private static final String APPKEY="7a54e0a24b623f7ecdff2447";
-    private static final String MASTER_SECRET ="7cda93da3c1ea1065765d585";
+    private static final String APPKEY="7a54e0a24b623f7ecdff2447";//外网:7a54e0a24b623f7ecdff2447,内网:b0d0bcfad5c428ad6279b64c
+    private static final String MASTER_SECRET ="2d65d761bb1237e2da4c9bd2";//外网:7cda93da3c1ea1065765d585
     private static final ClientConfig clientConfig=ClientConfig.getInstance();
     private static final JPushClient jpushClient;
     private static final Logger Log = LoggerFactory.getLogger(DoctorClientPush.class);
