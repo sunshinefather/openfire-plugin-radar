@@ -80,7 +80,7 @@ public class MomClientPush {
 		        } catch (APIConnectionException e) {
 		        	Log.error("ios mom 不能连接到极光推送服务器",e);
 		        } catch (APIRequestException e) {
-		        	Log.error(String.format("ios mom http status: %s ,error code: %s,error message: %s",e.getStatus(),e.getErrorCode(),e.getErrorMessage()));
+		        	Log.error(String.format("ios mom http status: %s ,error code: %s,error message: %s "+userName,e.getStatus(),e.getErrorCode(),e.getErrorMessage()));
 		        }
 			}
 		});
