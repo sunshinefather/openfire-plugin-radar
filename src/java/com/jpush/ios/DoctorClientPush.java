@@ -3,6 +3,7 @@ package com.jpush.ios;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.jpush.JpushConfig;
 import com.radar.ios.PushMessage;
 import com.radar.pool.QueueTask;
 import com.radar.pool.ThreadPool;
@@ -19,8 +20,8 @@ import cn.jpush.api.push.model.notification.IosNotification;
 import cn.jpush.api.push.model.notification.Notification;
 
 public class DoctorClientPush {
-    private static final String APPKEY="7a54e0a24b623f7ecdff2447";//外网:7a54e0a24b623f7ecdff2447,内网:b0d0bcfad5c428ad6279b64c
-    private static final String MASTER_SECRET ="2d65d761bb1237e2da4c9bd2";//外网:7cda93da3c1ea1065765d585
+    private static final String APPKEY=JpushConfig.DOCTOR_APPKEY;
+    private static final String MASTER_SECRET =JpushConfig.DOCTOR_MASTER_SECRET;
     private static final ClientConfig clientConfig=ClientConfig.getInstance();
     private static final JPushClient jpushClient;
     private static final Logger Log = LoggerFactory.getLogger(DoctorClientPush.class);

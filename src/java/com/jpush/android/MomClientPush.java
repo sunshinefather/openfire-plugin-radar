@@ -2,8 +2,11 @@ package com.jpush.android;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.jpush.JpushConfig;
 import com.radar.pool.QueueTask;
 import com.radar.pool.ThreadPool;
+
 import cn.jpush.api.JPushClient;
 import cn.jpush.api.common.ClientConfig;
 import cn.jpush.api.common.resp.APIConnectionException;
@@ -15,8 +18,8 @@ import cn.jpush.api.push.model.notification.AndroidNotification;
 import cn.jpush.api.push.model.notification.Notification;
 
 public class MomClientPush {
-    private static final String APPKEY="2b2d440d7025e9b22efe36f6";
-    private static final String MASTER_SECRET ="57a8203808cdc5d1c6dc9e6a";
+    private static final String APPKEY=JpushConfig.MOM_APPKEY;
+    private static final String MASTER_SECRET =JpushConfig.MOM_MASTER_SECRET;
     private static final ClientConfig clientConfig=ClientConfig.getInstance();
     private static final JPushClient jpushClient;
     private static final Logger Log = LoggerFactory.getLogger(MomClientPush.class);
