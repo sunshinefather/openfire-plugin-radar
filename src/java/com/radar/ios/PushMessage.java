@@ -198,7 +198,7 @@ public class PushMessage {
 									}
 								}
 								}catch(Exception e){
-									log.error("@sunshine 找不到用户:"+userName);
+									log.error("@sunshine 找不到用户:"+userName,e);
 								}
 							}
 						}
