@@ -100,7 +100,7 @@ public class BoardcastEmitter
     		}
 	    }else{
 	    	//极光推送
-	    	if(StringUtils.isEmpty(accepterType) && StringUtils.isEmpty(appName)){
+	    	if(StringUtils.isEmpty(accepterType) && StringUtils.isEmpty(appName)){//默认情况下为mom
 	    		if(StringUtils.isNotEmpty(dateType)){
 	    			MomClientPush.push(message.getSubject(),message.getBody(),message.getFrom().getNode(), dateType, dateType);
 	    		}
@@ -121,6 +121,7 @@ public class BoardcastEmitter
 		    	   }
 			    }
 	    	//极光推送结束
+	    	
 	    	//xmpp推送
 	    	for(ClientSession sess:ccsess){
         		try {
@@ -175,7 +176,7 @@ public class BoardcastEmitter
     }
     
     /**
-     * 发送定向消息, 接收人不在线不处理
+     * 发送定向 广播消息, 接收人不在线不处理
      * @Title: sendBoardCastServer
      * @Description: TODO  
      * @param: @param userName 接收人
@@ -194,12 +195,12 @@ public class BoardcastEmitter
         		try {
 					User user= XMPPServer.getInstance().getUserManager().getUser(userName);
 					PacketExtension pext= message.getExtension("notice", "notice:extension:type");
-					if(pext!=null ){
+					if(pext!=null && user!=null){
 						String dateType = pext.getElement().elementTextTrim("type");
 						if(StringUtils.isNotEmpty(dateType)){
-							if(user!=null && "300".equals(user.getEmail())){
+							if("300".equals(user.getEmail())){
 				        		MomClientPush.push(message.getSubject(),message.getBody(),message.getFrom().getNode(), dateType, dateType,new String[]{userName});
-				        	}else if(user!=null &&  "201".equals(user.getEmail())){
+				        	}else if("201".equals(user.getEmail())){
 				        		DoctorClientPush.push(message.getSubject(),message.getBody(),message.getFrom().getNode(), dateType, dateType,new String[]{userName});
 				        	}
 						}

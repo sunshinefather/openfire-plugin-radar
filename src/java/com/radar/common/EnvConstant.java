@@ -1,6 +1,8 @@
 package com.radar.common;
 
 import java.util.Collection;
+
+import com.radar.ios.PushMessage;
 /**
  * 配置参数常量
  * @ClassName:  EnvConstant   
@@ -13,11 +15,11 @@ public class EnvConstant
     /**
      * imcrm服务器地址
      */
-	public static  String IMCRMHOST="192.168.1.245";//(内网内)192.168.1.245;192.168.43.154(移动),192.168.66.20(华为)
+	public static final String IMCRMHOST=PushMessage.IOS_PRODUCT_ENV?"192.168.66.20":"192.168.1.245";//(内网内)192.168.1.245;192.168.66.20(华为)
      /**
       * imcrm服务器端口
       */
-	public static int IMCRMPORT=7700;
+	public static final int IMCRMPORT=7700;
     /**
      * 搜索引擎访问地址
      */
