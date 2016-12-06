@@ -44,7 +44,7 @@ public class PushMessage {
 	
 	private static final Logger log = LoggerFactory.getLogger(PushMessage.class);
 	/**证书推送环境*/
-	public static final boolean  IOS_PRODUCT_ENV=false;
+	public static final boolean  IOS_PRODUCT_ENV=true;
 
 	/** start 环境配置  */
 	private static String KSPASSWORD="1234";// 证书密码
@@ -380,7 +380,7 @@ public class PushMessage {
 	 */
 	private static String alertMessage(String subject, String headMessage, String message){
 		if("other".equals(subject)){
-			message = "[表情]";
+			message = "[检验报告]";
 		}else if ("image".equals(subject)) {
 			message = "[图片]";
 		}else if ("sound".equals(subject)) {
