@@ -88,7 +88,7 @@ public class GroupAction {
 			if(StringUtils.isNotEmpty(_imCrmGroupMember.getGroupUserId()) && "0".equals(getGroupRoomById(imCrmGroupMember.getGroupId()).getGroupType())){
 			  GroupBroadcast.memberJoinBoard(imCrmGroupMember.getUserName(), imCrmGroupMember.getGroupId(),from);
 			}else{
-				log.error("@sunshine:添加群成员失败:imcrm=("+imCrmGroupMember.getUserName()+","+imCrmGroupMember.getGroupId()+")");
+				//log.error("@sunshine:添加群成员失败:imcrm=("+imCrmGroupMember.getUserName()+","+imCrmGroupMember.getGroupId()+")");
 			}
             return _imCrmGroupMember;
 		} catch (Exception e) {

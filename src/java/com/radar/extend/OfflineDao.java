@@ -77,12 +77,13 @@ public class OfflineDao
             pstmt.setInt(4, msgXML.length());
             pstmt.setString(5, msgXML);
             int result = pstmt.executeUpdate();
-            if(result<1)
-                Log.error("保存离线消息内容失败："+message.toXML());
+            if(result<1){
+                //Log.error("保存离线消息内容失败："+message.toXML());
+            }
         }
 
         catch (Exception e) {
-            Log.error("保存离线消息内容失败："+message.toXML(), e);
+            Log.error("保存离线消息内容异常："+message.toXML(), e);
         }
         finally {
             DbConnectionManager.closeConnection(pstmt, con);
