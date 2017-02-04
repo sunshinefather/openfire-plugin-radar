@@ -14,8 +14,8 @@ import org.xmpp.packet.Message;
 import org.xmpp.packet.Packet;
 import org.xmpp.packet.PacketExtension;
 import org.xmpp.packet.Presence;
-import com.jpush.android.DoctorClientPush;
-import com.jpush.android.MomClientPush;
+import com.jpush.all.AllDoctorClientPush;
+import com.jpush.all.AllMomClientPush;
 import com.radar.common.EnvConstant;
 import com.radar.extend.OfflineDao;
 import com.radar.utils.HixinUtils;
@@ -49,6 +49,7 @@ public class BoardcastEmitter
         	}else{
         		 XMPPServer.getInstance().getSessionManager().userBroadcast(userName, message);
         	}
+        	//极光推送
         	 try {
 					User user= XMPPServer.getInstance().getUserManager().getUser(userName);
 					PacketExtension pext= message.getExtension("notice", "notice:extension:type");
@@ -56,9 +57,13 @@ public class BoardcastEmitter
 						String dateType = pext.getElement().elementTextTrim("type");
 						if(StringUtils.isNotEmpty(dateType)){
 							if(user!=null && "300".equals(user.getEmail())){
-				        		MomClientPush.push(message.getSubject(),message.getBody(),message.getFrom().getNode(), dateType, dateType,new String[]{userName});
+				        		//MomClientPush.push(message.getSubject(),message.getBody(),message.getFrom().getNode(), dateType, dateType,new String[]{userName});
+				        		//注释上面代码，改为混合推送
+				        		AllMomClientPush.push(message.getSubject(),message.getBody(),message.getFrom().getNode(), dateType, dateType,new String[]{userName});
 				        	}else if(user!=null &&  "201".equals(user.getEmail())){
-				        		DoctorClientPush.push(message.getSubject(),message.getBody(),message.getFrom().getNode(), dateType, dateType,new String[]{userName});
+				        		//DoctorClientPush.push(message.getSubject(),message.getBody(),message.getFrom().getNode(), dateType, dateType,new String[]{userName});
+				        		//注释上面代码，改为混合推送
+				        		AllDoctorClientPush.push(message.getSubject(),message.getBody(),message.getFrom().getNode(), dateType, dateType,new String[]{userName});
 				        	}
 						}
 					}
@@ -95,29 +100,41 @@ public class BoardcastEmitter
     	if(EnvConstant.APPS.ALLAPP.toString().equals(appName)){
     		XMPPServer.getInstance().getSessionManager().broadcast(message);
     		if(StringUtils.isNotEmpty(dateType)){
-        		MomClientPush.push(message.getSubject(),message.getBody(),message.getFrom().getNode(), dateType, dateType);
-        		DoctorClientPush.push(message.getSubject(),message.getBody(),message.getFrom().getNode(), dateType, dateType);
+        		//MomClientPush.push(message.getSubject(),message.getBody(),message.getFrom().getNode(), dateType, dateType);
+        		//DoctorClientPush.push(message.getSubject(),message.getBody(),message.getFrom().getNode(), dateType, dateType);
+        		//注释上面代码，改为混合推送
+        		AllMomClientPush.push(message.getSubject(),message.getBody(),message.getFrom().getNode(), dateType, dateType);
+        		AllDoctorClientPush.push(message.getSubject(),message.getBody(),message.getFrom().getNode(), dateType, dateType);
     		}
 	    }else{
-	    	//极光推送
 	    	if(StringUtils.isEmpty(accepterType) && StringUtils.isEmpty(appName)){//默认情况下为mom
 	    		if(StringUtils.isNotEmpty(dateType)){
-	    			MomClientPush.push(message.getSubject(),message.getBody(),message.getFrom().getNode(), dateType, dateType);
+	    			//MomClientPush.push(message.getSubject(),message.getBody(),message.getFrom().getNode(), dateType, dateType);
+	    			//注释上面代码，改为混合推送
+	    			AllMomClientPush.push(message.getSubject(),message.getBody(),message.getFrom().getNode(), dateType, dateType);
 	    		}
 		       }else if(StringUtils.isNotEmpty(accepterType)){
 		    	   if(StringUtils.isNotEmpty(dateType)){
 		    		    if("300".equals(accepterType)){
-		    		    	MomClientPush.push(message.getSubject(),message.getBody(),message.getFrom().getNode(), dateType, dateType);
+		    		    	//MomClientPush.push(message.getSubject(),message.getBody(),message.getFrom().getNode(), dateType, dateType);
+		    		    	//注释上面代码，改为混合推送
+		    		    	AllMomClientPush.push(message.getSubject(),message.getBody(),message.getFrom().getNode(), dateType, dateType);
 		    		    }else if("201".equals(accepterType)){
-		    		    	DoctorClientPush.push(message.getSubject(),message.getBody(),message.getFrom().getNode(), dateType, dateType);
+		    		    	//DoctorClientPush.push(message.getSubject(),message.getBody(),message.getFrom().getNode(), dateType, dateType);
+		    		    	//注释上面代码，改为混合推送
+		    		    	AllDoctorClientPush.push(message.getSubject(),message.getBody(),message.getFrom().getNode(), dateType, dateType);
 		    		    }
 		    		}
 		       }else if(StringUtils.isNotEmpty(appName)){
 		    	   EnvConstant.APPS app =EnvConstant.APPS.valueOf(appName);
 		    	   if(app == EnvConstant.APPS.MOM){
-		    		   MomClientPush.push(message.getSubject(),message.getBody(),message.getFrom().getNode(), dateType, dateType);
+		    		   //MomClientPush.push(message.getSubject(),message.getBody(),message.getFrom().getNode(), dateType, dateType);
+		    		   //注释上面代码，改为混合推送
+		    		   AllMomClientPush.push(message.getSubject(),message.getBody(),message.getFrom().getNode(), dateType, dateType);
 		    	   }else if(app == EnvConstant.APPS.DOCTOR){
-		    		   DoctorClientPush.push(message.getSubject(),message.getBody(),message.getFrom().getNode(), dateType, dateType);
+		    		   //DoctorClientPush.push(message.getSubject(),message.getBody(),message.getFrom().getNode(), dateType, dateType);
+		    		   //注释上面代码，改为混合推送
+		    		   AllDoctorClientPush.push(message.getSubject(),message.getBody(),message.getFrom().getNode(), dateType, dateType);
 		    	   }
 			    }
 	    	//极光推送结束
@@ -199,9 +216,13 @@ public class BoardcastEmitter
 						String dateType = pext.getElement().elementTextTrim("type");
 						if(StringUtils.isNotEmpty(dateType)){
 							if("300".equals(user.getEmail())){
-				        		MomClientPush.push(message.getSubject(),message.getBody(),message.getFrom().getNode(), dateType, dateType,new String[]{userName});
+				        		//MomClientPush.push(message.getSubject(),message.getBody(),message.getFrom().getNode(), dateType, dateType,new String[]{userName});
+								//注释上面代码，改为混合推送
+								AllMomClientPush.push(message.getSubject(),message.getBody(),message.getFrom().getNode(), dateType, dateType,new String[]{userName});
 				        	}else if("201".equals(user.getEmail())){
-				        		DoctorClientPush.push(message.getSubject(),message.getBody(),message.getFrom().getNode(), dateType, dateType,new String[]{userName});
+				        		//DoctorClientPush.push(message.getSubject(),message.getBody(),message.getFrom().getNode(), dateType, dateType,new String[]{userName});
+				        		//注释上面代码，改为混合推送
+				        		AllDoctorClientPush.push(message.getSubject(),message.getBody(),message.getFrom().getNode(), dateType, dateType,new String[]{userName});
 				        	}
 						}
 					}

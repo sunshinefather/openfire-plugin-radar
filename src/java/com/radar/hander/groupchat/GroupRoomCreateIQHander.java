@@ -1,7 +1,6 @@
 package com.radar.hander.groupchat;
 
 import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Element;
 import org.jivesoftware.openfire.IQHandlerInfo;
@@ -10,7 +9,6 @@ import org.jivesoftware.openfire.handler.IQHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmpp.packet.IQ;
-
 import com.radar.action.GroupAction;
 import com.radar.common.IqConstant;
 import com.zyt.web.after.grouproom.remote.ImCrmGroupRoom;
@@ -67,7 +65,7 @@ public class GroupRoomCreateIQHander extends IQHandler
         
         if(StringUtils.isEmpty(groupName) || StringUtils.isEmpty(createUserId)){
         	replay.setType(IQ.Type.error);
-        	log.info("创建群组参数错误");
+        	log.error("创建群组参数错误,xml="+packet.toXML());
         }else {
         	ImCrmGroupRoom imCrmGroupRoom=new ImCrmGroupRoom();
         	imCrmGroupRoom.setGroupName(groupName);
@@ -96,7 +94,7 @@ public class GroupRoomCreateIQHander extends IQHandler
             	.addAttribute("extension2",imCrmGroupRoom.getExtension2());
             }else{
             	replay.setType(IQ.Type.error);
-            	log.info("创建群组失败");
+            	log.error("创建群组失败,xml="+packet.toXML());
 		    }
         }
         return replay;

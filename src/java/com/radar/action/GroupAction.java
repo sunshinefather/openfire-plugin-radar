@@ -1,11 +1,9 @@
 package com.radar.action;
 
 import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.radar.broadcast.group.GroupBroadcast;
 import com.radar.common.EnvConstant;
 import com.radar.common.ThriftClientInfo;

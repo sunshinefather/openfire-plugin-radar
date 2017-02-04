@@ -5,9 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmpp.packet.IQ;
 import org.xmpp.packet.Message;
-import com.radar.ios.PushMessageTask;
 import com.radar.pool.QueueTask;
-import com.radar.pool.ThreadPool;
 import com.radar.utils.HixinUtils;
 /**
  * 发送广播消息队列
@@ -75,10 +73,12 @@ public class SendBoardcastTask implements QueueTask {
 					BoardcastEmitter.sendBoardCastAndStoreServer(userName, message.createCopy());
 				}
 			}
-			//IOS推送通知消息
+			//IOS推送通知消息,下面ios单独推送改为极光混合推送，需要单独推送时候取消下面注释。并做其他相应处理
+			/**
 	    	if(message.getType() == Message.Type.headline){
 	            ThreadPool.addWork(new PushMessageTask(appName,accepterType,message.createCopy()));
 			}
+			*/
 		}
 	}
 }
