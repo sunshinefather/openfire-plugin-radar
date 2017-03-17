@@ -74,9 +74,9 @@ public class DoctorClientPush {
 		        	jpushClient.sendPush(ppld);
 		    	}
 		        } catch (APIConnectionException e) {
-		        	Log.error("android doctor 不能连接到极光推送服务器",e);
+		        	Log.error("孕宝医生:android 不能连接到极光推送服务器",e);
 		        } catch (APIRequestException e) {
-		        	Log.error(String.format("android doctor http status: %s ,error code: %s,error message: %s",e.getStatus(),e.getErrorCode(),e.getErrorMessage()));
+		        	Log.error(String.format("孕宝医生:android http status: %s ,error code: %s,error message: %s",e.getStatus(),e.getErrorCode(),e.getErrorMessage()));
 		        }
 			}
 		});
@@ -94,9 +94,9 @@ public class DoctorClientPush {
     					jpushClient1.sendPush(ppld);
     				}
     			} catch (APIConnectionException e) {
-    				Log.error("JKSC android doctor 不能连接到极光推送服务器",e);
+    				Log.error("健康四川医生: android 不能连接到极光推送服务器",e);
     			} catch (APIRequestException e) {
-    				Log.error(String.format("JKSC android doctor http status: %s ,error code: %s,error message: %s",e.getStatus(),e.getErrorCode(),e.getErrorMessage()));
+    				Log.error(String.format("健康四川医生: android http status: %s ,error code: %s,error message: %s",e.getStatus(),e.getErrorCode(),e.getErrorMessage()));
     			}
     		}
     	});

@@ -96,9 +96,9 @@ public class AllDoctorClientPush {
 		        	jpushClient.sendPush(ppld);
 		    	}
 		        } catch (APIConnectionException e) {
-		        	Log.error("all doctor 不能连接到极光推送服务器",e);
+		        	Log.error("孕宝医生:不能连接到极光推送服务器",e);
 		        } catch (APIRequestException e) {
-		        	Log.error(String.format("all doctor http status: %s ,error code: %s,error message: %s",e.getStatus(),e.getErrorCode(),e.getErrorMessage()));
+		        	Log.error(String.format("孕宝医生: http status: %s ,error code: %s,error message: %s",e.getStatus(),e.getErrorCode(),e.getErrorMessage()));
 		        }
 			}
 		});
@@ -115,9 +115,9 @@ public class AllDoctorClientPush {
 		        	jpushClient1.sendPush(ppld);
 		    	}
 		        } catch (APIConnectionException e) {
-		        	Log.error("JKSC all doctor 不能连接到极光推送服务器",e);
+		        	Log.error("健康四川医生:不能连接到极光推送服务器",e);
 		        } catch (APIRequestException e) {
-		        	Log.error(String.format("JKSC all doctor http status: %s ,error code: %s,error message: %s",e.getStatus(),e.getErrorCode(),e.getErrorMessage()));
+		        	Log.error(String.format("健康四川医生:http status: %s ,error code: %s,error message: %s",e.getStatus(),e.getErrorCode(),e.getErrorMessage()));
 		        }
 			}
 		});

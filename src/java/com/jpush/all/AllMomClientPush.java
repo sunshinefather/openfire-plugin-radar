@@ -23,12 +23,16 @@ import com.radar.pool.ThreadPool;
 public class AllMomClientPush {
     private static final String APPKEY=JpushConfig.MOM_APPKEY;
     private static final String MASTER_SECRET =JpushConfig.MOM_MASTER_SECRET;
+    private static final String APPKEY1=JpushConfig.MOM_APPKEY1;
+    private static final String MASTER_SECRET1 =JpushConfig.MOM_MASTER_SECRET1;
     private static final ClientConfig clientConfig=ClientConfig.getInstance();
     private static final JPushClient jpushClient;
+    private static final JPushClient jpushClient1;
     private static final Logger Log = LoggerFactory.getLogger(AllMomClientPush.class);
     static{
     	clientConfig.setConnectionTimeout(10*1000);
     	jpushClient = new JPushClient(MASTER_SECRET, APPKEY,null,clientConfig);
+    	jpushClient1 = new JPushClient(MASTER_SECRET1, APPKEY1,null,clientConfig);
     }
     public static PushPayload buildPushObject_all_alias(String[] userName,String alert,String dataId,String senderId,String dataType,String messageType) {
         return PushPayload.newBuilder()
@@ -92,11 +96,28 @@ public class AllMomClientPush {
 		        	jpushClient.sendPush(buildPushObject_all_all(alert, dataId, senderId, dataType, messageType));
 		    	}
 		        } catch (APIConnectionException e) {
-		        	Log.error("android mom不能连接到极光推送服务器",e);
+		        	Log.error("孕宝:不能连接到极光推送服务器",e);
 		        } catch (APIRequestException e) {
-		        	Log.error(String.format("android mom http status: %s ,error code: %s,error message: %s",e.getStatus(),e.getErrorCode(),e.getErrorMessage()));
+		        	Log.error(String.format("孕宝:http status: %s ,error code: %s,error message: %s",e.getStatus(),e.getErrorCode(),e.getErrorMessage()));
 		        }
 			}
 		});
+    	ThreadPool.addWork(new QueueTask() {
+    		@Override
+    		public void executeTask() throws Exception {
+    			//JPushClient jpushClient = new JPushClient(MASTER_SECRET, APPKEY,null,clientConfig);
+    			try{
+    				if(userName!=null && userName.length>0){
+    					jpushClient1.sendPush(buildPushObject_all_alias(userName[0], alert, dataId, senderId, dataType, messageType));
+    				}else{
+    					jpushClient1.sendPush(buildPushObject_all_all(alert, dataId, senderId, dataType, messageType));
+    				}
+    			} catch (APIConnectionException e) {
+    				Log.error("互联网医院:不能连接到极光推送服务器",e);
+    			} catch (APIRequestException e) {
+    				Log.error(String.format("互联网医院:http status: %s ,error code: %s,error message: %s",e.getStatus(),e.getErrorCode(),e.getErrorMessage()));
+    			}
+    		}
+    	});
     }
 }
