@@ -44,7 +44,7 @@ public class PushMessage {
 	
 	private static final Logger log = LoggerFactory.getLogger(PushMessage.class);
 	/**证书推送环境*/
-	public static final boolean  IOS_PRODUCT_ENV=false;
+	public static final boolean  IOS_PRODUCT_ENV=true;
 
 	/** start 环境配置  */
 	private static String KSPASSWORD="1234";// 证书密码
@@ -363,9 +363,9 @@ public class PushMessage {
 	private static void push(User user,Payload param, String deviceToken){
 		if(user!=null){
 			 if("300".equals(user.getEmail())){
-				 push2Mom(param, deviceToken);
+				 //push2Mom(param, deviceToken);
 			 }else if("201".equals(user.getEmail())){
-				 push2Doctor(param, deviceToken);
+				 //push2Doctor(param, deviceToken);
 			 }
 		}
 	}
