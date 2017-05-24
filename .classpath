@@ -26,7 +26,7 @@
 	<classpathentry kind="lib" path="lib/include/crm-api-0.0.4.jar"/>
 	<classpathentry kind="lib" path="lib/include/gson-2.7.jar"/>
 	<classpathentry kind="lib" path="lib/include/jpush-client-3.2.9.jar" sourcepath="C:/Users/Administrator/Desktop/jpush/jpush-api-java-client-master.zip"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/openfire_4.0.2"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

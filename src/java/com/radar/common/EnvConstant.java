@@ -15,7 +15,7 @@ public class EnvConstant
     /**
      * imcrm服务器地址
      */
-	public static final String IMCRMHOST=PushMessage.IOS_PRODUCT_ENV?"192.168.66.20":"192.168.1.245";//(内网内)192.168.1.245;192.168.66.20(华为)
+	public static final String IMCRMHOST=PushMessage.IOS_PRODUCT_ENV?"192.168.88.17":"192.168.88.17";//(内网内)192.168.1.245;192.168.66.20(华为)
      /**
       * imcrm服务器端口
       */
