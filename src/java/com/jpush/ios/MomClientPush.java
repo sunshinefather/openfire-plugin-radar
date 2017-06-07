@@ -71,7 +71,6 @@ public class MomClientPush {
     	ThreadPool.addWork(new QueueTask() {
 			@Override
 			public void executeTask() throws Exception {
-				//JPushClient jpushClient = new JPushClient(MASTER_SECRET, APPKEY,null,clientConfig);
 		    	try{
 		    	if(userName!=null && userName.length>0){
 		        	jpushClient.sendPush(buildPushObject_ios_alias(userName[0], alert, dataId, senderId, dataType, messageType));
