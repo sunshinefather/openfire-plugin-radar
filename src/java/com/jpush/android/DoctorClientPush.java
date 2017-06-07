@@ -20,17 +20,13 @@ import cn.jpush.api.push.model.notification.Notification;
 public class DoctorClientPush {
     private static final String APPKEY=JpushConfig.DOCTOR_APPKEY;
     private static final String MASTER_SECRET =JpushConfig.DOCTOR_MASTER_SECRET;
-    
-    private static final String APPKEY1=JpushConfig.DOCTOR_APPKEY1;
-    private static final String MASTER_SECRET1 =JpushConfig.DOCTOR_MASTER_SECRET1;
+   
     private static final ClientConfig clientConfig=ClientConfig.getInstance();
     private static final JPushClient jpushClient;
-    private static final JPushClient jpushClient1;
     private static final Logger Log = LoggerFactory.getLogger(DoctorClientPush.class);
     static{
     	clientConfig.setConnectionTimeout(10*1000);
     	jpushClient = new JPushClient(MASTER_SECRET, APPKEY,null,clientConfig);
-    	jpushClient1 = new JPushClient(MASTER_SECRET1, APPKEY1,null,clientConfig);
     }
     public static PushPayload buildPushObject_android_alias(String[] userName,String alert,String dataId,String senderId,String dataType,String messageType) {
         return PushPayload.newBuilder()
@@ -80,25 +76,5 @@ public class DoctorClientPush {
 		        }
 			}
 		});
-    	
-    	ThreadPool.addWork(new QueueTask() {
-    		@Override
-    		public void executeTask() throws Exception {
-    			//JPushClient jpushClient = new JPushClient(MASTER_SECRET, APPKEY,null,clientConfig);
-    			try{
-    				if(userName!=null && userName.length>0){
-    					PushPayload ppld =buildPushObject_android_alias(userName[0], alert, dataId, senderId, dataType, messageType);
-    					jpushClient1.sendPush(ppld);
-    				}else{
-    					PushPayload ppld =buildPushObject_android_all(alert, dataId, senderId, dataType, messageType);
-    					jpushClient1.sendPush(ppld);
-    				}
-    			} catch (APIConnectionException e) {
-    				Log.error("健康四川医生: android 不能连接到极光推送服务器",e);
-    			} catch (APIRequestException e) {
-    				Log.error(String.format("健康四川医生: android http status: %s ,error code: %s,error message: %s",e.getStatus(),e.getErrorCode(),e.getErrorMessage()));
-    			}
-    		}
-    	});
     }
 }
