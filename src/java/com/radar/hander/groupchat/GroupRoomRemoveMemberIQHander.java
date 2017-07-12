@@ -9,9 +9,9 @@ import org.jivesoftware.openfire.handler.IQHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmpp.packet.IQ;
+import com.mdks.imcrm.bean.GroupMember;
 import com.radar.action.GroupAction;
 import com.radar.common.IqConstant;
-import com.zyt.web.after.grouproom.remote.ImCrmGroupMember;
 /**
  * 移除群成员,当userLoginName值为:allUsers清空除群创建者以外的所有人
  * @ClassName:  GroupRoomRemoveMemberIQHander   
@@ -54,11 +54,11 @@ public class GroupRoomRemoveMemberIQHander extends IQHandler
         	if("allUsers".equals(userLoginName)){//userLoginName为allUsers清空除群管理员以外的所有成员
             	userLoginName=null;
             }
-        	ImCrmGroupMember imCrmGroupMember=new ImCrmGroupMember();
-        	imCrmGroupMember.setGroupUserId(groupUserId);
-        	imCrmGroupMember.setGroupId(groupid);
-        	imCrmGroupMember.setUserName(userLoginName);
-        	boolean rt=GroupAction.delMember(imCrmGroupMember,packet.getFrom().getNode());
+        	GroupMember GroupMember=new GroupMember();
+        	GroupMember.setGroupUserId(groupUserId);
+        	GroupMember.setGroupId(groupid);
+        	GroupMember.setUserName(userLoginName);
+        	boolean rt=GroupAction.delMember(GroupMember,packet.getFrom().getNode());
         	if(!rt){
         		replay.setType(IQ.Type.error);
             	log.error("移除群成员失败",packet.toXML());

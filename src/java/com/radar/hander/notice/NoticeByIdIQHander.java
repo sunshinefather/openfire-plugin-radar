@@ -1,7 +1,6 @@
 package com.radar.hander.notice;
 
 import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Element;
 import org.jivesoftware.openfire.IQHandlerInfo;
@@ -11,11 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmpp.packet.IQ;
 import org.xmpp.packet.IQ.Type;
-
+import com.mdks.imcrm.bean.Notice;
+import com.mdks.imcrm.bean.NoticeDetial;
 import com.radar.action.NoticeAction;
 import com.radar.common.IqConstant;
-import com.zyt.web.after.notice.remote.bean.ImCrmNotice;
-import com.zyt.web.after.notice.remote.bean.ImCrmNoticeDetail;
 
 public class NoticeByIdIQHander extends IQHandler {
 
@@ -51,7 +49,7 @@ public class NoticeByIdIQHander extends IQHandler {
         	log.info("获取通知失败:参数错误");
         	return replay;
         }
-        ImCrmNotice notice= NoticeAction.findById(userId, noticeId);
+        Notice notice= NoticeAction.findById(userId, noticeId);
     	if(notice!=null && StringUtils.isEmpty(notice.getNoticeId())){
     		replay.setType(IQ.Type.error);
     		log.info("获取通知失败");
@@ -66,8 +64,8 @@ public class NoticeByIdIQHander extends IQHandler {
         	                          .addAttribute("sendTime", notice.getExtension1())
         	                          .addAttribute("attachment", notice.getAttachment());
         	if("1".equals(allUserState)){
-            	List<ImCrmNoticeDetail> detailList= notice.getDetails();
-            	for(ImCrmNoticeDetail detail:detailList){
+            	List<NoticeDetial> detailList= notice.getDetails();
+            	for(NoticeDetial detail:detailList){
                 	noticeNode.addElement("accepter").addAttribute("userName",detail.getAccepter())
                 	                                 .addAttribute("readState", detail.getReadState())
                 	                                 .addAttribute("readTime", detail.getReadTime())

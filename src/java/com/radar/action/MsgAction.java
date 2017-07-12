@@ -1,14 +1,10 @@
 package com.radar.action;
 
-import com.radar.common.EnvConstant;
-import com.radar.common.ThriftClientInfo;
-import com.radar.common.ThriftClientManager;
-import com.zyt.web.after.messages.remote.ImCrmMessage;
-import com.zyt.web.after.messages.remote.ImCrmMessageService;
+import com.mdks.imcrm.bean.Messages;
+import com.mdks.imcrm.service.MessageRpcService;
+import com.radar.common.DubboServer;
 
 public class MsgAction {
-	private static final String HOST=EnvConstant.IMCRMHOST;
-	private static final int PORT=EnvConstant.IMCRMPORT;
     /**
      * 保存消息
      * @Title: saveMessage
@@ -19,17 +15,13 @@ public class MsgAction {
      * @author: sunshine  
      * @throws
      */
-	public static boolean saveMessage(ImCrmMessage imCrmMessage){
-		ThriftClientInfo clientinfo=null;
+	public static boolean saveMessage(Messages imCrmMessage){
 		try {
-			clientinfo = ThriftClientManager.getExpendClient(HOST, PORT, ImCrmMessageService.Client.class);
-			ImCrmMessageService.Client clent=(ImCrmMessageService.Client)clientinfo.getTserviceClient();
+			MessageRpcService clent = DubboServer.getInstance().getService(MessageRpcService.class);
 			boolean rt=clent.saveMessage(imCrmMessage);
 			return rt;
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally{
-			ThriftClientManager.closeClient(clientinfo);
 		}
 		return false;
 	}
@@ -45,16 +37,12 @@ public class MsgAction {
 	 * @throws
 	 */
 	public static boolean updateMessageState(String messageId,String accepter){
-		ThriftClientInfo clientinfo=null;
 		try {
-			clientinfo = ThriftClientManager.getExpendClient(HOST, PORT, ImCrmMessageService.Client.class);
-			ImCrmMessageService.Client clent=(ImCrmMessageService.Client)clientinfo.getTserviceClient();
+			MessageRpcService clent = DubboServer.getInstance().getService(MessageRpcService.class);
 			boolean rt=clent.updateMessageState(messageId, accepter);
 			return rt;
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally{
-			ThriftClientManager.closeClient(clientinfo);
 		}
 		return false;
 	}
@@ -73,16 +61,12 @@ public class MsgAction {
 	 * @throws
 	 */
 	public static String findMessageList(String userId,String targetId,int pageNo,int pageSize,String chatType){
-		ThriftClientInfo clientinfo=null;
 		String msglist="";
 		try {
-			clientinfo = ThriftClientManager.getExpendClient(HOST, PORT, ImCrmMessageService.Client.class);
-			ImCrmMessageService.Client clent=(ImCrmMessageService.Client)clientinfo.getTserviceClient();
+			MessageRpcService clent = DubboServer.getInstance().getService(MessageRpcService.class);
 			msglist=clent.findMessageList(userId, targetId, pageNo, pageSize, chatType);
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally{
-			ThriftClientManager.closeClient(clientinfo);
 		}
 		return msglist;
 	}
@@ -98,16 +82,12 @@ public class MsgAction {
 	 * @throws
 	 */
 	public static boolean delMessage(String userId,String messageIds){
-		ThriftClientInfo clientinfo=null;
 		try {
-			clientinfo = ThriftClientManager.getExpendClient(HOST, PORT, ImCrmMessageService.Client.class);
-			ImCrmMessageService.Client clent=(ImCrmMessageService.Client)clientinfo.getTserviceClient();
+			MessageRpcService clent = DubboServer.getInstance().getService(MessageRpcService.class);
 			boolean rt=clent.delMessages(userId, messageIds);
 			return rt;
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally{
-			ThriftClientManager.closeClient(clientinfo);
 		}
 		return false;
 	}

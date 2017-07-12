@@ -2,7 +2,6 @@ package com.radar.hander.contact;
 
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Element;
 import org.jivesoftware.openfire.IQHandlerInfo;
@@ -11,11 +10,10 @@ import org.jivesoftware.openfire.handler.IQHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmpp.packet.IQ;
-
+import com.mdks.imcrm.bean.FriendGroups;
+import com.mdks.imcrm.bean.Friends;
 import com.radar.action.ContactAction;
 import com.radar.common.IqConstant;
-import com.zyt.web.after.friends.remote.ImCrmFriendGroups;
-import com.zyt.web.after.friends.remote.ImCrmFriends;
 
 public class ContactListIQHander extends IQHandler {
 
@@ -44,16 +42,16 @@ public class ContactListIQHander extends IQHandler {
             	userId=packet.getFrom().getNode();
             }
         }
-		Map<ImCrmFriendGroups, List<ImCrmFriends>> map=ContactAction.friendsList(userId,userFrom);
+		Map<FriendGroups, List<Friends>> map=ContactAction.friendsList(userId,userFrom);
 		if(map!=null && map.size()>0){
-			for(ImCrmFriendGroups imfg:map.keySet()){
+			for(FriendGroups imfg:map.keySet()){
 				Element elm=replay.getChildElement()
 						.addElement("friendGroup")
 						.addAttribute("fgId",imfg.getFgId())
 						.addAttribute("fgName",imfg.getFgName());
-				List<ImCrmFriends> list=map.get(imfg);
+				List<Friends> list=map.get(imfg);
 				if(list!=null && list.size()>0){
-					for(ImCrmFriends imfds:list){
+					for(Friends imfds:list){
 						elm.addElement("friends")
 						.addAttribute("friendId",imfds.getFriendId())
 						.addAttribute("friendUserId",imfds.getFriendUserId())

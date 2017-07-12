@@ -11,8 +11,6 @@
 	<classpathentry kind="lib" path="lib/new/slf4j-api.jar"/>
 	<classpathentry kind="lib" path="lib/new/dom4j.jar" sourcepath="D:/softpack/openfire/dom4j-1.6.1-sources.jar"/>
 	<classpathentry kind="lib" path="lib/new/xstream-1.4.8.jar"/>
-	<classpathentry kind="lib" path="lib/include/libthrift-0.9.2.jar"/>
-	<classpathentry kind="lib" path="lib/include/fastjson-1.1.41.jar"/>
 	<classpathentry kind="lib" path="lib/bin/commons-daemon.jar"/>
 	<classpathentry kind="lib" path="lib/bin/commons-launcher.jar"/>
 	<classpathentry kind="lib" path="lib/bin/commons-logging-api.jar"/>
@@ -23,9 +21,18 @@
 	<classpathentry kind="lib" path="lib/server/jasper-runtime.jar"/>
 	<classpathentry kind="lib" path="lib/mysql.jar"/>
 	<classpathentry kind="lib" path="lib/openfire.jar" sourcepath="/openfire_4.0.2"/>
-	<classpathentry kind="lib" path="lib/include/crm-api-0.0.4.jar"/>
-	<classpathentry kind="lib" path="lib/include/gson-2.7.jar"/>
 	<classpathentry kind="lib" path="lib/include/jpush-client-3.2.9.jar" sourcepath="C:/Users/Administrator/Desktop/jpush/jpush-api-java-client-master.zip"/>
+	<classpathentry kind="lib" path="lib/include/dubbo-2.8.4.jar"/>
+	<classpathentry kind="lib" path="lib/include/javassist-3.21.0-GA.jar"/>
+	<classpathentry kind="lib" path="lib/include/netty-3.7.0.Final.jar"/>
+	<classpathentry kind="lib" path="lib/include/slf4j-api-1.6.1.jar"/>
+	<classpathentry kind="lib" path="lib/include/yunbao-common-1.0.0.jar"/>
+	<classpathentry kind="lib" path="lib/include/yunbao-imcrm-api-1.0.0.jar"/>
+	<classpathentry kind="lib" path="lib/include/zkclient-0.10.jar"/>
+	<classpathentry kind="lib" path="lib/include/zookeeper-3.4.8.jar"/>
+	<classpathentry kind="lib" path="lib/include/fastjson-1.1.41.jar"/>
+	<classpathentry kind="lib" path="lib/include/gson-2.7.jar"/>
+	<classpathentry kind="lib" path="lib/include/yunbao-user-api-1.0.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/openfire_4.0.2"/>
 	<classpathentry kind="output" path="classes"/>

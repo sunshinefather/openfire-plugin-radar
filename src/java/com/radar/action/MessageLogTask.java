@@ -1,17 +1,15 @@
 package com.radar.action;
 
 import java.sql.Date;
-
 import org.apache.commons.httpclient.util.DateUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmpp.packet.Message;
 import org.xmpp.packet.PacketExtension;
-
+import com.mdks.imcrm.bean.Messages;
 import com.radar.bean.MsgInfoEnttity.Type;
 import com.radar.pool.QueueTask;
-import com.zyt.web.after.messages.remote.ImCrmMessage;
 /**
  * 保存消息记录
  * @ClassName:  MessageLogTask   
@@ -27,7 +25,7 @@ public class MessageLogTask implements QueueTask {
 	private String sender;
 	private String accepter;
 	private String messageInfo;
-	private ImCrmMessage imCrmMessage;
+	private Messages imCrmMessage;
 	private static final Logger log = LoggerFactory.getLogger(MessageLogTask.class);
     
 	public MessageLogTask (int type, Type contentType, Message message){
@@ -46,7 +44,7 @@ public class MessageLogTask implements QueueTask {
 		this.sender = message.getFrom().getNode();
 		this.accepter = message.getTo().getNode();
 		this.messageInfo = message.getBody();
-		imCrmMessage=new ImCrmMessage();
+		imCrmMessage=new Messages();
 		imCrmMessage.setAccepter(accepter);
  		imCrmMessage.setSender(sender);
  		imCrmMessage.setSendDate(String.valueOf(sendDate));

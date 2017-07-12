@@ -1,7 +1,6 @@
 package com.radar.hander.contact;
 
 import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Element;
 import org.jivesoftware.openfire.IQHandlerInfo;
@@ -10,10 +9,9 @@ import org.jivesoftware.openfire.handler.IQHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmpp.packet.IQ;
-
+import com.mdks.imcrm.bean.FriendGroups;
 import com.radar.action.ContactAction;
 import com.radar.common.IqConstant;
-import com.zyt.web.after.friends.remote.ImCrmFriendGroups;
 
 public class ContactAddFriendsGroupIQHander extends IQHandler {
 
@@ -47,7 +45,7 @@ public class ContactAddFriendsGroupIQHander extends IQHandler {
         	replay.setType(IQ.Type.error);
         	log.info("创建分组参数错误");
         }else{
-            ImCrmFriendGroups imCrmFriendGroups=new ImCrmFriendGroups();
+            FriendGroups imCrmFriendGroups=new FriendGroups();
             imCrmFriendGroups.setExtension1(extension1);
             imCrmFriendGroups.setExtension2(extension2);
             imCrmFriendGroups.setFgName(fgName);

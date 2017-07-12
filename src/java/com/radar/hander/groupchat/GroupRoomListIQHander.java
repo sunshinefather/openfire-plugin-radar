@@ -1,7 +1,6 @@
 package com.radar.hander.groupchat;
 
 import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Element;
 import org.jivesoftware.openfire.IQHandlerInfo;
@@ -10,10 +9,9 @@ import org.jivesoftware.openfire.handler.IQHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmpp.packet.IQ;
-
+import com.mdks.imcrm.bean.GroupRoom;
 import com.radar.action.GroupAction;
 import com.radar.common.IqConstant;
-import com.zyt.web.after.grouproom.remote.ImCrmGroupRoom;
 /**
  * 拉取群组列表
  * @ClassName:  GroupRoomListIQHander   
@@ -50,19 +48,19 @@ public class GroupRoomListIQHander extends IQHandler
         	replay.setType(IQ.Type.error);
         	log.info("获取群组列表参数错误");
         }else {
-        	List<ImCrmGroupRoom> list=GroupAction.findGroupRoomList(userId, "");
+        	List<GroupRoom> list=GroupAction.findGroupRoomList(userId, "");
         	if(list!=null && list.size()>0){
-            	for(ImCrmGroupRoom imCrmGroupRoom:list){
+            	for(GroupRoom GroupRoom:list){
             		replay.getChildElement().addElement("item")
-                	.addAttribute("groupId",imCrmGroupRoom.getGroupId())
-                	.addAttribute("groupName",imCrmGroupRoom.getGroupName())
-                	.addAttribute("createUserId",imCrmGroupRoom.getCreateUserId())
-                	.addAttribute("memberSize",imCrmGroupRoom.getMemberSize())
-                	.addAttribute("roomPassword",imCrmGroupRoom.getRoomPassword())
-                	.addAttribute("groupType",imCrmGroupRoom.getGroupType())
-                	.addAttribute("groupDesc",imCrmGroupRoom.getGroupDesc())
-                	.addAttribute("extension1",imCrmGroupRoom.getExtension1())
-                	.addAttribute("extension2",imCrmGroupRoom.getExtension2());
+                	.addAttribute("groupId",GroupRoom.getGroupId())
+                	.addAttribute("groupName",GroupRoom.getGroupName())
+                	.addAttribute("createUserId",GroupRoom.getCreateUserId())
+                	.addAttribute("memberSize",GroupRoom.getMemberSize())
+                	.addAttribute("roomPassword",GroupRoom.getRoomPassword())
+                	.addAttribute("groupType",GroupRoom.getGroupType())
+                	.addAttribute("groupDesc",GroupRoom.getGroupDesc())
+                	.addAttribute("extension1",GroupRoom.getExtension1())
+                	.addAttribute("extension2",GroupRoom.getExtension2());
             	}
         	}
         }

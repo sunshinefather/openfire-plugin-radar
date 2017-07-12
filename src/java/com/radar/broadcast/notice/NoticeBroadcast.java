@@ -4,11 +4,10 @@ import org.apache.commons.lang.StringUtils;
 import org.xmpp.packet.JID;
 import org.xmpp.packet.Message;
 import org.xmpp.packet.PacketExtension;
-
+import com.mdks.imcrm.bean.Notice;
 import com.radar.broadcast.SendBoardcastTask;
 import com.radar.pool.ThreadPool;
 import com.radar.utils.HixinUtils;
-import com.zyt.web.after.notice.remote.bean.ImCrmNotice;
 /**
  * 发送系统通知工具类
  * @ClassName:  NoticeBroadcast   
@@ -18,7 +17,7 @@ import com.zyt.web.after.notice.remote.bean.ImCrmNotice;
  */
 public class NoticeBroadcast {
 
-	public static void pushNotice(ImCrmNotice imCrmNotice,String[] toUserNames,Boolean... forceNotStore) {
+	public static void pushNotice(Notice imCrmNotice,String[] toUserNames,Boolean... forceNotStore) {
 		Message msg=new Message();
 		msg.setType(Message.Type.headline);
 		msg.setSubject(imCrmNotice.getNoticeSubject());

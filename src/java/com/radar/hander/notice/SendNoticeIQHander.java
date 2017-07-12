@@ -10,10 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmpp.packet.IQ;
 import org.xmpp.packet.IQ.Type;
-
+import com.mdks.imcrm.bean.Notice;
 import com.radar.action.NoticeAction;
 import com.radar.common.IqConstant;
-import com.zyt.web.after.notice.remote.bean.ImCrmNotice;
 
 public class SendNoticeIQHander extends IQHandler {
 
@@ -61,7 +60,7 @@ public class SendNoticeIQHander extends IQHandler {
         if(StringUtils.isNotEmpty(toUserName)){
         	toUserNames=toUserName.split("[,]");
         }
-        ImCrmNotice imCrmNotice=new ImCrmNotice();
+        Notice imCrmNotice=new Notice();
         imCrmNotice.setNoticeId(noticeId);
         imCrmNotice.setSender(packet.getFrom().getNode());
         imCrmNotice.setNoticeType(noticeType);

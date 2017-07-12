@@ -1,7 +1,6 @@
 package com.radar.hander.groupchat;
 
 import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Element;
 import org.jivesoftware.openfire.IQHandlerInfo;
@@ -10,10 +9,9 @@ import org.jivesoftware.openfire.handler.IQHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmpp.packet.IQ;
-
+import com.mdks.imcrm.bean.GroupRoom;
 import com.radar.action.GroupAction;
 import com.radar.common.IqConstant;
-import com.zyt.web.after.grouproom.remote.ImCrmGroupRoom;
 /**
  * 群组详细信息
  * @ClassName:  GroupRoomByIdIQHander   
@@ -50,18 +48,18 @@ public class GroupRoomByIdIQHander extends IQHandler
         	replay.setType(IQ.Type.error);
         	log.info("获取群组详细信息参数错误");
         }else {
-        	ImCrmGroupRoom imCrmGroupRoom=GroupAction.getGroupRoomById(groupId);
-        	if(imCrmGroupRoom!=null){
+        	GroupRoom GroupRoom=GroupAction.getGroupRoomById(groupId);
+        	if(GroupRoom!=null){
         		replay.getChildElement().addElement("groupRoom")
-            	.addAttribute("groupId",imCrmGroupRoom.getGroupId())
-            	.addAttribute("groupName",imCrmGroupRoom.getGroupName())
-            	.addAttribute("createUserId",imCrmGroupRoom.getCreateUserId())
-            	.addAttribute("memberSize",imCrmGroupRoom.getMemberSize())
-            	.addAttribute("roomPassword",imCrmGroupRoom.getRoomPassword())
-            	.addAttribute("groupType",imCrmGroupRoom.getGroupType())
-            	.addAttribute("groupDesc",imCrmGroupRoom.getGroupDesc())
-            	.addAttribute("extension1",imCrmGroupRoom.getExtension1())
-            	.addAttribute("extension2",imCrmGroupRoom.getExtension2());
+            	.addAttribute("groupId",GroupRoom.getGroupId())
+            	.addAttribute("groupName",GroupRoom.getGroupName())
+            	.addAttribute("createUserId",GroupRoom.getCreateUserId())
+            	.addAttribute("memberSize",GroupRoom.getMemberSize())
+            	.addAttribute("roomPassword",GroupRoom.getRoomPassword())
+            	.addAttribute("groupType",GroupRoom.getGroupType())
+            	.addAttribute("groupDesc",GroupRoom.getGroupDesc())
+            	.addAttribute("extension1",GroupRoom.getExtension1())
+            	.addAttribute("extension2",GroupRoom.getExtension2());
         	}
         }
         return replay;

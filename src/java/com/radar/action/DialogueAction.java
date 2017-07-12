@@ -1,13 +1,9 @@
 package com.radar.action;
 
-import com.radar.common.EnvConstant;
-import com.radar.common.ThriftClientInfo;
-import com.radar.common.ThriftClientManager;
-import com.zyt.web.after.dialogue.remote.ImCrmDialogueService;
+import com.mdks.imcrm.service.DialogueRpcService;
+import com.radar.common.DubboServer;
 
 public class DialogueAction {
-	private static final String HOST=EnvConstant.IMCRMHOST;
-	private static final int PORT=EnvConstant.IMCRMPORT;
     
 	/**
 	 * 拉取会话列表
@@ -23,15 +19,11 @@ public class DialogueAction {
 	 */
 	public static String findDialogueList(String userId,int pageNo,int pageSize){
 		String dialogueList="";
-		ThriftClientInfo clientinfo=null;
 		try {
-			clientinfo = ThriftClientManager.getExpendClient(HOST, PORT, ImCrmDialogueService.Client.class);
-			ImCrmDialogueService.Client clent=(ImCrmDialogueService.Client)clientinfo.getTserviceClient();
+			DialogueRpcService clent = DubboServer.getInstance().getService(DialogueRpcService.class);
 			dialogueList=clent.dialogueList(userId,"", pageNo, pageSize);
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally{
-			ThriftClientManager.closeClient(clientinfo);
 		}
 		return dialogueList;
 	}
@@ -47,16 +39,12 @@ public class DialogueAction {
 	 * @throws
 	 */
 	public static boolean delDialogues(String userId,String dialogueIds,String targetId){
-		ThriftClientInfo clientinfo=null;
 		try {
-			clientinfo = ThriftClientManager.getExpendClient(HOST, PORT, ImCrmDialogueService.Client.class);
-			ImCrmDialogueService.Client clent=(ImCrmDialogueService.Client)clientinfo.getTserviceClient();
+			DialogueRpcService clent = DubboServer.getInstance().getService(DialogueRpcService.class);
 			boolean rt=clent.delDialogue(userId, dialogueIds);
 			return rt;
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally{
-			ThriftClientManager.closeClient(clientinfo);
 		}
 		return false;
 	}

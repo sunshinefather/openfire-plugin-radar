@@ -3,7 +3,6 @@ package com.radar.plugin;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.jivesoftware.openfire.XMPPServer;
 import org.jivesoftware.openfire.component.InternalComponentManager;
 import org.jivesoftware.openfire.container.Plugin;
@@ -14,7 +13,7 @@ import org.jivesoftware.util.JiveGlobals;
 import org.jivesoftware.util.PropertyEventDispatcher;
 import org.jivesoftware.util.StringUtils;
 import org.xmpp.component.ComponentException;
-
+import com.radar.common.DubboServer;
 import com.radar.common.EnvConstant;
 import com.radar.component.ReceiptComponent;
 import com.radar.hander.contact.ContactAddFriendsGroupIQHander;
@@ -93,7 +92,6 @@ public class RadarServerPlugin implements Plugin
         } catch (ComponentException e1) {
             e1.printStackTrace();
         }
-        
         initOpenfireExtend();
     }
     
@@ -160,6 +158,8 @@ public class RadarServerPlugin implements Plugin
         EnvConstant.MEMCACHED_ADDRESS = JiveGlobals.getProperty("plugin.radar.memcachedAddress","");
         
         EnvConstant.KSPASSWORD=JiveGlobals.getProperty("plugin.iospush.password","1234");
+        
+        EnvConstant.ZOOKEEPERHOST=JiveGlobals.getProperty("plugin.radar.zookeeper",EnvConstant.ZOOKEEPERHOST);
         
         EnvConstant.IS_PRODUCT_ENV=JiveGlobals.getBooleanProperty("plugin.iospush.model");
         
@@ -232,6 +232,7 @@ public class RadarServerPlugin implements Plugin
             listIQ=null;
         }
         ThreadPool.shutdown();  //销毁线程池
+        DubboServer.getInstance().destroyAll();//关闭RPC连接
     }
 
     //get set方法

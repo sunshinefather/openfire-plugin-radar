@@ -2,22 +2,18 @@ package com.radar.action;
 
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.lang.StringUtils;
-
-import com.alibaba.fastjson.JSON;
-import com.radar.bean.User;
-import com.radar.common.EnvConstant;
-import com.radar.common.ThriftClientInfo;
-import com.radar.common.ThriftClientManager;
-import com.zyt.web.after.friends.remote.ImCrmFriendGroups;
-import com.zyt.web.after.friends.remote.ImCrmFriends;
-import com.zyt.web.after.friends.remote.ImCrmFriendsGroupsService;
-import com.zyt.web.after.user.remote.ImCrmUserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import com.mdks.common.pojo.User;
+import com.mdks.imcrm.bean.FriendGroups;
+import com.mdks.imcrm.bean.Friends;
+import com.mdks.imcrm.service.FriendsGroupsRpcService;
+import com.mdks.module.user.service.UserRpcService;
+import com.radar.common.DubboServer;
 
 public class ContactAction {
-	private static final String HOST=EnvConstant.IMCRMHOST;
-	private static final int PORT=EnvConstant.IMCRMPORT;
+	private static final Logger log = LoggerFactory.getLogger(ContactAction.class);
 	/**
 	 * 获取用户联系人
 	 * @Title: friendsList
@@ -25,21 +21,17 @@ public class ContactAction {
 	 * @param: @param userId
 	 * @param: @param userFrom
 	 * @param: @return      
-	 * @return: Map<ImCrmFriendGroups,List<ImCrmFriends>>
+	 * @return: Map<FriendGroups,List<Friends>>
 	 * @author: sunshine  
 	 * @throws
 	 */
-	public static Map<ImCrmFriendGroups, List<ImCrmFriends>> friendsList(String userId,String userFrom){
-		ThriftClientInfo clientinfo=null;
+	public static Map<FriendGroups, List<Friends>> friendsList(String userId,String userFrom){
 		try {
-			clientinfo = ThriftClientManager.getExpendClient(HOST, PORT, ImCrmFriendsGroupsService.Client.class);
-			ImCrmFriendsGroupsService.Client clent=(ImCrmFriendsGroupsService.Client)clientinfo.getTserviceClient();
-			Map<ImCrmFriendGroups, List<ImCrmFriends>>  map=clent.friendsList(userId,userFrom);
+			FriendsGroupsRpcService friendsGroupsRpcService = DubboServer.getInstance().getService(FriendsGroupsRpcService.class);
+			Map<FriendGroups, List<Friends>>  map=friendsGroupsRpcService.friendsList(userId,userFrom);
 			return map;
 		} catch (Exception e) {
-			e.printStackTrace();
-		}finally{
-			ThriftClientManager.closeClient(clientinfo);
+			log.error("获取用户联系人异常",e);
 		}
 		return null;
 	}
@@ -49,21 +41,17 @@ public class ContactAction {
 	 * @Description: TODO  
 	 * @param: @param imCrmFriendGroups
 	 * @param: @return      
-	 * @return: ImCrmFriendGroups
+	 * @return: FriendGroups
 	 * @author: sunshine  
 	 * @throws
 	 */
-	public static ImCrmFriendGroups addFriendsGroup(ImCrmFriendGroups imCrmFriendGroups){
-		ThriftClientInfo clientinfo=null;
+	public static FriendGroups addFriendsGroup(FriendGroups imCrmFriendGroups){
 		try {
-			clientinfo = ThriftClientManager.getExpendClient(HOST, PORT, ImCrmFriendsGroupsService.Client.class);
-			ImCrmFriendsGroupsService.Client clent=(ImCrmFriendsGroupsService.Client)clientinfo.getTserviceClient();
-			ImCrmFriendGroups _imCrmFriendGroups=clent.addFriendsGroup(imCrmFriendGroups);
+			FriendsGroupsRpcService friendsGroupsRpcService = DubboServer.getInstance().getService(FriendsGroupsRpcService.class);
+			FriendGroups _imCrmFriendGroups=friendsGroupsRpcService.addFriendsGroup(imCrmFriendGroups);
 			return _imCrmFriendGroups;
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally{
-			ThriftClientManager.closeClient(clientinfo);
 		}
 		return null;
 	}	
@@ -73,21 +61,17 @@ public class ContactAction {
 	 * @Description: TODO  
 	 * @param: @param imCrmFriends
 	 * @param: @return      
-	 * @return: ImCrmFriends
+	 * @return: Friends
 	 * @author: sunshine  
 	 * @throws
 	 */
-	public static ImCrmFriends addMember(ImCrmFriends imCrmFriends){
-		ThriftClientInfo clientinfo=null;
+	public static Friends addMember(Friends imCrmFriends){
 		try {
-			clientinfo = ThriftClientManager.getExpendClient(HOST, PORT, ImCrmFriendsGroupsService.Client.class);
-			ImCrmFriendsGroupsService.Client clent=(ImCrmFriendsGroupsService.Client)clientinfo.getTserviceClient();
-			ImCrmFriends _imCrmFriends=clent.addMember(imCrmFriends);
+			FriendsGroupsRpcService friendsGroupsRpcService = DubboServer.getInstance().getService(FriendsGroupsRpcService.class);
+			Friends _imCrmFriends=friendsGroupsRpcService.addMember(imCrmFriends);
 			return _imCrmFriends;
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally{
-			ThriftClientManager.closeClient(clientinfo);
 		}
 		return null;
 	}
@@ -101,17 +85,13 @@ public class ContactAction {
 	 * @author: sunshine  
 	 * @throws
 	 */
-	public static boolean delMember(ImCrmFriends imCrmFriends){
-		ThriftClientInfo clientinfo=null;
+	public static boolean delMember(Friends imCrmFriends){
 		try {
-			clientinfo = ThriftClientManager.getExpendClient(HOST, PORT, ImCrmFriendsGroupsService.Client.class);
-			ImCrmFriendsGroupsService.Client clent=(ImCrmFriendsGroupsService.Client)clientinfo.getTserviceClient();
+			FriendsGroupsRpcService clent = DubboServer.getInstance().getService(FriendsGroupsRpcService.class);
 			boolean rt=clent.delMember(imCrmFriends);
 			return rt;
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally{
-			ThriftClientManager.closeClient(clientinfo);
 		}
 		return false;
 	}
@@ -125,17 +105,13 @@ public class ContactAction {
 	 * @author: sunshine  
 	 * @throws
 	 */
-	public static boolean delFriendsGroup(ImCrmFriendGroups imCrmFriendGroups){
-		ThriftClientInfo clientinfo=null;
+	public static boolean delFriendsGroup(FriendGroups imCrmFriendGroups){
 		try {
-			clientinfo = ThriftClientManager.getExpendClient(HOST, PORT, ImCrmFriendsGroupsService.Client.class);
-			ImCrmFriendsGroupsService.Client clent=(ImCrmFriendsGroupsService.Client)clientinfo.getTserviceClient();
+			FriendsGroupsRpcService clent = DubboServer.getInstance().getService(FriendsGroupsRpcService.class);
 			boolean rt=clent.delFriendsGroup(imCrmFriendGroups);
 			return rt;
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally{
-			ThriftClientManager.closeClient(clientinfo);
 		}
 		return false;
 	}
@@ -149,17 +125,14 @@ public class ContactAction {
 	 * @author: sunshine  
 	 * @throws
 	 */
-	public static boolean updateFriendsGroup(ImCrmFriendGroups imCrmFriendGroups){
-		ThriftClientInfo clientinfo=null;
+	public static boolean updateFriendsGroup(FriendGroups imCrmFriendGroups){
+
 		try {
-			clientinfo = ThriftClientManager.getExpendClient(HOST, PORT, ImCrmFriendsGroupsService.Client.class);
-			ImCrmFriendsGroupsService.Client clent=(ImCrmFriendsGroupsService.Client)clientinfo.getTserviceClient();
+			FriendsGroupsRpcService clent = DubboServer.getInstance().getService(FriendsGroupsRpcService.class);
 			boolean rt=clent.updateFriendsGroup(imCrmFriendGroups);
 			return rt;
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally{
-			ThriftClientManager.closeClient(clientinfo);
 		}
 		return false;
 	}
@@ -173,17 +146,13 @@ public class ContactAction {
 	 * @author: sunshine  
 	 * @throws
 	 */
-	public static boolean reNameMember(ImCrmFriends imCrmFriends){
-		ThriftClientInfo clientinfo=null;
+	public static boolean reNameMember(Friends imCrmFriends){
 		try {
-			clientinfo = ThriftClientManager.getExpendClient(HOST, PORT, ImCrmFriendsGroupsService.Client.class);
-			ImCrmFriendsGroupsService.Client clent=(ImCrmFriendsGroupsService.Client)clientinfo.getTserviceClient();
+			FriendsGroupsRpcService clent = DubboServer.getInstance().getService(FriendsGroupsRpcService.class);
 			boolean rt=clent.reNameMember(imCrmFriends);
 			return rt;
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally{
-			ThriftClientManager.closeClient(clientinfo);
 		}
 		return false;
 	}
@@ -197,17 +166,13 @@ public class ContactAction {
 	 * @author: sunshine  
 	 * @throws
 	 */
-	public static boolean moveMember(ImCrmFriends imCrmFriends){
-		ThriftClientInfo clientinfo=null;
+	public static boolean moveMember(Friends imCrmFriends){
 		try {
-			clientinfo = ThriftClientManager.getExpendClient(HOST, PORT, ImCrmFriendsGroupsService.Client.class);
-			ImCrmFriendsGroupsService.Client clent=(ImCrmFriendsGroupsService.Client)clientinfo.getTserviceClient();
+			FriendsGroupsRpcService clent = DubboServer.getInstance().getService(FriendsGroupsRpcService.class);
 			boolean rt=clent.moveMember(imCrmFriends);
 			return rt;
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally{
-			ThriftClientManager.closeClient(clientinfo);
 		}
 		return false;
 	}
@@ -247,18 +212,14 @@ public class ContactAction {
 	 */
 	public static User queryUser(String userName) {
 		User user=null;
-		ThriftClientInfo clientinfo=null;
 		try {
-			clientinfo = ThriftClientManager.getExpendClient(HOST, PORT, ImCrmUserService.Client.class);
-			ImCrmUserService.Client clent=(ImCrmUserService.Client)clientinfo.getTserviceClient();
-			String userstring=clent.findUserByName(userName);
-			if(StringUtils.isNotEmpty(userstring) && !"[]".equals(userstring)){
-				user =JSON.parseObject(userstring,User.class);
+			UserRpcService clent = DubboServer.getInstance().getService(UserRpcService.class);
+			user=clent.findUserByUserName(userName);
+			if(user == null){
+				user=clent.findUsersById2(userName);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally{
-			ThriftClientManager.closeClient(clientinfo);
 		}
 		return user;
 	}

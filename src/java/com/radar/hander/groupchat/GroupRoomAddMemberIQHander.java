@@ -1,7 +1,6 @@
 package com.radar.hander.groupchat;
 
 import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Element;
 import org.jivesoftware.openfire.IQHandlerInfo;
@@ -10,9 +9,9 @@ import org.jivesoftware.openfire.handler.IQHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmpp.packet.IQ;
+import com.mdks.imcrm.bean.GroupMember;
 import com.radar.action.GroupAction;
 import com.radar.common.IqConstant;
-import com.zyt.web.after.grouproom.remote.ImCrmGroupMember;
 /**
  * 添加群成员
  * @ClassName:  GroupRoomAddMemberIQHander   
@@ -51,13 +50,13 @@ public class GroupRoomAddMemberIQHander extends IQHandler
         	replay.setType(IQ.Type.error);
         	log.info("添加群成员参数错误");
         }else {
-        	ImCrmGroupMember imCrmGroupMember=new ImCrmGroupMember();
-        	imCrmGroupMember.setGroupId(groupId);
-        	imCrmGroupMember.setUserName(userId);
-        	imCrmGroupMember=GroupAction.addMember(imCrmGroupMember,packet.getFrom().getNode());
-        	if(imCrmGroupMember!=null && StringUtils.isNotEmpty(imCrmGroupMember.getGroupUserId())){
+        	GroupMember GroupMember=new GroupMember();
+        	GroupMember.setGroupId(groupId);
+        	GroupMember.setUserName(userId);
+        	GroupMember=GroupAction.addMember(GroupMember,packet.getFrom().getNode());
+        	if(GroupMember!=null && StringUtils.isNotEmpty(GroupMember.getGroupUserId())){
             	replay.getChildElement().addElement("groupRoomMember")
-            	.addAttribute("groupUserId",imCrmGroupMember.getGroupUserId());
+            	.addAttribute("groupUserId",GroupMember.getGroupUserId());
             }else{
             	replay.setType(IQ.Type.error);
 		    }

@@ -20,6 +20,8 @@ import com.apns.model.Feedback;
 import com.apns.model.Payload;
 import com.jpush.ios.DoctorClientPush;
 import com.jpush.ios.MomClientPush;
+import com.mdks.imcrm.bean.GroupRoom;
+import com.mdks.imcrm.bean.PushConfig;
 import com.radar.action.ContactAction;
 import com.radar.action.DeviceToken;
 import com.radar.action.GroupAction;
@@ -27,8 +29,6 @@ import com.radar.action.PushConfigAction;
 import com.radar.common.EnvConstant;
 import com.radar.extend.IosTokenDao;
 import com.radar.extend.PaginationAble;
-import com.zyt.web.after.grouproom.remote.ImCrmGroupRoom;
-import com.zyt.web.after.push.remote.ImCrmPushConfig;
 
 /**
  * IOS设备推送消息
@@ -255,7 +255,7 @@ public class PushMessage {
 	public static void pushGroupChatMessage(Message message) throws Exception {
 		String groupUid = message.getTo().getNode();
 		String from = message.getFrom().getNode();
-		ImCrmGroupRoom groupRoom = GroupAction.getGroupRoomById(groupUid);
+		GroupRoom groupRoom = GroupAction.getGroupRoomById(groupUid);
 		String grouptype="2";
 		if(groupRoom!=null && StringUtils.isNotEmpty(groupRoom.getGroupType())){
 			grouptype=groupRoom.getGroupType();
@@ -268,11 +268,11 @@ public class PushMessage {
 		
 		List<String> itmes = queryGroupMember(groupUid);
 		if(itmes.contains(from)){
-			ImCrmPushConfig imCrmPushConfig = new ImCrmPushConfig();
+			PushConfig imCrmPushConfig = new PushConfig();
 			imCrmPushConfig.setGroupId(groupUid);
-			List<ImCrmPushConfig> list= PushConfigAction.findPushConfig(imCrmPushConfig);
+			List<PushConfig> list= PushConfigAction.findPushConfig(imCrmPushConfig);
 			List<String> listUserName= new ArrayList<>();//不走apns推送的用户列表
-			for(ImCrmPushConfig _imCrmPushConfig :list){
+			for(PushConfig _imCrmPushConfig :list){
 				listUserName.add(_imCrmPushConfig.getUserName().toLowerCase());
 			}
 			if(log.isDebugEnabled()){

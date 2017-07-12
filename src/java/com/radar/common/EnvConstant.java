@@ -13,13 +13,9 @@ import com.radar.ios.PushMessage;
 public class EnvConstant
 {
     /**
-     * imcrm服务器地址
+     * zookeeper服务器地址
      */
-	public static final String IMCRMHOST=PushMessage.IOS_PRODUCT_ENV?"192.168.66.20":"192.168.1.245";//(内网内)192.168.1.245;192.168.66.20(华为)
-     /**
-      * imcrm服务器端口
-      */
-	public static final int IMCRMPORT=7700;
+	public static String ZOOKEEPERHOST=PushMessage.IOS_PRODUCT_ENV?"192.168.1.110:2181":"192.168.1.110:2181";//(内网内)192.168.1.110;192.168.66.20(华为)
     /**
      * 搜索引擎访问地址
      */

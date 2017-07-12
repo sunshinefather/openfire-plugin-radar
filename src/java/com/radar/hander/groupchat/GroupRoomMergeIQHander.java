@@ -1,7 +1,6 @@
 package com.radar.hander.groupchat;
 
 import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Element;
 import org.jivesoftware.openfire.IQHandlerInfo;
@@ -10,10 +9,9 @@ import org.jivesoftware.openfire.handler.IQHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmpp.packet.IQ;
-
+import com.mdks.imcrm.bean.GroupRoom;
 import com.radar.action.GroupAction;
 import com.radar.common.IqConstant;
-import com.zyt.web.after.grouproom.remote.ImCrmGroupRoom;
 /**
  * 修改群组
  * @ClassName:  GroupRoomMergeIQHander   
@@ -59,17 +57,17 @@ public class GroupRoomMergeIQHander extends IQHandler
         	replay.setType(IQ.Type.error);
         	log.info("修改群组参数错误");
         }else {
-        	ImCrmGroupRoom imCrmGroupRoom=new ImCrmGroupRoom();
-        	imCrmGroupRoom.setGroupName(groupName);
-        	imCrmGroupRoom.setGroupId(groupId);
-        	imCrmGroupRoom.setGroupDesc(groupDesc);
-        	imCrmGroupRoom.setRoomPassword(roomPassword);
-        	imCrmGroupRoom.setGroupType(groupType);
+        	GroupRoom GroupRoom=new GroupRoom();
+        	GroupRoom.setGroupName(groupName);
+        	GroupRoom.setGroupId(groupId);
+        	GroupRoom.setGroupDesc(groupDesc);
+        	GroupRoom.setRoomPassword(roomPassword);
+        	GroupRoom.setGroupType(groupType);
         	if(StringUtils.isNotEmpty(memberSize)){
-        		imCrmGroupRoom.setMemberSize(memberSize);
+        		GroupRoom.setMemberSize(memberSize);
             }
-        	imCrmGroupRoom.setRoomPassword(roomPassword);
-        	boolean rt=GroupAction.mergeGroupRoom(imCrmGroupRoom);
+        	GroupRoom.setRoomPassword(roomPassword);
+        	boolean rt=GroupAction.mergeGroupRoom(GroupRoom);
         	if(!rt){
             	replay.setType(IQ.Type.error);
             	log.info("修改群组参数失败");

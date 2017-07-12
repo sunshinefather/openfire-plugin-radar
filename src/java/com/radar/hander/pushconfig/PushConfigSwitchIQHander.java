@@ -1,7 +1,6 @@
 package com.radar.hander.pushconfig;
 
 import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Element;
 import org.jivesoftware.openfire.IQHandlerInfo;
@@ -11,10 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmpp.packet.IQ;
 import org.xmpp.packet.IQ.Type;
-
+import com.mdks.imcrm.bean.PushConfig;
 import com.radar.action.PushConfigAction;
 import com.radar.common.IqConstant;
-import com.zyt.web.after.push.remote.ImCrmPushConfig;
 
 public class PushConfigSwitchIQHander extends IQHandler {
 	
@@ -44,7 +42,7 @@ public class PushConfigSwitchIQHander extends IQHandler {
         	log.info("切换通知推送失败:参数错误");
         	return replay;
         }
-        ImCrmPushConfig pushconfig =new ImCrmPushConfig();
+        PushConfig pushconfig =new PushConfig();
         pushconfig.setGroupId(groupId);
         pushconfig.setUserName(userName);
         boolean flag= PushConfigAction.switchPush(pushconfig);

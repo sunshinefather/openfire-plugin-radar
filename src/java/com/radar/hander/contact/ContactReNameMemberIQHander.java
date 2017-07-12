@@ -1,7 +1,6 @@
 package com.radar.hander.contact;
 
 import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Element;
 import org.jivesoftware.openfire.IQHandlerInfo;
@@ -10,10 +9,9 @@ import org.jivesoftware.openfire.handler.IQHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmpp.packet.IQ;
-
+import com.mdks.imcrm.bean.Friends;
 import com.radar.action.ContactAction;
 import com.radar.common.IqConstant;
-import com.zyt.web.after.friends.remote.ImCrmFriends;
 
 public class ContactReNameMemberIQHander extends IQHandler {
 
@@ -43,7 +41,7 @@ public class ContactReNameMemberIQHander extends IQHandler {
         	replay.setType(IQ.Type.error);
         	log.info("修改联系人备注参数错误");
         }else{
-        	ImCrmFriends imCrmFriends=new ImCrmFriends();
+        	Friends imCrmFriends=new Friends();
         	imCrmFriends.setFriendId(friendId);
         	imCrmFriends.setFriendDesc(friendDesc);
         	boolean rt=ContactAction.reNameMember(imCrmFriends);

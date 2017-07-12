@@ -1,7 +1,6 @@
 package com.radar.hander.groupchat;
 
 import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Element;
 import org.jivesoftware.openfire.IQHandlerInfo;
@@ -10,10 +9,9 @@ import org.jivesoftware.openfire.handler.IQHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmpp.packet.IQ;
-
+import com.mdks.imcrm.bean.GroupMember;
 import com.radar.action.GroupAction;
 import com.radar.common.IqConstant;
-import com.zyt.web.after.grouproom.remote.ImCrmGroupMember;
 /**
  * 群成员列表(已过时兼容老版本)
  * @ClassName:  GroupRoomMemberListIQHander   
@@ -51,21 +49,21 @@ public class GroupRoomMemberListIQHander extends IQHandler
         	log.info("群成员列表参数错误");
         }else {
         	@SuppressWarnings("deprecation")
-			List<ImCrmGroupMember> groupMemberlist =GroupAction.getGroupMemberList(groupId);
+			List<GroupMember> groupMemberlist =GroupAction.getGroupMemberList(groupId);
         	if(groupMemberlist!=null && groupMemberlist.size()>0){
-        		for(ImCrmGroupMember imCrmGroupMember:groupMemberlist){
+        		for(GroupMember GroupMember:groupMemberlist){
                 	replay.getChildElement().addElement("item")
-                	.addAttribute("groupUserId",imCrmGroupMember.getGroupUserId())
-                	.addAttribute("groupid",imCrmGroupMember.getGroupId())
-                	.addAttribute("userAlias",imCrmGroupMember.getUserAlias())
-                	.addAttribute("userHead",imCrmGroupMember.getUserHead())
-                	.addAttribute("userName",imCrmGroupMember.getNickName())
-                	.addAttribute("userLoginName",imCrmGroupMember.getUserName())
-                	.addAttribute("userState",imCrmGroupMember.getUserState())
-                	.addAttribute("userId",imCrmGroupMember.getUserId())
-                	.addAttribute("extension1",imCrmGroupMember.getExtension1())
-                	.addAttribute("extension2",imCrmGroupMember.getExtension2())
-                	.addAttribute("groupAdmin",imCrmGroupMember.getGroupAdmin());
+                	.addAttribute("groupUserId",GroupMember.getGroupUserId())
+                	.addAttribute("groupid",GroupMember.getGroupId())
+                	.addAttribute("userAlias",GroupMember.getUserAlias())
+                	.addAttribute("userHead",GroupMember.getUserHead())
+                	.addAttribute("userName",GroupMember.getNickName())
+                	.addAttribute("userLoginName",GroupMember.getUserName())
+                	.addAttribute("userState",GroupMember.getUserState())
+                	.addAttribute("userId",GroupMember.getUserId())
+                	.addAttribute("extension1",GroupMember.getExtension1())
+                	.addAttribute("extension2",GroupMember.getExtension2())
+                	.addAttribute("groupAdmin",GroupMember.getGroupAdmin());
         		}
         	}
         }

@@ -9,9 +9,9 @@ import org.jivesoftware.openfire.handler.IQHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmpp.packet.IQ;
+import com.mdks.imcrm.bean.GroupRoom;
 import com.radar.action.GroupAction;
 import com.radar.common.IqConstant;
-import com.zyt.web.after.grouproom.remote.ImCrmGroupRoom;
 /**
  * 创建群组
  * @ClassName:  GroupRoomCreateIQHander   
@@ -67,31 +67,31 @@ public class GroupRoomCreateIQHander extends IQHandler
         	replay.setType(IQ.Type.error);
         	log.error("创建群组参数错误,xml="+packet.toXML());
         }else {
-        	ImCrmGroupRoom imCrmGroupRoom=new ImCrmGroupRoom();
-        	imCrmGroupRoom.setGroupName(groupName);
-        	imCrmGroupRoom.setCreateUserId(createUserId);
+        	GroupRoom GroupRoom=new GroupRoom();
+        	GroupRoom.setGroupName(groupName);
+        	GroupRoom.setCreateUserId(createUserId);
         	if(StringUtils.isNotEmpty(groupType)){
-            imCrmGroupRoom.setGroupType(groupType);
+            GroupRoom.setGroupType(groupType);
         	}
-        	imCrmGroupRoom.setGroupDesc(groupDesc);
+        	GroupRoom.setGroupDesc(groupDesc);
         	if(StringUtils.isNotEmpty(memberSize)){
-        		imCrmGroupRoom.setMemberSize(memberSize);
+        		GroupRoom.setMemberSize(memberSize);
             }
-        	imCrmGroupRoom.setRoomPassword(roomPassword);
-        	imCrmGroupRoom.setExtension1(extension1);
-        	imCrmGroupRoom.setExtension2(extension2);
-        	imCrmGroupRoom=GroupAction.createGroupRoom(imCrmGroupRoom);
-        	if(imCrmGroupRoom!=null && StringUtils.isNotEmpty(imCrmGroupRoom.getGroupId())){
+        	GroupRoom.setRoomPassword(roomPassword);
+        	GroupRoom.setExtension1(extension1);
+        	GroupRoom.setExtension2(extension2);
+        	GroupRoom=GroupAction.createGroupRoom(GroupRoom);
+        	if(GroupRoom!=null && StringUtils.isNotEmpty(GroupRoom.getGroupId())){
             	replay.getChildElement().addElement("groupRoom")
-            	.addAttribute("groupId",imCrmGroupRoom.getGroupId())
-            	.addAttribute("groupName",imCrmGroupRoom.getGroupName())
-            	.addAttribute("createUserId",imCrmGroupRoom.getCreateUserId())
-            	.addAttribute("memberSize",imCrmGroupRoom.getMemberSize())
-            	.addAttribute("roomPassword",imCrmGroupRoom.getRoomPassword())
-            	.addAttribute("groupDesc",imCrmGroupRoom.getGroupDesc())
-            	.addAttribute("groupType",imCrmGroupRoom.getGroupType())
-            	.addAttribute("extension1",imCrmGroupRoom.getExtension1())
-            	.addAttribute("extension2",imCrmGroupRoom.getExtension2());
+            	.addAttribute("groupId",GroupRoom.getGroupId())
+            	.addAttribute("groupName",GroupRoom.getGroupName())
+            	.addAttribute("createUserId",GroupRoom.getCreateUserId())
+            	.addAttribute("memberSize",GroupRoom.getMemberSize())
+            	.addAttribute("roomPassword",GroupRoom.getRoomPassword())
+            	.addAttribute("groupDesc",GroupRoom.getGroupDesc())
+            	.addAttribute("groupType",GroupRoom.getGroupType())
+            	.addAttribute("extension1",GroupRoom.getExtension1())
+            	.addAttribute("extension2",GroupRoom.getExtension2());
             }else{
             	replay.setType(IQ.Type.error);
             	log.error("创建群组失败,xml="+packet.toXML());
