@@ -12,7 +12,17 @@ import org.jivesoftware.openfire.interceptor.InterceptorManager;
 import org.jivesoftware.util.JiveGlobals;
 import org.jivesoftware.util.PropertyEventDispatcher;
 import org.jivesoftware.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmpp.component.ComponentException;
+import com.mdks.imcrm.bean.GroupRoom;
+import com.mdks.imcrm.service.DialogueRpcService;
+import com.mdks.imcrm.service.FriendsGroupsRpcService;
+import com.mdks.imcrm.service.GroupRoomRpcService;
+import com.mdks.imcrm.service.MessageRpcService;
+import com.mdks.imcrm.service.NoticeRpcService;
+import com.mdks.imcrm.service.PushRpcService;
+import com.mdks.module.user.service.UserRpcService;
 import com.radar.common.DubboServer;
 import com.radar.common.EnvConstant;
 import com.radar.component.ReceiptComponent;
@@ -53,6 +63,7 @@ import com.radar.utils.HixinUtils;
 
 public class RadarServerPlugin implements Plugin
 {
+	private static final Logger log = LoggerFactory.getLogger(RadarServerPlugin.class);
     /**
      * XMPP协议
      */
@@ -81,6 +92,7 @@ public class RadarServerPlugin implements Plugin
         pluginManager = manager;
         initCustomIQ();
         initCustomConstant();
+        initDubbo();
         //加入监听
         PropertyEventDispatcher.addListener(propertyEventListener);
     
@@ -210,7 +222,26 @@ public class RadarServerPlugin implements Plugin
         JiveGlobals.setProperty("admin.authorizedJIDs","488@127.0.0.1");
 */
     }
-
+    public void initDubbo(){
+    	GroupRoom gm=null;
+    	try {
+			Class<?>  gpclass =Class.forName(GroupRoom.class.getName());
+			gm = (GroupRoom)gpclass.newInstance();
+	    	DubboServer.getInstance().getService(FriendsGroupsRpcService.class);
+	    	DubboServer.getInstance().getService(UserRpcService.class);
+	    	DubboServer.getInstance().getService(DialogueRpcService.class);
+	    	DubboServer.getInstance().getService(GroupRoomRpcService.class);
+	    	DubboServer.getInstance().getService(MessageRpcService.class);
+	    	DubboServer.getInstance().getService(NoticeRpcService.class);
+	    	DubboServer.getInstance().getService(PushRpcService.class);
+		} catch (Exception e) {
+			if(gm!=null){
+				log.error("@sunsinie加载dubbo失败,"+gm.getClass().getClassLoader(),e);
+			}else{
+				log.error("@sunsinie加载dubbo失败",e);
+			}
+		}
+    }
     
     /**
      * 插件销毁
