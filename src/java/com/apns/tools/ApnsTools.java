@@ -49,7 +49,7 @@ public class ApnsTools {
 	/**
 	 * 设备token解码为16进制byte
 	 * @Title: decodeHex
-	 * @Description: TODO  
+	 * @Description:   
 	 * @param: @param hex
 	 * @param: @return      
 	 * @return: byte[]

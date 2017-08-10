@@ -16,7 +16,7 @@ import com.radar.common.IqConstant;
 /**
  * 群成员列表
  * @ClassName:  GroupRoomMemberListIQHander   
- * @Description:TODO   
+ *    
  * @author: sunshine  
  * @date:   2015年2月2日 下午3:02:41
  */

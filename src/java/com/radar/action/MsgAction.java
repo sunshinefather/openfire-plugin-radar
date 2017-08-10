@@ -8,7 +8,7 @@ public class MsgAction {
     /**
      * 保存消息
      * @Title: saveMessage
-     * @Description: TODO  
+     * @Description:   
      * @param: @param imCrmMessage
      * @param: @return      
      * @return: boolean
@@ -28,7 +28,7 @@ public class MsgAction {
 	/**
 	 * 修改消息读取状态
 	 * @Title: updateMessageState
-	 * @Description: TODO  
+	 * @Description:   
 	 * @param: @param messageId
 	 * @param: @param accepter
 	 * @param: @return      
@@ -49,7 +49,7 @@ public class MsgAction {
 	/**
 	 * 获取聊天记录
 	 * @Title: findMessageList
-	 * @Description: TODO  
+	 * @Description:   
 	 * @param: @param userId
 	 * @param: @param targetId
 	 * @param: @param pageNo
@@ -73,7 +73,7 @@ public class MsgAction {
 	/**
 	 * 消息撤回(删除聊天记录)
 	 * @Title: delMessageState
-	 * @Description: TODO  
+	 * @Description:   
 	 * @param: @param userId
 	 * @param: @param messageIds
 	 * @param: @return      

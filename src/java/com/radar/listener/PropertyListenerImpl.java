@@ -11,7 +11,7 @@ import com.radar.common.EnvConstant;
 /**
  * 配置文件监听器
  * @ClassName:  PropertyListenerImpl   
- * @Description:TODO   
+ *    
  * @author: sunshine  
  * @date:   2015年4月14日 上午10:56:08
  */

@@ -5,7 +5,7 @@ import java.util.Date;
 /**
  * 消息实体
  * @ClassName:  MsgInfoEnttity   
- * @Description:TODO   
+ *    
  * @author: sunshine  
  * @date:   2015年2月9日 下午2:16:06
  */

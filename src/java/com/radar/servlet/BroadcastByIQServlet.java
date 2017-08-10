@@ -18,7 +18,7 @@ import com.radar.utils.HixinUtils;
 /**
  * 企业后台 添加用户 删除用户后的更新通讯录广播
  * @ClassName:  BroadcastByIQServlet   
- * @Description:TODO   
+ *    
  * @author: sunshine  
  * @date:   2015年2月2日 下午6:10:53
  */

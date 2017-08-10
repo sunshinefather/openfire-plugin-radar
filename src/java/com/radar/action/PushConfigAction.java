@@ -11,7 +11,7 @@ public class PushConfigAction {
 	/**
 	 * 切换推送(推送与不推送 每调用一次,状态进行切换)
 	 * @Title: switchPush
-	 * @Description: TODO  
+	 * @Description:   
 	 * @param: @param pushConfig
 	 * @param: @return      
 	 * @return: boolean
@@ -35,7 +35,7 @@ public class PushConfigAction {
 	/**
 	 * 查询推送配置
 	 * @Title: findPushConfig
-	 * @Description: TODO  
+	 * @Description:   
 	 * @param: @param pushConfig
 	 * @param: @return      
 	 * @return: List<PushConfig>

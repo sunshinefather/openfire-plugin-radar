@@ -13,7 +13,7 @@ import com.radar.pool.QueueTask;
 /**
  * 保存消息记录
  * @ClassName:  MessageLogTask   
- * @Description:TODO   
+ *    
  * @author: sunshine  
  * @date:   2015年2月2日 下午6:04:15
  */

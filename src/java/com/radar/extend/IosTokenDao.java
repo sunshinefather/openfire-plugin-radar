@@ -75,7 +75,7 @@ public class IosTokenDao {
     /**
      * 查询所有用户
      * @Title: getAllUser
-     * @Description: TODO  
+     * @Description:   
      * @param: @return     
      * @return: Map<String,String>
      * @author: sunshine  
@@ -110,7 +110,7 @@ public class IosTokenDao {
     /**
      * 根据token查询用户
      * @Title: getUserNameByToken
-     * @Description: TODO  
+     * @Description:   
      * @param: @param token
      * @param: @return   
      * @return: Map<String,String>
@@ -152,7 +152,7 @@ public class IosTokenDao {
     /**
      * 统计设备token
      * @Title: getTotal
-     * @Description: TODO  
+     * @Description:   
      * @param: @return      
      * @return: int
      * @author: sunshine  
@@ -183,7 +183,7 @@ public class IosTokenDao {
     /**
      * 分页获取 userName+","+token
      * @Title: getTokenByPage
-     * @Description: TODO  
+     * @Description:   
      * @param: @param page
      * @param: @return      
      * @return: PaginationAble
@@ -227,7 +227,7 @@ public class IosTokenDao {
     /**
      * 根据用户查询token
      * @Title: getTokenByUserName
-     * @Description: TODO  
+     * @Description:   
      * @param: @param userName
      * @param: @return     
      * @return: String
@@ -353,7 +353,7 @@ public class IosTokenDao {
     /**
      * 目前为了兼容版本,此处的保存用户信息非保存,删除新版本在本系统中存储的token，由极光服务器维护，保留旧版本,旧版本依旧使用本系统推送
      * @Title: saveUserInfo
-     * @Description: TODO  
+     * @Description:   
      * @param: @param userInfo
      * @param: @return      
      * @return: boolean

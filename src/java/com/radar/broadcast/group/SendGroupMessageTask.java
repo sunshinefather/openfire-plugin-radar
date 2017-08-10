@@ -15,7 +15,7 @@ import com.radar.utils.HixinUtils;
 /**
  * 群聊消息发送队列
  * @ClassName:  SendGroupMessageTask   
- * @Description:TODO   
+ *    
  * @author: sunshine  
  * @date:   2015年2月2日 下午2:33:22
  */

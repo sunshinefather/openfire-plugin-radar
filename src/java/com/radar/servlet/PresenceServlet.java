@@ -18,7 +18,7 @@ import com.radar.utils.HixinUtils;
 /**
  * 通知 下线（ 管理员主动把某人下线等）
  * @ClassName:  PresenceServlet   
- * @Description:TODO   
+ *    
  * @author: sunshine  
  * @date:   2015年2月2日 下午6:13:04
  */

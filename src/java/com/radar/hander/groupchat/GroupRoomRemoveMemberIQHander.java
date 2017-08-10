@@ -15,7 +15,7 @@ import com.radar.common.IqConstant;
 /**
  * 移除群成员,当userLoginName值为:allUsers清空除群创建者以外的所有人
  * @ClassName:  GroupRoomRemoveMemberIQHander   
- * @Description:TODO   
+ *    
  * @author: sunshine  
  * @date:   2015年2月2日 下午3:02:41
  */

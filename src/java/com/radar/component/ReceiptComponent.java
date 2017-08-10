@@ -14,7 +14,7 @@ import com.radar.utils.HixinUtils;
 /**
  * 处理客户端收到群消息后的回执信息组件
  * @ClassName:  ReceiptComponent   
- * @Description:TODO   
+ *    
  * @author: sunshine  
  * @date:   2015年2月2日 下午6:28:45
  */

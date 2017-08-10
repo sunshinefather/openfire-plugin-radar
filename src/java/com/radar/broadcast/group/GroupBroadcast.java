@@ -1,14 +1,11 @@
 package com.radar.broadcast.group;
 
 import org.apache.commons.lang.StringUtils;
-
-import com.radar.action.ContactAction;
 import com.radar.pool.ThreadPool;
 /**
  * 发送群通知信息工具类
  * 群添加成员通知,群成员退出通知 ,群改名通知
- * @ClassName:  GroupBroadcast   
- * @Description:TODO   
+ * @ClassName:  GroupBroadcast    
  * @author: sunshine  
  * @date:   2015年2月2日 下午2:39:35
  */

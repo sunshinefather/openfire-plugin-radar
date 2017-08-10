@@ -15,7 +15,7 @@ import org.apache.commons.httpclient.methods.multipart.Part;
 /**
  * Http请求工具
  * @ClassName:  HttpUtils   
- * @Description:TODO   
+ *    
  * @author: sunshine  
  * @date:   2015年6月23日 下午2:57:54
  */
@@ -204,7 +204,7 @@ public class HttpUtils
     /**
      * 处理乱码问题
      * @Title: convertStreamToString
-     * @Description: TODO  
+     * @Description:   
      * @param: @param is
      * @param: @return      
      * @return: String

@@ -15,7 +15,7 @@ public class GroupAction {
     /**
      * 创建群
      * @Title: createGroup
-     * @Description: TODO  
+     * @Description:   
      * @param: @param owner
      * @param: @param groupName
      * @param: @return
@@ -38,7 +38,7 @@ public class GroupAction {
 	/**
 	 * 修改群信息
 	 * @Title: mergeGroupRoom
-	 * @Description: TODO  
+	 * @Description:   
 	 * @param: @param imCrmGroupRoom
 	 * @param: @return      
 	 * @return: boolean
@@ -58,7 +58,7 @@ public class GroupAction {
     /**
      * 添加群成员
      * @Title: addMember
-     * @Description: TODO  
+     * @Description:   
      * @param: @param imCrmGroupMember
      * @param: @return      
      * @return: GroupMember
@@ -81,7 +81,7 @@ public class GroupAction {
 	/**移除群成员
 	 * 
 	 * @Title: delMember
-	 * @Description: TODO  
+	 * @Description:   
 	 * @param: @param imCrmGroupMember
 	 * @param: @return      
 	 * @return: boolean
@@ -105,7 +105,7 @@ public class GroupAction {
 	/**
 	 * 获取群列表
 	 * @Title: findGroupRoomList
-	 * @Description: TODO  
+	 * @Description:   
 	 * @param: @param userId
 	 * @param: @param userFrom
 	 * @param: @return      
@@ -126,7 +126,7 @@ public class GroupAction {
 	/**
 	 * 根据群id获取群信息
 	 * @Title: getGroupRoomById
-	 * @Description: TODO  
+	 * @Description:   
 	 * @param: @param groupId
 	 * @param: @return      
 	 * @return: GroupRoom
@@ -146,7 +146,7 @@ public class GroupAction {
 	/**
 	 * 获取群成员列表
 	 * @Title: getGroupMemberList
-	 * @Description: TODO  
+	 * @Description:   
 	 * @param: @param groupId
 	 * @param: @return      
 	 * @return: List<GroupMember>

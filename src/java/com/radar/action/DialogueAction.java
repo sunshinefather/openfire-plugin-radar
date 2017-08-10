@@ -8,7 +8,7 @@ public class DialogueAction {
 	/**
 	 * 拉取会话列表
 	 * @Title: findDialogueList
-	 * @Description: TODO  
+	 * @Description:   
 	 * @param: @param userId
 	 * @param: @param pageNo
 	 * @param: @param pageSize
@@ -30,7 +30,7 @@ public class DialogueAction {
 	/**
 	 * 删除会话
 	 * @Title: delDialogues
-	 * @Description: TODO  
+	 * @Description:   
 	 * @param: @param userId
 	 * @param: @param messageIds
 	 * @param: @return      

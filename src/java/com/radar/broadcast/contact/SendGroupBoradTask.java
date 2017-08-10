@@ -16,7 +16,7 @@ import com.radar.utils.HixinUtils;
  * 发送更新广播队列
  * 主要针对群成员更新和通讯录更新
  * @ClassName:  SendGroupBoradTask   
- * @Description:TODO   
+ *    
  * @author: sunshine  
  * @date:   2015年1月28日 下午5:18:44
  */

@@ -2,16 +2,14 @@ package com.radar.action;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
-
 import com.radar.extend.IosTokenDao;
 import com.radar.extend.PaginationAble;
 
 /**
  * IOS设备的deviceToken值的管理：包括deviceToken的保存(更新)、获取、删除
  * @ClassName:  DeviceToken   
- * @Description:TODO   
+ *    
  * @author: sunshine  
  * @date:   2015年2月2日 下午6:17:09
  */
@@ -85,7 +83,7 @@ public class DeviceToken {
 	/**
 	 * 获取所有IOS用户设备deviceToken(数据量小可以使用)
 	 * @Title: getALL
-	 * @Description: TODO  
+	 * @Description:   
 	 * @param: @return      
 	 * @return: String
 	 * @author: sunshine  
@@ -101,7 +99,7 @@ public class DeviceToken {
 	/**
 	 * 分页获取设备
 	 * @Title: getDeviceTokensByPage
-	 * @Description: TODO  
+	 * @Description:   
 	 * @param: @return      
 	 * @return: List<String>
 	 * @author: sunshine  
@@ -114,7 +112,7 @@ public class DeviceToken {
 	/**
 	 * 获取所有IOS用户设备对应的用户(数据量小可以使用)
 	 * @Title: getAllUserNames
-	 * @Description: TODO  
+	 * @Description:   
 	 * @param: @return      
 	 * @return: List<String>
 	 * @author: sunshine  

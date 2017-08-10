@@ -14,7 +14,7 @@ public class NoticeAction {
 	/**
 	 * 发送通知
 	 * @Title: sendNotice
-	 * @Description: TODO  
+	 * @Description:   
 	 * @param: @param imCrmNotice
 	 * @param: @return      
 	 * @return: boolean
@@ -28,7 +28,7 @@ public class NoticeAction {
 	/**
 	 * 修改通知状态
 	 * @Title: updatestate
-	 * @Description: TODO  
+	 * @Description:   
 	 * @param: @param noticeId
 	 * @param: @param accepter
 	 * @param: @return      
@@ -49,7 +49,7 @@ public class NoticeAction {
 	/**
 	 * 拉取接收通知列表
 	 * @Title: findAccepterList
-	 * @Description: TODO  
+	 * @Description:   
 	 * @param: @param pageModel
 	 * @param: @return      
 	 * @return: List<Notice>
@@ -69,7 +69,7 @@ public class NoticeAction {
 	/**
 	 * 拉取发送通知列表
 	 * @Title: findSenderList
-	 * @Description: TODO  
+	 * @Description:   
 	 * @param: @param sender
 	 * @param: @param noticeType
 	 * @param: @param pageNo
@@ -93,7 +93,7 @@ public class NoticeAction {
 	/**
 	 * 获取未读通知
 	 * @Title: findUnread
-	 * @Description: TODO  
+	 * @Description:   
 	 * @param: @param accepter
 	 * @param: @param noticeType
 	 * @param: @return      
@@ -114,7 +114,7 @@ public class NoticeAction {
 	/**
 	 * 获取通知类容以及详细
 	 * @Title: findById
-	 * @Description: TODO  
+	 * @Description:   
 	 * @param: @param accepter
 	 * @param: @param noticeId
 	 * @param: @return      

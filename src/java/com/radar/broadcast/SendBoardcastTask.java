@@ -10,7 +10,7 @@ import com.radar.utils.HixinUtils;
 /**
  * 发送广播消息队列
  * @ClassName:  MessageBoardcastTask   
- * @Description:TODO   
+ *    
  * @author: sunshine  
  * @date:   2015年2月2日 下午4:52:24
  */

@@ -18,7 +18,7 @@ import com.radar.utils.HixinUtils;
 /**
  * 版本更新公告
  * @ClassName:  VersionBoardcastServlet   
- * @Description:TODO   
+ *    
  * @author: sunshine  
  * @date:   2015年4月17日 上午10:31:47
  */

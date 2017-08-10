@@ -13,7 +13,6 @@ import com.radar.utils.UUIDUtils;
 /**
  * 系统发送到群的消息 队列
  * @ClassName:  GroupBroadcastTask   
- * @Description:TODO   
  * @author: sunshine  
  * @date:   2015年1月28日 下午5:36:03
  */

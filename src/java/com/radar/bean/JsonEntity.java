@@ -5,7 +5,7 @@ import java.util.Map;
 /**
  * 该数据体用于进行http协议json格式接口的返回信息描述。
  * @ClassName:  JsonEntity   
- * @Description:TODO   
+ *    
  * @author: sunshine  
  * @date:   2015年2月2日 下午2:45:27
  */

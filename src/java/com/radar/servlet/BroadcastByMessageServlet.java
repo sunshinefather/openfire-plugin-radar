@@ -19,7 +19,7 @@ import com.radar.utils.HixinUtils;
 /**
  * 发送Message广播信息 
  * @ClassName:  BroadcastByMessageServlet   
- * @Description:TODO   
+ *    
  * @author: sunshine  
  * @date:   2015年2月2日 下午6:09:30
  */

@@ -6,7 +6,7 @@ import com.radar.ios.PushMessage;
 /**
  * 配置参数常量
  * @ClassName:  EnvConstant   
- * @Description:TODO   
+ *    
  * @author: sunshine  
  * @date:   2015年2月2日 下午2:45:06
  */

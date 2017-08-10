@@ -41,7 +41,7 @@ public class HixinUtils {
 	/**
 	 * 群聊主机前缀
 	 * @Title: getGroupPrefix
-	 * @Description: TODO  
+	 * @Description:   
 	 * @param: @return      
 	 * @return: String
 	 * @author: sunshine  

@@ -22,7 +22,7 @@ import com.radar.utils.HixinUtils;
 /**
  * 广播消息发射器
  * @ClassName:  BoardcastEmitter   
- * @Description:TODO   
+ *    
  * @author: sunshine  
  * @date:   2015年2月2日 下午2:42:28
  */
@@ -33,7 +33,7 @@ public class BoardcastEmitter
     /**
      * 发送Message定向广播消息, 接收人不在线走离线
      * @Title: sendBoardCastAndStoreServer
-     * @Description: TODO  
+     * @Description:   
      * @param: @param userName 接收人
      * @param: @param message  发送内容
      * @return: void
@@ -80,7 +80,7 @@ public class BoardcastEmitter
     /**
      * 发送Message广播消息
      * @Title: sendBoardCastServer
-     * @Description: TODO  
+     * @Description:   
      * @param: @param message
      * @param: @return      
      * @return: boolean
@@ -179,7 +179,7 @@ public class BoardcastEmitter
     /**
      * 向所有在线用户发送系统广播消息
      * @Title: sendServerMessage
-     * @Description: TODO  
+     * @Description:   
      * @param: @param subject
      * @param: @param body
      * @param: @return      
@@ -195,7 +195,7 @@ public class BoardcastEmitter
     /**
      * 发送定向 广播消息, 接收人不在线不处理
      * @Title: sendBoardCastServer
-     * @Description: TODO  
+     * @Description:   
      * @param: @param userName 接收人
      * @param: @param iq      发送内容
      * @return: void

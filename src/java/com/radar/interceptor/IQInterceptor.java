@@ -20,7 +20,7 @@ import com.radar.utils.HixinUtils;
  * 1.拦截资源绑定保存IOSdeviceToken
  * 2.拦截IOSdeviceToken：移除deviceToken
  * @ClassName:  IQInterceptor
- * @Description:TODO   
+ *    
  * @author: sunshine  
  * @date:   2015年2月2日 下午3:58:51
  */

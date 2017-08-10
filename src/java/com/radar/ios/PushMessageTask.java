@@ -7,7 +7,7 @@ import com.radar.pool.QueueTask;
 /**
  * ios 消息推送
  * @ClassName:  PushMessageTask   
- * @Description:TODO   
+ *    
  * @author: sunshine  
  * @date:   2015年2月2日 下午6:07:29
  */

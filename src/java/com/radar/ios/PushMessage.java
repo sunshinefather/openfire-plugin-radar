@@ -34,7 +34,7 @@ import com.radar.extend.PaginationAble;
  * IOS设备推送消息
  * 分为1对1推送,群聊推送和通知推送
  * @ClassName:  PushMessage   
- * @Description:TODO   
+ *    
  * @author: sunshine  
  * @date:   2015年6月30日 上午10:14:27
  */
@@ -84,7 +84,7 @@ public class PushMessage {
     /**
      * 1对1推送消息
      * @Title: pushChatMessage
-     * @Description: TODO  
+     * @Description:   
      * @param: @param message
      * @param: @throws Exception      
      * @return: void
@@ -245,7 +245,7 @@ public class PushMessage {
     /**
      * 群聊推送消息
      * @Title: pushGroupChatMessage
-     * @Description: TODO  
+     * @Description:   
      * @param: @param message
      * @param: @throws Exception      
      * @return: void
@@ -350,7 +350,7 @@ public class PushMessage {
 	/**
 	 * apns推送
 	 * @Title: push
-	 * @Description: TODO  
+	 * @Description:   
 	 * @param: @param user
 	 * @param: @param param
 	 * @param: @param deviceToken      

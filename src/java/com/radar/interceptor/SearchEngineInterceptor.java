@@ -20,7 +20,7 @@ import com.radar.utils.HixinUtils;
 /**
  * 消息记录拦截器
  * @ClassName:  SearchEngineInterceptor   
- * @Description:TODO   
+ *    
  * @author: sunshine  
  * @date:   2015年2月2日 下午4:15:04
  */

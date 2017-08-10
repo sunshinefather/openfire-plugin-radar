@@ -17,7 +17,7 @@ public class ContactAction {
 	/**
 	 * 获取用户联系人
 	 * @Title: friendsList
-	 * @Description: TODO  
+	 * @Description:   
 	 * @param: @param userId
 	 * @param: @param userFrom
 	 * @param: @return      
@@ -38,7 +38,7 @@ public class ContactAction {
 	/**
 	 * 添加分组
 	 * @Title: addFriendsGroup
-	 * @Description: TODO  
+	 * @Description:   
 	 * @param: @param imCrmFriendGroups
 	 * @param: @return      
 	 * @return: FriendGroups
@@ -58,7 +58,7 @@ public class ContactAction {
 	/**
 	 * 添加成员
 	 * @Title: addFriendsGroup
-	 * @Description: TODO  
+	 * @Description:   
 	 * @param: @param imCrmFriends
 	 * @param: @return      
 	 * @return: Friends
@@ -78,7 +78,7 @@ public class ContactAction {
 	/**
 	 * 移除成员
 	 * @Title: delMember
-	 * @Description: TODO  
+	 * @Description:   
 	 * @param: @param imCrmFriends
 	 * @param: @return      
 	 * @return: boolean
@@ -98,7 +98,7 @@ public class ContactAction {
 	/**
 	 * 删除分组
 	 * @Title: delFriendsGroup
-	 * @Description: TODO  
+	 * @Description:   
 	 * @param: @param imCrmFriendGroups
 	 * @param: @return      
 	 * @return: boolean
@@ -118,7 +118,7 @@ public class ContactAction {
 	/**
 	 * 修改组名
 	 * @Title: updateFriendsGroup
-	 * @Description: TODO  
+	 * @Description:   
 	 * @param: @param imCrmFriendGroups
 	 * @param: @return      
 	 * @return: boolean
@@ -139,7 +139,7 @@ public class ContactAction {
 	/**
 	 * 修改联系人备注
 	 * @Title: reNameMember
-	 * @Description: TODO  
+	 * @Description:   
 	 * @param: @param imCrmFriends
 	 * @param: @return      
 	 * @return: boolean
@@ -159,7 +159,7 @@ public class ContactAction {
 	/**
 	 * 好友分组转移
 	 * @Title: moveMember
-	 * @Description: TODO  
+	 * @Description:   
 	 * @param: @param imCrmFriends
 	 * @param: @return      
 	 * @return: boolean
@@ -179,7 +179,7 @@ public class ContactAction {
     /**
      * 根据用户名登录名称(userName),或者ID查询用户真实名称
      * @Title: queryNickeName
-     * @Description: TODO  
+     * @Description:   
      * @param: @param userName
      * @param: @return      
      * @return: String
@@ -203,7 +203,7 @@ public class ContactAction {
 	/**
 	 * 根据用户名称或者用户ID查询用户
 	 * @Title: queryUser
-	 * @Description: TODO  
+	 * @Description:   
 	 * @param: @param userName
 	 * @param: @return      
 	 * @return: String

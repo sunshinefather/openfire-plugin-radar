@@ -15,7 +15,7 @@ import org.xmpp.packet.Message;
 /**
  * 
  * @ClassName:  OfflineDao   
- * @Description:TODO   
+ *    
  * @author: sunshine  
  * @date:   2015年11月30日 下午4:43:27
  */

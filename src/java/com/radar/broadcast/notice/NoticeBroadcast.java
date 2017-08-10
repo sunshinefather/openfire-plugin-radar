@@ -11,7 +11,7 @@ import com.radar.utils.HixinUtils;
 /**
  * 发送系统通知工具类
  * @ClassName:  NoticeBroadcast   
- * @Description:TODO   
+ *    
  * @author: sunshine  
  * @date:   2015年4月17日 下午5:36:13
  */
