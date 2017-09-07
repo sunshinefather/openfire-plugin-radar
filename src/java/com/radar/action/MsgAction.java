@@ -1,10 +1,13 @@
 package com.radar.action;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.mdks.imcrm.bean.Messages;
 import com.mdks.imcrm.service.MessageRpcService;
 import com.radar.common.DubboServer;
 
 public class MsgAction {
+	private static final Logger log = LoggerFactory.getLogger(MsgAction.class);
     /**
      * 保存消息
      * @Title: saveMessage
@@ -21,7 +24,7 @@ public class MsgAction {
 			boolean rt=clent.saveMessage(imCrmMessage);
 			return rt;
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("@sunshine:保存消息到imcrm异常",e);
 		}
 		return false;
 	}
@@ -42,7 +45,7 @@ public class MsgAction {
 			boolean rt=clent.updateMessageState(messageId, accepter);
 			return rt;
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("@sunshine:修改消息读取状态到imcrm异常",e);
 		}
 		return false;
 	}
@@ -66,7 +69,7 @@ public class MsgAction {
 			MessageRpcService clent = DubboServer.getInstance().getService(MessageRpcService.class);
 			msglist=clent.findMessageList(userId, targetId, pageNo, pageSize, chatType);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("@sunshine:从imcrm获取聊天记录异常",e);
 		}
 		return msglist;
 	}
@@ -87,7 +90,7 @@ public class MsgAction {
 			boolean rt=clent.delMessages(userId, messageIds);
 			return rt;
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("@sunshine:从imcrm消息撤回异常",e);
 		}
 		return false;
 	}

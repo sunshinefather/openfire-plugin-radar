@@ -61,7 +61,7 @@ public class GroupRoomRemoveMemberIQHander extends IQHandler
         	boolean rt=GroupAction.delMember(GroupMember,packet.getFrom().getNode());
         	if(!rt){
         		replay.setType(IQ.Type.error);
-            	log.error("移除群成员失败",packet.toXML());
+            	log.error("移除群成员失败:"+packet.toXML());
             }
         }else{
         	replay.setType(IQ.Type.error);

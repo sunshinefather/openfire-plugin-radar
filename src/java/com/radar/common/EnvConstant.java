@@ -15,7 +15,7 @@ public class EnvConstant
     /**
      * zookeeper服务器地址
      */
-	public static String ZOOKEEPERHOST=PushMessage.IOS_PRODUCT_ENV?"192.168.1.110:2181":"192.168.1.110:2181";//(内网内)192.168.1.110;192.168.66.20(华为)
+	public static String ZOOKEEPERHOST=PushMessage.IOS_PRODUCT_ENV?"192.168.66.178:2181":"192.168.1.110:2181";//(内网内)192.168.1.110;192.168.66.178(华为)
     /**
      * 搜索引擎访问地址
      */

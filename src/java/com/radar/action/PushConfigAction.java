@@ -3,11 +3,15 @@ package com.radar.action;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.mdks.imcrm.bean.PushConfig;
 import com.mdks.imcrm.service.PushRpcService;
 import com.radar.common.DubboServer;
 
 public class PushConfigAction {
+	
+	private static final Logger log = LoggerFactory.getLogger(PushConfigAction.class);
 	/**
 	 * 切换推送(推送与不推送 每调用一次,状态进行切换)
 	 * @Title: switchPush
@@ -27,7 +31,7 @@ public class PushConfigAction {
 				falg=true;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("@sunshine:切换推送异常",e);
 		}
 		return falg;
 	}
@@ -48,7 +52,7 @@ public class PushConfigAction {
 			PushRpcService clent = DubboServer.getInstance().getService(PushRpcService.class);
 			list=clent.findPushConfig(pushConfig);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("@sunshine:查询推送配置异常",e);
 		}
        return list;
 	}

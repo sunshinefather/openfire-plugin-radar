@@ -31,7 +31,7 @@ public class ContactAction {
 			Map<FriendGroups, List<Friends>>  map=friendsGroupsRpcService.friendsList(userId,userFrom);
 			return map;
 		} catch (Exception e) {
-			log.error("获取用户联系人异常",e);
+			log.error("@sunshine:获取用户联系人异常",e);
 		}
 		return null;
 	}
@@ -51,7 +51,7 @@ public class ContactAction {
 			FriendGroups _imCrmFriendGroups=friendsGroupsRpcService.addFriendsGroup(imCrmFriendGroups);
 			return _imCrmFriendGroups;
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("@sunshine:添加分组异常",e);
 		}
 		return null;
 	}	
@@ -71,7 +71,7 @@ public class ContactAction {
 			Friends _imCrmFriends=friendsGroupsRpcService.addMember(imCrmFriends);
 			return _imCrmFriends;
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("@sunshine:添加成员",e);
 		}
 		return null;
 	}
@@ -91,7 +91,7 @@ public class ContactAction {
 			boolean rt=clent.delMember(imCrmFriends);
 			return rt;
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("@sunshine:移除成员",e);
 		}
 		return false;
 	}
@@ -111,7 +111,7 @@ public class ContactAction {
 			boolean rt=clent.delFriendsGroup(imCrmFriendGroups);
 			return rt;
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("@sunshine:删除分组",e);
 		}
 		return false;
 	}
@@ -132,7 +132,7 @@ public class ContactAction {
 			boolean rt=clent.updateFriendsGroup(imCrmFriendGroups);
 			return rt;
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("@sunshine:修改组名",e);
 		}
 		return false;
 	}
@@ -152,7 +152,7 @@ public class ContactAction {
 			boolean rt=clent.reNameMember(imCrmFriends);
 			return rt;
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("@sunshine:修改联系人备注",e);
 		}
 		return false;
 	}
@@ -172,7 +172,7 @@ public class ContactAction {
 			boolean rt=clent.moveMember(imCrmFriends);
 			return rt;
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("@sunshine:好友分组转移",e);
 		}
 		return false;
 	}
@@ -219,7 +219,7 @@ public class ContactAction {
 				user=clent.findUsersById2(userName);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("@sunshine:根据用户名称或者用户ID查询用户",e);
 		}
 		return user;
 	}

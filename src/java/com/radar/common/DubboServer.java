@@ -26,7 +26,7 @@ public static DubboServer getInstance(){
 @SuppressWarnings("unchecked")
 public <T> T getService(Class<T> t){
 	//下面这句话完美解决dubbo问题
-	//Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+	Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
 	ReferenceConfig<?> rc=referenceConfigMap.get(t);
 	if(rc==null){
 		rc = getReferenceConfig(t);

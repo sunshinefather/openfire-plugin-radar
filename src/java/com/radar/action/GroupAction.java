@@ -30,8 +30,7 @@ public class GroupAction {
 			GroupRoom _imCrmGroupRoom=clent.addGroupRoom(imCrmGroupRoom);
 			return _imCrmGroupRoom;
 		} catch (Exception e) {
-			log.info("创建群失败:"+e.getMessage());
-			e.printStackTrace();
+			log.error("@sunshine:创建群异常",e);
 		}
 		return null;
 	}
@@ -51,7 +50,7 @@ public class GroupAction {
 			boolean rt=clent.mergeGroupRoom(imCrmGroupRoom);
 			return rt;
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("@sunshine:修改群信息异常",e);
 		}
 		return false;
 	}
@@ -97,7 +96,7 @@ public class GroupAction {
 			}
             return rt;
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("@sunshine:移除群成员异常",e);
 			
 		}
 		return false;
@@ -139,7 +138,7 @@ public class GroupAction {
 			GroupRoom groupRoom=clent.getGroupRoomById(groupId);
             return groupRoom;
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("@sunshine:根据群id获取群信息异常",e);
 		}
 		return new GroupRoom();
 	}
@@ -159,7 +158,7 @@ public class GroupAction {
 			String memberlist=clent.getGroupMembers(groupId,pageSize,pageNo);
             return memberlist;
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("@sunshine:获取群成员列表异常",e);
 		}
 		return null;
 	}
@@ -171,7 +170,7 @@ public class GroupAction {
 			List<GroupMember> groupMemberList=clent.getGroupMemberList(groupId);
 			return groupMemberList;
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("@sunshine:不分页获取群成员列表异常",e);
 		}
 		return null;
 	}
