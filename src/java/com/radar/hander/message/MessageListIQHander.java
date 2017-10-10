@@ -51,7 +51,7 @@ public class MessageListIQHander extends IQHandler {
             	pageSize=Integer.valueOf(pageSizeStr);
             }
             }catch(NumberFormatException e){
-            	log.info("参数类型传入错误");
+            	log.info("参数类型传入错误",e);
             }
             if(StringUtils.isEmpty(userId)){
             	userId=packet.getFrom().getNode();
@@ -59,7 +59,7 @@ public class MessageListIQHander extends IQHandler {
         }
         if(StringUtils.isEmpty(userId) || StringUtils.isEmpty(targetId)|| StringUtils.isEmpty(chatType)){
         	replay.setType(IQ.Type.error);
-        	log.info("获取聊天记录参数错误");
+        	log.info("获取聊天记录参数错误,用户id:"+userId+",群id:"+targetId+"群类型:"+chatType);
         }else {
         	String msglist=MsgAction.findMessageList(userId, targetId, pageNo, pageSize, chatType);
         	if(StringUtils.isEmpty(msglist)){
