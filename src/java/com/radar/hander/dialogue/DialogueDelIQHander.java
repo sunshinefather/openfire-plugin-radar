@@ -45,14 +45,14 @@ public class DialogueDelIQHander extends IQHandler {
         }
         if(StringUtils.isEmpty(userId) || (StringUtils.isEmpty(dialogueIds) && StringUtils.isEmpty(targetId) )){
         	replay.setType(IQ.Type.error);
-        	log.info("删除会话参数错误");
+        	log.info("删除会话参数错误,userName="+userId+",会话ids="+dialogueIds);
         }else {
         	boolean bool=DialogueAction.delDialogues(userId, dialogueIds,targetId);
         	if(bool){
             	replay.getChildElement().addElement("dialogueIds").setText(dialogueIds);
         	}else{
             	replay.setType(IQ.Type.error);
-            	log.info("删除会话失败");
+            	log.info("删除会话失败,userName="+userId+",会话ids="+dialogueIds);
         	}
         }
 		return replay;
